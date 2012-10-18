@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AACEncoder", "AACEncoder\AACEncoder.vcproj", "{1EF98708-0729-40E4-8B5F-785E7C8B33F0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AACEncoderTest", "AACEncoderTest\AACEncoderTest.vcproj", "{1255771A-71A4-4E84-A9E1-D171541BEB3C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libfaac", "..\libfaac\libfaac\libfaac.vcproj", "{9CC48C6E-92EB-4814-AD37-97AB3622AB65}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveAPI", "..\WaveAPI\WaveAPI.vcproj", "{0452C754-4390-4327-BB2B-1FD65F2B29D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EF98708-0729-40E4-8B5F-785E7C8B33F0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1EF98708-0729-40E4-8B5F-785E7C8B33F0}.Debug|Win32.Build.0 = Debug|Win32
+		{1EF98708-0729-40E4-8B5F-785E7C8B33F0}.Release|Win32.ActiveCfg = Release|Win32
+		{1EF98708-0729-40E4-8B5F-785E7C8B33F0}.Release|Win32.Build.0 = Release|Win32
+		{1255771A-71A4-4E84-A9E1-D171541BEB3C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1255771A-71A4-4E84-A9E1-D171541BEB3C}.Debug|Win32.Build.0 = Debug|Win32
+		{1255771A-71A4-4E84-A9E1-D171541BEB3C}.Release|Win32.ActiveCfg = Release|Win32
+		{1255771A-71A4-4E84-A9E1-D171541BEB3C}.Release|Win32.Build.0 = Release|Win32
+		{9CC48C6E-92EB-4814-AD37-97AB3622AB65}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9CC48C6E-92EB-4814-AD37-97AB3622AB65}.Debug|Win32.Build.0 = Debug|Win32
+		{9CC48C6E-92EB-4814-AD37-97AB3622AB65}.Release|Win32.ActiveCfg = Release|Win32
+		{9CC48C6E-92EB-4814-AD37-97AB3622AB65}.Release|Win32.Build.0 = Release|Win32
+		{0452C754-4390-4327-BB2B-1FD65F2B29D0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0452C754-4390-4327-BB2B-1FD65F2B29D0}.Debug|Win32.Build.0 = Debug|Win32
+		{0452C754-4390-4327-BB2B-1FD65F2B29D0}.Release|Win32.ActiveCfg = Release|Win32
+		{0452C754-4390-4327-BB2B-1FD65F2B29D0}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
