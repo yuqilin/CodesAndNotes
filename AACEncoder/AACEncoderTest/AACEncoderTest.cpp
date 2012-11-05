@@ -1,8 +1,12 @@
 
 #include "faac.h"
 #include <windows.h>
+#include <tchar.h>
 #include <stdio.h>
 #include <assert.h>
+#include <dshow.h>
+#include <comutil.h>
+#include <vector>
 
 #define BUFFER_SIZE 4096
 
@@ -18,8 +22,53 @@ typedef struct
 
 int ParseWaveFile(void* fpInput, WAVEFORMATINFO* waveFormat, int* nDataPos);
 
+
+/*
+#define BeginEnumSysDev(clsid, pMoniker)                                                                      \
+{                                                                                                             \
+	CComPtr<ICreateDevEnum> pDevEnum4$##clsid;                                                                \
+	pDevEnum4$##clsid.CoCreateInstance(CLSID_SystemDeviceEnum);                                               \
+	CComPtr<IEnumMoniker> pClassEnum4$##clsid;                                                                \
+	if (SUCCEEDED(pDevEnum4$##clsid->CreateClassEnumerator(clsid, &pClassEnum4$##clsid, 0))                   \
+	&& pClassEnum4$##clsid)                                                                               \
+{                                                                                                         \
+	for (CComPtr<IMoniker> pMoniker; pClassEnum4$##clsid->Next(1, &pMoniker, 0) == S_OK; pMoniker = NULL) \
+{
+
+#define EndEnumSysDev }}}
+//*/
+
+
+//HRESULT EnumSystemDevice(const CLSID& clsDeviceCategory, const TCHAR* pcszDeviceName, IBaseFilter** ppFilter);
+
+typedef struct tagDeviceInfo{
+	TCHAR szFriendlyName[MAX_PATH];
+	TCHAR szDescription[MAX_PATH];
+	TCHAR szDevicePath[MAX_PATH];
+	LONG lWaveInID;
+	IBaseFilter* pFilter;
+	GUID clsid;
+}DeviceInfo;
+
+HRESULT EnumSystemDevices(const CLSID& category, std::vector<DeviceInfo*>& devices);
+void ClearInfo(std::vector<DeviceInfo*>& devices);
+
+
+
 int main(int argc, char* argv[])
 {
+	HRESULT hr = CoInitialize(NULL);
+	if (FAILED(hr))
+		return -1;
+
+	std::vector<DeviceInfo*> devices;
+	EnumSystemDevices(CLSID_AudioInputDeviceCategory, devices);
+	ClearInfo(devices);
+	
+	EnumSystemDevices(CLSID_AudioRendererCategory, devices);
+	ClearInfo(devices);
+
+
 	FILE* fpInput;
 	FILE* fpOutput;
 
@@ -41,7 +90,7 @@ int main(int argc, char* argv[])
 	const char* pszInputFileName = argv[1];//"D:\\MediaSample\\wav\\11k16bitpcm.wav";
 
 	if (pszInputFileName == NULL)
-		return 0;
+		goto error_out;
 
 	char pszOutputFileName[MAX_PATH];// = "D:\\MediaSample\\wav\\8k16bitpcm.aac";
 
@@ -115,6 +164,9 @@ int main(int argc, char* argv[])
 	delete[] pbAACBuffer;
 	fclose(fpInput);
 	fclose(fpOutput);
+
+	::CoUninitialize();
+
 	return 0;
 
 error_out:
@@ -122,6 +174,9 @@ error_out:
 	delete[] pbAACBuffer;
 	fclose(fpInput);
 	fclose(fpOutput);
+	
+	::CoUninitialize();
+
 	return -1;
 }
 
@@ -180,4 +235,175 @@ int ParseWaveFile(void* fpIn, WAVEFORMATINFO* waveFormat, int* nDataPos)
 	}
 	
 	return 1;
+}
+
+int EnumCaptureDevice(const CLSID& clsDeviceCategory, const TCHAR* pcszDeviceName, IBaseFilter** ppFilter)
+{
+	HRESULT hr;
+	ICreateDevEnum* pSysDevEnum = NULL;
+	hr = CoCreateInstance(CLSID_SystemDeviceEnum, NULL, CLSCTX_INPROC_SERVER,
+		IID_ICreateDevEnum, (void**)&pSysDevEnum);
+	if (SUCCEEDED(hr))
+	{
+		// Obtain a class enumerator for the audio input device category
+		IEnumMoniker* pEnumCat = NULL;
+		hr = pSysDevEnum->CreateClassEnumerator(clsDeviceCategory/*CLSID_AudioInputDeviceCategory*/, &pEnumCat, 0);
+		if (hr == S_OK)
+		{
+			// Enumerate the monikers
+			IMoniker* pMoniker = NULL;
+			ULONG cFetched;
+			while (pEnumCat->Next(1, &pMoniker, &cFetched) == S_OK)
+			{
+				IPropertyBag* pPropBag = NULL;
+				hr = pMoniker->BindToStorage(NULL, NULL, IID_IPropertyBag,
+					(void**)&pPropBag);
+				if (SUCCEEDED(hr))
+				{
+					// To retrieve the filter's friendly name
+					VARIANT varName;
+					VariantInit(&varName);
+					hr = pPropBag->Read(L"FriendlyName", &varName, NULL);
+					if (SUCCEEDED(hr))
+					{
+						// Display the name in your UI somehow
+						LPCTSTR pcszName = _bstr_t(varName.bstrVal);
+						if (lstrcmpi(pcszName, pcszDeviceName) == 0)
+						{
+							// TODO:
+						}
+					}
+					VariantClear(&varName);
+
+					// To create an instance of the filter
+					IBaseFilter* pFilter = NULL;
+					hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter,
+						(void**)&pFilter);
+
+					// Now add the filter to the graph
+					// Remember to release pFilter later
+					if (ppFilter && *ppFilter)
+					{
+						*ppFilter = pFilter;
+					}
+					else
+					{
+						pFilter->Release();
+					}
+
+					pPropBag->Release();
+				}
+
+				pMoniker->Release();
+			}
+			pEnumCat->Release();
+		}
+		pSysDevEnum->Release();
+	}
+
+
+	
+
+	return 0;
+}
+
+
+HRESULT EnumSystemDevices(const CLSID& category, std::vector<DeviceInfo*>& devices)
+{
+	HRESULT hr = S_OK;
+	ICreateDevEnum* pSysDevEnum = NULL;
+	hr = CoCreateInstance(CLSID_SystemDeviceEnum, NULL, CLSCTX_INPROC_SERVER,
+		IID_ICreateDevEnum, (void**)&pSysDevEnum);
+	if (SUCCEEDED(hr))
+	{
+		IEnumMoniker* pEnumCat = NULL;
+		hr = pSysDevEnum->CreateClassEnumerator(category, &pEnumCat, 0);
+		if (hr == S_OK)
+		{
+			IMoniker* pMoniker = NULL;
+			ULONG cFetched;
+			while (pEnumCat->Next(1, &pMoniker, &cFetched) == S_OK)
+			{
+				DeviceInfo* pInfo = new DeviceInfo;
+				memset(&pInfo, 0, sizeof(DeviceInfo));
+
+				IPropertyBag* pPropBag = NULL;
+				hr = pMoniker->BindToStorage(NULL, NULL, IID_IPropertyBag,
+					(void**)&pPropBag);
+				if (SUCCEEDED(hr))
+				{
+					VARIANT var;
+					VariantInit(&var);
+
+					hr = pPropBag->Read(L"FriendlyName", &var, NULL);
+					if (SUCCEEDED(hr))
+					{
+						LPCTSTR pcszName = _bstr_t(var.bstrVal);
+						_tcscpy_s(pInfo->szFriendlyName, pcszName);
+						VariantClear(&var);
+					}
+
+					hr = pPropBag->Read(L"Description", &var, NULL);
+					if (SUCCEEDED(hr))
+					{
+						LPCTSTR pcszDescription = _bstr_t(var.bstrVal);
+						_tcscpy_s(pInfo->szDescription, pcszDescription);
+						VariantClear(&var);
+					}
+					
+					hr = pPropBag->Read(L"DevicePath", &var, NULL);
+					if (SUCCEEDED(hr))
+					{
+						LPCTSTR pcszPath = _bstr_t(var.bstrVal);
+						_tcscpy_s(pInfo->szDevicePath, pcszPath);
+						VariantClear(&var);
+					}
+
+					hr = pPropBag->Read(L"WaveInID", &var, NULL);
+					if (SUCCEEDED(hr))
+					{
+						LONG lWaveInID = var.lVal;
+						pInfo->lWaveInID = lWaveInID;
+						VariantClear(&var);
+					}
+
+					// To create an instance of the filter
+					IBaseFilter* pFilter = NULL;
+					hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter,
+						(void**)&pFilter);
+
+					// Remember to release pFilter later
+					if (SUCCEEDED(hr))
+					{
+						pInfo->pFilter = pFilter;
+
+						CLSID clsid;
+						hr = pFilter->GetClassID(&clsid);
+						if (SUCCEEDED(hr))
+						{
+							pInfo->clsid = clsid;
+						}
+					}	
+					pPropBag->Release();
+				}
+				pMoniker->Release();
+
+				devices.push_back(pInfo);
+			}
+			pEnumCat->Release();
+		}
+		pSysDevEnum->Release();
+	}
+
+	return hr;
+}
+
+void ClearInfo(std::vector<DeviceInfo*>& devices)
+{
+	std::vector<DeviceInfo*>::iterator it;
+	for (it=devices.begin(); it!=devices.end(); ++it)
+	{
+		delete (*it);
+	}
+	devices.clear();
 }
