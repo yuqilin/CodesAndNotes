@@ -19,3 +19,4 @@ ipch
 *.suo
 *.user
 *.manifest
+*.ncb
