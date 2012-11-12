@@ -325,7 +325,7 @@ HRESULT EnumSystemDevices(const CLSID& category, std::vector<DeviceInfo*>& devic
 			while (pEnumCat->Next(1, &pMoniker, &cFetched) == S_OK)
 			{
 				DeviceInfo* pInfo = new DeviceInfo;
-				memset(&pInfo, 0, sizeof(DeviceInfo));
+				memset(pInfo, 0, sizeof(DeviceInfo));
 
 				IPropertyBag* pPropBag = NULL;
 				hr = pMoniker->BindToStorage(NULL, NULL, IID_IPropertyBag,
@@ -383,6 +383,42 @@ HRESULT EnumSystemDevices(const CLSID& category, std::vector<DeviceInfo*>& devic
 						{
 							pInfo->clsid = clsid;
 						}
+
+						IEnumPins *pEnumPins = NULL;
+						IPin *pPin = NULL;
+						IAMAudioInputMixer *pMixer = NULL;
+						hr = pFilter->EnumPins(&pEnumPins);
+						if (SUCCEEDED(hr))
+						{
+							while (pEnumPins->Next(1, &pPin, NULL) == S_OK)
+							{
+								PIN_DIRECTION dir;
+								hr = pPin->QueryDirection(&dir);
+								if (SUCCEEDED(hr))
+								{
+									if (dir == PINDIR_INPUT)
+									{
+										hr = pPin->QueryInterface(IID_IAMAudioInputMixer, (void**)&pMixer);
+										if (SUCCEEDED(hr))
+										{
+											BOOL bEnable = FALSE;
+											if (S_OK == pMixer->get_Enable(&bEnable))
+											{
+												if (bEnable)
+												{
+													double dLevel = 0.0;
+													if (S_OK == pMixer->get_MixLevel(&dLevel))
+														printf("MixLevel=%f", dLevel);
+												}
+											}
+											pMixer->Release();
+										}
+									}
+								}
+								pPin->Release();
+							}
+							pEnumPins->Release();
+						}
 					}	
 					pPropBag->Release();
 				}
@@ -403,6 +439,11 @@ void ClearInfo(std::vector<DeviceInfo*>& devices)
 	std::vector<DeviceInfo*>::iterator it;
 	for (it=devices.begin(); it!=devices.end(); ++it)
 	{
+		IBaseFilter* pFilter = (*it)->pFilter;
+		if (pFilter != NULL)
+		{
+			pFilter->Release();
+		}
 		delete (*it);
 	}
 	devices.clear();

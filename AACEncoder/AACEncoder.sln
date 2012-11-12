@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libfaac", "..\libfaac\libfa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveAPI", "..\WaveAPI\WaveAPI.vcproj", "{0452C754-4390-4327-BB2B-1FD65F2B29D0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSUtil", "..\DSUtil\DSUtil.vcproj", "{C3C3340A-F71F-4A62-93CD-01343E25822F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{0452C754-4390-4327-BB2B-1FD65F2B29D0}.Debug|Win32.Build.0 = Debug|Win32
 		{0452C754-4390-4327-BB2B-1FD65F2B29D0}.Release|Win32.ActiveCfg = Release|Win32
 		{0452C754-4390-4327-BB2B-1FD65F2B29D0}.Release|Win32.Build.0 = Release|Win32
+		{C3C3340A-F71F-4A62-93CD-01343E25822F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C3C3340A-F71F-4A62-93CD-01343E25822F}.Debug|Win32.Build.0 = Debug|Win32
+		{C3C3340A-F71F-4A62-93CD-01343E25822F}.Release|Win32.ActiveCfg = Release|Win32
+		{C3C3340A-F71F-4A62-93CD-01343E25822F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

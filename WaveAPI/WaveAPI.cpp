@@ -19,7 +19,7 @@ void CALLBACK waveInProc(HWAVEIN hwi,
 						 DWORD_PTR dwParam2);
 
 
-void CALLBACK waveOutProc(HWAVEIN hwo,
+void CALLBACK waveOutProc(HWAVEOUT hwo,
 						 UINT uMsg,
 						 DWORD_PTR dwInstance,
 						 DWORD_PTR dwParam1,
@@ -78,8 +78,8 @@ int main(int argc, char* argv[])
 		wh[i].lpNext = NULL;  
 		wh[i].reserved = 0;  
 
-		waveInPrepareHeader(hWaveIn, &wh[i], sizeof(WAVEHDR));  
-		waveInAddBuffer(hWaveIn, &wh[i], sizeof(WAVEHDR));  
+		waveInPrepareHeader(hWaveIn, &wh[i], sizeof(WAVEHDR));
+		waveInAddBuffer(hWaveIn, &wh[i], sizeof(WAVEHDR));
 	}
 
 	// record   
@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
 	wavhdr.dwFlags = 0;  
 	wavhdr.dwLoops = 0;  
 
-	waveOutPrepareHeader(hWaveOut, &wavhdr, sizeof(WAVEHDR));  
+	waveOutPrepareHeader(hWaveOut, &wavhdr, sizeof(WAVEHDR));
 
 	// play   
 	printf("Start to Play...\n");  
@@ -180,7 +180,7 @@ void CALLBACK waveInProc(HWAVEIN hwi,
 		memcpy(buffer+buf_count, pwh->lpData, temp);  
 		buf_count += temp;  
 
-		waveInAddBuffer(hwi, pwh, sizeof(WAVEHDR));  
+		waveInAddBuffer(hwi, pwh, sizeof(WAVEHDR));
 	}  
 }
 

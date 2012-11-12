@@ -1,0 +1,187 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Slovak resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SKY)
+#ifdef _WIN32
+LANGUAGE LANG_SLOVAK, SUBLANG_DEFAULT
+#pragma code_page(1250)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP_LOGO         BITMAP                  "bitmap_logo.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,3,0
+ PRODUCTVERSION 1,0,3,0
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041b04b0"
+        BEGIN
+            VALUE "CompanyName", "MONOGRAM Multimedia, s.r.o."
+            VALUE "FileDescription", "mmaace.ax"
+            VALUE "FileVersion", "1, 0, 3, 0"
+            VALUE "InternalName", "MONOGRAM AAC Encoder"
+            VALUE "LegalCopyright", "Copyright (C) 2008"
+            VALUE "OriginalFilename", "mmaace.ax"
+            VALUE "ProductName", "mmaace.ax"
+            VALUE "ProductVersion", "1, 0, 3, 0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x41b, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_PAGE_AAC            "AAC Encoder"
+END
+
+#endif    // Slovak resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PAGE_AAC DIALOGEX 0, 0, 320, 200
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CTEXT           "This software is released under the GNU LGPL license.",IDC_STATIC,6,162,306,8
+    CTEXT           "http://www.monogram.sk",IDC_STATIC,6,186,306,8
+    CTEXT           "Based on the libfaac implementation of AAC encoder.",IDC_STATIC,6,174,306,8
+    LTEXT           "MPEG version",IDC_STATIC,12,69,44,8
+    LTEXT           "Object type",IDC_STATIC,12,86,39,8
+    COMBOBOX        IDC_CB_VERSION,66,66,96,84,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_CB_TYPE,66,84,96,78,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Bitrate",IDC_STATIC,12,105,22,8
+    COMBOBOX        IDC_CB_BITRATE,66,102,60,246,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "kbps",IDC_STATIC,144,105,16,8
+    LTEXT           "Input samplerate :",IDC_STATIC,186,66,60,8
+    LTEXT           "Output",IDC_STATIC,12,123,24,8
+    COMBOBOX        IDC_CB_OUTPUT,66,120,96,54,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Input channels :",IDC_STATIC,186,78,53,8
+    LTEXT           "Frame size :",IDC_STATIC,186,108,40,8
+    LTEXT           "Frames processed :",IDC_STATIC,186,120,64,8
+    GROUPBOX        "Options",IDC_STATIC,6,48,162,96
+    GROUPBOX        "Stats",IDC_STATIC,174,48,138,96
+    LTEXT           "44.100 Khz",IDC_LABEL_SAMPLERATE,258,66,48,8
+    LTEXT           "2",IDC_LABEL_CHANNELS,258,78,48,8
+    LTEXT           "1024 samples",IDC_LABEL_FRAMESIZE,258,108,44,8
+    LTEXT           "0",IDC_LABEL_FRAMES,258,120,42,8
+    CONTROL         101,IDC_STATIC,"Static",SS_BITMAP,0,0,320,20
+    CTEXT           "MONOGRAM AAC Encoder 1.0.3.0",IDC_STATIC_VERSION,6,150,306,9
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_PAGE_AAC, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
