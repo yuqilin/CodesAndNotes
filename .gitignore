@@ -20,3 +20,9 @@ ipch
 *.user
 *.manifest
 *.ncb
+*.obj
+*.pdb
+*.pch
+*.idb
+*.exp
+*.ink

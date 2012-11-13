@@ -107,6 +107,32 @@ CWavDestFilter::CWavDestFilter(LPUNKNOWN pUnk, HRESULT *phr) :
         {
             *phr = E_OUTOFMEMORY;
         }
+
+
+		m_outbuf = NULL;
+		m_outbuf_size = 0;
+
+		// info
+		m_info.samplerate		= 0;
+		m_info.channels		= 0;
+		m_info.frame_size		= 0;
+		m_info.frames_done	= 0;
+		
+		// encoder
+		m_encoder				= NULL;
+		m_extradata			= NULL;
+		m_extradata_size		= 0;
+
+		// buffer
+		m_enc_buffer	= (short*)malloc(6 * 4096 * sizeof(short));
+		m_enc_temp	= (short*)malloc(6 * 4096 * sizeof(short));
+		m_buf_time_samples = 0;
+
+		// LoadSettings
+		m_config.version		= AAC_VERSION_MPEG4;
+		m_config.object_type	= AAC_OBJECT_LOW;
+		m_config.output_type	= AAC_OUTPUT_RAW;
+		m_config.bitrate		= 128000;
     }
 }
 
@@ -116,6 +142,12 @@ CWavDestFilter::CWavDestFilter(LPUNKNOWN pUnk, HRESULT *phr) :
 
 CWavDestFilter::~CWavDestFilter()
 {
+	if (m_enc_buffer)
+		free(m_enc_buffer);
+	m_enc_buffer	= NULL;
+	if (m_enc_temp)
+		free(m_enc_temp);
+	m_enc_temp	= NULL;
 }
 
 
@@ -157,6 +189,13 @@ HRESULT CWavDestFilter::Receive(IMediaSample *pSample)
         m_cbWavData = cbOld;
     }
 
+	if (m_outbuf)
+	{
+		delete[] m_outbuf;
+		m_outbuf = NULL;
+	}
+	m_outbuf_size = 0;
+
     return hr;
 }
 
@@ -169,11 +208,50 @@ HRESULT CWavDestFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
     REFERENCE_TIME rtStart, rtEnd;
 
     // First just copy the data to the output sample
-    HRESULT hr = Copy(pIn, pOut);
+    //HRESULT hr = Copy(pIn, pOut);
+	HRESULT hr = NOERROR;
+	BYTE	*buf;
+	long	size;
+	pIn->GetPointer(&buf);
+	size = pIn->GetActualDataLength();
+
+	short	*in_buf = (short*)buf;
+	long	in_samples   = size / sizeof(short);
+	int		time_samples = in_samples / m_info.channels;
+
+	m_outbuf = new BYTE[size];
+	m_outbuf_size = 0;
+
+
+	hr = ProcessPCM(in_buf, time_samples);
+
     if(FAILED(hr))
     {
         return hr;
     }
+
+	REFERENCE_TIME TimeStart, TimeEnd;
+	if(NOERROR == pIn->GetTime(&TimeStart, &TimeEnd))
+	{
+		pOut->SetTime(&TimeStart, &TimeEnd);
+	}
+
+	LONGLONG MediaStart, MediaEnd;
+	if(pIn->GetMediaTime(&MediaStart,&MediaEnd) == NOERROR)
+	{
+		pOut->SetMediaTime(&MediaStart,&MediaEnd);
+	}
+
+	// Copy the media type
+	AM_MEDIA_TYPE *pMediaType;
+	pIn->GetMediaType(&pMediaType);
+	pOut->SetMediaType(pMediaType);
+	DeleteMediaType(pMediaType);
+
+	hr = pOut->SetActualDataLength(m_outbuf_size);
+	BYTE* outbuf;
+	pOut->GetPointer(&outbuf);
+	memcpy(outbuf, m_outbuf, m_outbuf_size);
 
     // Prepare it for writing    
     LONG lActual = pOut->GetActualDataLength();
@@ -278,6 +356,42 @@ HRESULT CWavDestFilter::GetMediaType(int iPosition, CMediaType *pMediaType)
     return VFW_S_NO_MORE_ITEMS;
 }
 
+HRESULT CWavDestFilter::SetMediaType(PIN_DIRECTION direction, const CMediaType *pmt)
+{
+	if (direction == PINDIR_INPUT)
+	{
+		/*
+			Musime odchytit vstupny format, aby sme vedeli dobre
+			inicializovat enkoder
+		*/
+		WAVEFORMATEX	*wfx = (WAVEFORMATEX*)pmt->pbFormat;
+		if (!wfx) return E_FAIL;
+
+		// teraz nas zaujima vacero veci:
+		if (wfx->wBitsPerSample != 16) return E_FAIL;
+		m_info.channels	= wfx->nChannels;
+		m_info.samplerate	= wfx->nSamplesPerSec;
+
+		if (m_encoder)
+		{
+			CloseEncoder();
+		}
+
+		// otvorime novy enkoder
+		int ret = OpenEncoder();
+		if (ret < 0)
+		{
+			CloseEncoder();
+			return E_FAIL;
+		}
+
+	} 
+	else if (direction == PINDIR_OUTPUT)
+	{
+	}
+	return NOERROR;
+}
+
 //
 // DecideBufferSize
 //
@@ -365,6 +479,20 @@ HRESULT CWavDestFilter::StartStreaming()
 	m_cbHeader = 0;
 
     m_cbWavData = 0;
+
+	m_info.frames_done = 0;
+	m_buf_time_samples = 0;
+
+// 	if (!m_encoder)
+// 	{
+// 		int ret = OpenEncoder();
+// 		if (ret < 0)
+// 		{
+// 			CloseEncoder();
+// 			return E_FAIL;
+// 		}
+// 	}
+
     return S_OK;
 }
 
@@ -376,6 +504,11 @@ HRESULT CWavDestFilter::StartStreaming()
 //
 HRESULT CWavDestFilter::StopStreaming()
 {
+	m_buf_time_samples = 0;
+	m_info.frames_done = 0;
+
+	//CloseEncoder();
+
 	return S_OK;
 	/*
     IStream *pStream;
@@ -424,54 +557,202 @@ HRESULT CWavDestFilter::StopStreaming()
 	//*/
 }
 
+HRESULT CWavDestFilter::BreakConnect(PIN_DIRECTION dir)
+{
+	if (dir == PINDIR_INPUT) {
+		// tu zrusime instanciu enkodera a odpojime output pin
+		CloseEncoder();
+
+		// odpojime
+		if (m_pOutput->IsConnected()) {
+			m_pOutput->GetConnected()->Disconnect();
+			m_pOutput->Disconnect();
+		}
+
+		m_info.channels = 0;
+		m_info.samplerate = 0;
+
+	} else
+		if (dir == PINDIR_OUTPUT) {
+			// tu nerobime nic specialne - len zrusime pocitadla
+			CAutoLock	lck(&lock_info);
+			m_info.frames_done = 0;
+		}
+		return __super::BreakConnect(dir);
+}
+
 int CWavDestFilter::OpenEncoder()
 {
-	if (encoder) return -1;
-	if (aacinfo.samplerate == 0 || aacinfo.channels == 0) return -1;
+	if (m_encoder) return -1;
+	if (m_info.samplerate == 0 || m_info.channels == 0) return -1;
 
 	unsigned long	framesize;
 	unsigned long	ob;
 
 	// reset encoding delay
-	encoding_delay = 0;
+	m_encoding_delay = 0;
 
-	encoder = faacEncOpen(aacinfo.samplerate, aacinfo.channels, &framesize, &ob);
-	if (!encoder) return -1;
+	m_encoder = faacEncOpen(m_info.samplerate, m_info.channels, &framesize, &ob);
+	if (!m_encoder) return -1;
 
-	aacinfo.frame_size  = framesize;
-	aacinfo.frames_done = 0;
+	m_info.frame_size  = framesize;
+	m_info.frames_done = 0;
 
 	faacEncConfigurationPtr	conf;
-	conf = faacEncGetCurrentConfiguration(encoder);
-	if (!conf) {
-		faacEncClose(encoder);
-		encoder = NULL;
-		aacinfo.frame_size = 0;
+	conf = faacEncGetCurrentConfiguration(m_encoder);
+	if (!conf)
+	{
+		faacEncClose(m_encoder);
+		m_encoder = NULL;
+		m_info.frame_size = 0;
 		return -1;
 	}
 
-	conf->mpegVersion	= config.version;
-	conf->aacObjectType	= config.object_type;
-	conf->allowMidside	= 0;
-	conf->bandWidth		= 0;
-	conf->bitRate		= config.bitrate / info.channels;
+// 	conf->mpegVersion	= m_config.version;
+// 	conf->aacObjectType	= m_config.object_type;
+// 	conf->allowMidside	= 0;
+// 	conf->bandWidth		= 0;
+// 	conf->bitRate		= m_config.bitrate / m_info.channels;
 	conf->inputFormat	= FAAC_INPUT_16BIT;
-	conf->useLfe		= 0;
-	conf->useTns		= 0;
-	conf->shortctl		= SHORTCTL_NORMAL;
-	conf->outputFormat	= (config.output_type > 0 ? 1 : 0);
-	faacEncSetConfiguration(encoder, conf);
+// 	conf->useLfe		= 0;
+// 	conf->useTns		= 0;
+// 	conf->shortctl		= SHORTCTL_NORMAL;
+// 	conf->outputFormat	= (m_config.output_type > 0 ? 1 : 0);
+	faacEncSetConfiguration(m_encoder, conf);
 
 	BYTE *ex_ptr = NULL;
 	unsigned long ex_size;
-	faacEncGetDecoderSpecificInfo(encoder, &ex_ptr, &ex_size);
-	if (ex_ptr && ex_size > 0) {
-		extradata_size = ex_size;
-		extradata = (BYTE*)malloc(ex_size);
-		memcpy(extradata, ex_ptr, ex_size);
+	faacEncGetDecoderSpecificInfo(m_encoder, &ex_ptr, &ex_size);
+	if (ex_ptr && ex_size > 0)
+	{
+		m_extradata_size = ex_size;
+		m_extradata = (BYTE*)malloc(ex_size);
+		memcpy(m_extradata, ex_ptr, ex_size);
 	}
 
 	return 0;
+}
+
+void CWavDestFilter::CloseEncoder()
+{
+	if (!m_encoder) return ;
+	faacEncClose(m_encoder);
+	m_encoder = NULL;
+	m_info.frame_size = 0;
+	m_info.frames_done = 0;
+
+	if (m_extradata)
+	{
+		free(m_extradata);
+		m_extradata = NULL;
+	}
+	m_extradata_size = 0;
+}
+
+HRESULT CWavDestFilter::ProcessPCM(short *pcm, int time_samples)
+{
+	/**************************************************************************
+	*
+	*	We process samples in units of (frame_size) samples. We use
+	*	our temporary buffer to store samples that do not fit into the
+	*	frame_size chunk.
+	*
+	***************************************************************************/
+
+	int		needed_time_samples = m_info.frame_size / m_info.channels;
+	int		left = time_samples + m_buf_time_samples;
+
+	while (left >= needed_time_samples)
+	{
+		// copy data to the enc buffer
+		if (m_buf_time_samples > 0)
+		{
+			memcpy(m_enc_buffer, m_enc_temp, (m_buf_time_samples * m_info.channels) * sizeof(short));
+		}
+
+		// assemble one frame of PCM data
+		int	tocopy = (needed_time_samples - m_buf_time_samples) * m_info.channels;
+		memcpy(m_enc_buffer + (m_buf_time_samples * m_info.channels), pcm, tocopy*sizeof(short));
+		pcm += tocopy;
+
+		// and deliver data downstream
+		HRESULT hr = EncodeFrame();
+		if (FAILED(hr)) return hr;
+
+		// adjust buffers
+		m_buf_time_samples = 0;
+		left -= needed_time_samples;
+	}
+
+	// keep a copy of the data for later processing
+	int		time_left = left - m_buf_time_samples;
+	if (time_left > 0)
+	{
+		memcpy(m_enc_temp + m_buf_time_samples * m_info.channels, pcm, (time_left*m_info.channels)*sizeof(short));
+	}
+	m_buf_time_samples = left;
+
+	return NOERROR;
+}
+
+HRESULT CWavDestFilter::EncodeFrame()
+{
+	/*
+		This assumes we have the exact number of samples in the enc. buffer
+	*/
+
+	//int				time_samples = m_info.frame_size / m_info.channels;
+	//double			ddur		 = (time_samples * 10000000.0) / (double)m_info.samplerate;
+	//REFERENCE_TIME	tdur		 = (REFERENCE_TIME)ddur;
+
+	// adjust input timestamps
+	//m_samples_in += time_samples;
+	
+	// output buffer
+	BYTE			outbuf[16*1024];
+	int				outsize = sizeof(outbuf);
+
+	// encode the frame
+	int	ret = faacEncEncode(m_encoder, (int*)m_enc_buffer, m_info.frame_size, outbuf, outsize);
+	if (ret > 0)
+	{
+		memcpy(m_outbuf+m_outbuf_size, outbuf, ret);
+		m_outbuf_size += ret;
+
+
+// 		REFERENCE_TIME		rtStart, rtStop;
+// 		IMediaSample		*sample = NULL;
+// 		//HRESULT				hr;
+// 
+// 		hr = GetDeliveryBuffer(&sample);
+// 		//if (FAILED(hr)) return hr;
+// 
+// 		// we update the encoding delay value
+// 		if (m_encoding_delay <= 0)
+// 		{
+// 			m_encoding_delay = (m_samples_in - m_samples_out);
+// 		}
+// 
+// 		rtStart		= rtOutput + llMulDiv(m_samples_out, 10000000, m_info.samplerate, 0);
+// 		m_samples_out += time_samples;
+// 		rtStop		= rtOutput + llMulDiv(m_samples_out, 10000000, m_info.samplerate, 0);
+
+//		sample->SetTime(&rtStart, &rtStop);
+
+		// napiseme data
+// 		BYTE	*out;
+// 		sample->GetPointer(&out);
+// 		memcpy(out, outbuf, ret);
+// 		sample->SetActualDataLength(ret);
+
+//		hr = m_pOutput->Deliver(sample);
+//		sample->Release();
+
+		//if (FAILED(hr)) return hr;
+		m_info.frames_done ++;
+	}
+
+	return NOERROR;
 }
 
 //

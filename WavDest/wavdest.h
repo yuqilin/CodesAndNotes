@@ -66,12 +66,14 @@ public:
     HRESULT CheckInputType(const CMediaType* mtIn) ;
     HRESULT CheckTransform(const CMediaType *mtIn,const CMediaType *mtOut);
     HRESULT GetMediaType(int iPosition, CMediaType *pMediaType) ;
+	HRESULT SetMediaType(PIN_DIRECTION direction, const CMediaType *pmt);
 
     HRESULT DecideBufferSize(IMemAllocator *pAlloc,
                              ALLOCATOR_PROPERTIES *pProperties);
 
     HRESULT StartStreaming();
     HRESULT StopStreaming();
+	HRESULT BreakConnect(PIN_DIRECTION dir);
 
     HRESULT CompleteConnect(PIN_DIRECTION direction,IPin *pReceivePin) { return S_OK; }
 
@@ -84,11 +86,23 @@ private:
     ULONG m_cbWavData;
     ULONG m_cbHeader;
 
+	CCritSec							lock_info;
 	faacEncHandle						m_encoder;
+	BYTE								*m_extradata;
+	int									m_extradata_size;
 	AACConfig							m_config;
 	AACInfo								m_info;
 	int									m_encoding_delay;		// (in samples)
 
+	short								*m_enc_buffer;
+	short								*m_enc_temp;
+	int									m_buf_time_samples;
+
+	BYTE* m_outbuf;
+	long m_outbuf_size;
+
 	void CloseEncoder();
 	int OpenEncoder();
+	HRESULT ProcessPCM(short *pcm, int time_samples);
+	HRESULT EncodeFrame();
 };

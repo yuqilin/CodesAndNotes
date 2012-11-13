@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="wavdest"
-	ProjectGUID="{82DD56F1-9178-45F3-8EC2-A95FBC0587C6}"
-	RootNamespace="wavdest"
+	Name="grabber"
+	ProjectGUID="{7ED61F13-1F4B-4432-9B03-65C43A2C7B68}"
+	RootNamespace="grabber"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -15,6 +15,100 @@
 	<ToolFiles>
 	</ToolFiles>
 	<Configurations>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release_Unicode/grabber.tlb"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/Oxs /D_WIN32_WINNT=-0x0400 "
+				AdditionalIncludeDirectories="..\BaseClasses;"
+				PreprocessorDefinitions="DBG=0;WINVER=0x400;INC_OLE2;STRICT;_WIN32;_MT;_DLL;_X86_=1;WIN32;UNICODE"
+				StringPooling="true"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough="streams.h"
+				WarningLevel="4"
+				SuppressStartupBanner="true"
+				CallingConvention="2"
+				CompileAs="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG,WIN32"
+				Culture="1033"
+				AdditionalIncludeDirectories="..\BaseClasses"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386 /IGNORE:4089 /IGNORE:4098"
+				AdditionalDependencies="strmbase.lib msvcrt.lib quartz.lib vfw32.lib winmm.lib version.lib largeint.lib comctl32.lib olepro32.lib"
+				OutputFile="$(OutDir)\$(ProjectName).ax"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="..\baseclasses\$(ConfigurationName);$(OutDir)"
+				IgnoreAllDefaultLibraries="false"
+				ModuleDefinitionFile=".\grabber.def"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="2"
+				SetChecksum="true"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
@@ -42,16 +136,15 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug_Unicode/wavdest.tlb"
+				TypeLibraryName=".\Debug_Unicode/grabber.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Oid "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\baseclasses;..\libfaac\include"
+				AdditionalIncludeDirectories="..\BaseClasses;"
 				PreprocessorDefinitions="_WIN32_WINNT=0x0400;WINVER=0x0400;DBG=1;DEBUG;_DEBUG;INC_OLE2;STRICT;_WIN32;_MT;_DLL;_X86_=1;WIN32;UNICODE"
 				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="streams.h"
 				WarningLevel="4"
@@ -75,109 +168,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386 /IGNORE:4089 /IGNORE:4098"
-				AdditionalDependencies="strmbasd.lib msvcrtd.lib quartz.lib vfw32.lib winmm.lib version.lib comctl32.lib olepro32.lib libfaac.lib"
+				AdditionalDependencies="strmbasd.lib msvcrtd.lib quartz.lib vfw32.lib winmm.lib version.lib comctl32.lib olepro32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).ax"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;..\baseclasses\$(ConfigurationName)&quot;;$(OutDir)"
+				AdditionalLibraryDirectories="..\baseclasses\$(ConfigurationName);$(OutDir)"
 				IgnoreAllDefaultLibraries="false"
-				ModuleDefinitionFile=".\wavdest.def"
+				ModuleDefinitionFile=".\grabber.def"
 				GenerateDebugInformation="true"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release_Unicode/wavdest.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions="/Oxs /D_WIN32_WINNT=-0x0400 "
-				AdditionalIncludeDirectories="..\baseclasses;..\libfaac\include"
-				PreprocessorDefinitions="DBG=0;WINVER=0x400;INC_OLE2;STRICT;_WIN32;_MT;_DLL;_X86_=1;WIN32;UNICODE"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="streams.h"
-				WarningLevel="4"
-				SuppressStartupBanner="true"
-				CallingConvention="2"
-				CompileAs="0"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG,WIN32"
-				Culture="1033"
-				AdditionalIncludeDirectories="..\..\BaseClasses"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386 /IGNORE:4089 /IGNORE:4098"
-				AdditionalDependencies="strmbase.lib msvcrt.lib quartz.lib vfw32.lib winmm.lib version.lib largeint.lib comctl32.lib olepro32.lib"
-				OutputFile="$(OutDir)\$(ProjectName).ax"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;..\baseclasses\$(ConfigurationName)&quot;"
-				IgnoreAllDefaultLibraries="false"
-				ModuleDefinitionFile=".\wavdest.def"
-				OptimizeReferences="0"
-				EnableCOMDATFolding="2"
-				SetChecksum="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -212,15 +210,15 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\wavdest.cpp"
+				RelativePath=".\grabber.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wavdest.def"
+				RelativePath=".\grabber.def"
 				>
 			</File>
 			<File
-				RelativePath=".\wavdest.rc"
+				RelativePath=".\grabber.rc"
 				>
 			</File>
 		</Filter>
@@ -229,10 +227,14 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\wavdest.h"
+				RelativePath=".\grabber.h"
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\baseclasses\baseclasses.vcproj"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

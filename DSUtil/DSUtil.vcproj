@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="libfaac"
-	ProjectGUID="{9CC48C6E-92EB-4814-AD37-97AB3622AB65}"
-	TargetFrameworkVersion="131072"
+	Name="DSUtil"
+	ProjectGUID="{C3C3340A-F71F-4A62-93CD-01343E25822F}"
+	RootNamespace="DSUtil"
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
@@ -19,9 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,13 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32,_DEBUG,_LIB"
+				AdditionalIncludeDirectories="..\baseclasses;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -55,15 +55,12 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1043"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -86,9 +83,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -108,31 +103,27 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32,NDEBUG,_LIB"
-				StringPooling="true"
-				RuntimeLibrary="0"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\baseclasses;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\Release/libfaac.pch"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1043"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -156,126 +147,70 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\aacquant.c"
+				RelativePath=".\dsutil.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\backpred.c"
+				RelativePath=".\simple_thread.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\bitstream.c"
+				RelativePath=".\stdafx.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\channels.c"
-				>
-			</File>
-			<File
-				RelativePath=".\fft.c"
-				>
-			</File>
-			<File
-				RelativePath=".\filtbank.c"
-				>
-			</File>
-			<File
-				RelativePath=".\frame.c"
-				>
-			</File>
-			<File
-				RelativePath=".\huffman.c"
-				>
-			</File>
-			<File
-				RelativePath=".\ltp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\midside.c"
-				>
-			</File>
-			<File
-				RelativePath=".\psychkni.c"
-				>
-			</File>
-			<File
-				RelativePath=".\tns.c"
-				>
-			</File>
-			<File
-				RelativePath=".\util.c"
-				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\aacquant.h"
+				RelativePath=".\dsutil.h"
 				>
 			</File>
 			<File
-				RelativePath=".\backpred.h"
+				RelativePath=".\simple_thread.h"
 				>
 			</File>
 			<File
-				RelativePath=".\bitstream.h"
+				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\channels.h"
-				>
-			</File>
-			<File
-				RelativePath=".\coder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\fft.h"
-				>
-			</File>
-			<File
-				RelativePath=".\filtbank.h"
-				>
-			</File>
-			<File
-				RelativePath=".\frame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\huffman.h"
-				>
-			</File>
-			<File
-				RelativePath=".\hufftab.h"
-				>
-			</File>
-			<File
-				RelativePath=".\joint.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ltp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\psych.h"
-				>
-			</File>
-			<File
-				RelativePath=".\tns.h"
-				>
-			</File>
-			<File
-				RelativePath=".\util.h"
+				RelativePath=".\targetver.h"
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+		</Filter>
+		<File
+			RelativePath=".\ReadMe.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

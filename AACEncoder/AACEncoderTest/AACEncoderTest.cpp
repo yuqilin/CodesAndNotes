@@ -61,12 +61,12 @@ int main(int argc, char* argv[])
 	if (FAILED(hr))
 		return -1;
 
-	std::vector<DeviceInfo*> devices;
-	EnumSystemDevices(CLSID_AudioInputDeviceCategory, devices);
-	ClearInfo(devices);
-	
-	EnumSystemDevices(CLSID_AudioRendererCategory, devices);
-	ClearInfo(devices);
+// 	std::vector<DeviceInfo*> devices;
+// 	EnumSystemDevices(CLSID_AudioInputDeviceCategory, devices);
+// 	ClearInfo(devices);
+// 	
+// 	EnumSystemDevices(CLSID_AudioRendererCategory, devices);
+// 	ClearInfo(devices);
 
 
 	FILE* fpInput;
