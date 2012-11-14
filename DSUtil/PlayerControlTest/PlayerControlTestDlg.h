@@ -30,7 +30,6 @@ protected:
 	
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
-	afx_msg void OnDestroy();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
@@ -81,6 +80,8 @@ protected:
 	afx_msg LRESULT OnPlayStop(WPARAM,LPARAM);
 	afx_msg LRESULT OnOpenSucceeded(WPARAM,LPARAM);
 	afx_msg LRESULT OnOpenFailed(WPARAM,LPARAM);
+public:
+	afx_msg void OnClose();
 };
 
 inline void ShowDebug(const TCHAR * pcszFormat, ... )

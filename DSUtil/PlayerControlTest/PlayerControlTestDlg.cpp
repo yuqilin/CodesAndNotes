@@ -81,6 +81,7 @@ BEGIN_MESSAGE_MAP(CPlayerControlTestDlg, CDialog)
 	ON_MESSAGE(WM_PLAY_STOP, &CPlayerControlTestDlg::OnPlayStop)
 	ON_MESSAGE(WM_PLAY_OPEN_SUCCEEDED, &CPlayerControlTestDlg::OnOpenSucceeded)
 	ON_MESSAGE(WM_PLAY_OPEN_FAILED, &CPlayerControlTestDlg::OnOpenFailed)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -119,13 +120,6 @@ BOOL CPlayerControlTestDlg::OnInitDialog()
 	CreatePlayThread();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
-}
-
-void CPlayerControlTestDlg::OnDestroy()
-{
-	ExitPlayThread();
-
-	__super::OnDestroy();
 }
 
 void CPlayerControlTestDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -417,4 +411,11 @@ LRESULT CPlayerControlTestDlg::OnOpenFailed(WPARAM,LPARAM)
 {
 	GetDlgItem(IDC_STATIC_STATE)->SetWindowText(_T("Open Failed..."));
 	return 0;
+}
+void CPlayerControlTestDlg::OnClose()
+{
+	// TODO: Add your message handler code here and/or call default
+	ExitPlayThread();
+
+	CDialog::OnClose();
 }
