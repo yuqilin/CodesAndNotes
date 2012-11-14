@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSUtil", "DSUtil.vcproj", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "baseclasses", "..\baseclasses\baseclasses.vcproj", "{E8A3F6FA-AE1C-4C8E-A0B6-9C8480324EAA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlayerControlTest", "PlayerControlTest\PlayerControlTest.vcproj", "{A9C86093-2893-465B-BDF2-391743106206}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_MBCS|Win32 = Debug_MBCS|Win32
@@ -48,6 +50,18 @@ Global
 		{E8A3F6FA-AE1C-4C8E-A0B6-9C8480324EAA}.Release|Win32.Build.0 = Release|Win32
 		{E8A3F6FA-AE1C-4C8E-A0B6-9C8480324EAA}.Release|x64.ActiveCfg = Release|x64
 		{E8A3F6FA-AE1C-4C8E-A0B6-9C8480324EAA}.Release|x64.Build.0 = Release|x64
+		{A9C86093-2893-465B-BDF2-391743106206}.Debug_MBCS|Win32.ActiveCfg = Debug|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Debug_MBCS|Win32.Build.0 = Debug|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Debug_MBCS|x64.ActiveCfg = Debug|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Debug|Win32.Build.0 = Debug|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Debug|x64.ActiveCfg = Debug|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Release_MBCS|Win32.ActiveCfg = Release|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Release_MBCS|Win32.Build.0 = Release|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Release_MBCS|x64.ActiveCfg = Release|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Release|Win32.ActiveCfg = Release|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Release|Win32.Build.0 = Release|Win32
+		{A9C86093-2893-465B-BDF2-391743106206}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

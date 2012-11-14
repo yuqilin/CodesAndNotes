@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProducerConsumer", "ProducerConsumer\ProducerConsumer.vcproj", "{00DD728A-E457-4941-8E29-2D888D3A20FC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProducerConsumer2", "ProducerConsumer2\ProducerConsumer2.vcproj", "{FE11B55D-6C00-4AC6-9029-44949615AC57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00DD728A-E457-4941-8E29-2D888D3A20FC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{00DD728A-E457-4941-8E29-2D888D3A20FC}.Debug|Win32.Build.0 = Debug|Win32
+		{00DD728A-E457-4941-8E29-2D888D3A20FC}.Release|Win32.ActiveCfg = Release|Win32
+		{00DD728A-E457-4941-8E29-2D888D3A20FC}.Release|Win32.Build.0 = Release|Win32
+		{FE11B55D-6C00-4AC6-9029-44949615AC57}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FE11B55D-6C00-4AC6-9029-44949615AC57}.Debug|Win32.Build.0 = Debug|Win32
+		{FE11B55D-6C00-4AC6-9029-44949615AC57}.Release|Win32.ActiveCfg = Release|Win32
+		{FE11B55D-6C00-4AC6-9029-44949615AC57}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
