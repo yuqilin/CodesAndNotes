@@ -1,0 +1,38 @@
+﻿生成启动时间为 2012/11/15 17:18:35。
+     1>项目“E:\GitHub\codesandnotes\xy-vsfilter\src\filters\transform\vsfilter\vsfilter_2010\vsfilter_2010.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在对“Debug Unicode\vsfilter_2010.unsuccessfulbuild”执行 Touch 任务。
+       ClCompile:
+         所有输出均为最新。
+         所有输出均为最新。
+         所有输出均为最新。
+       ResourceCompile:
+         所有输出均为最新。
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\Debug Unicode\VSFilter.dll" /NOLOGO /LIBPATH:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\..\..\..\..\lib" strmbaseDU.lib dsutilDU.lib subtitlesDU.lib subpicDU.lib basevideofilterDU.lib winmm.lib libssfDU.lib /DEF:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\VSFilter.def" /MANIFEST /ManifestFile:"Debug Unicode\VSFilter.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\Debug Unicode\VSFilter.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\Debug Unicode\VSFilter.lib" /MACHINE:X86 /DLL "Debug Unicode\VSFilter.res"
+         "Debug Unicode\Copy.obj"
+         "Debug Unicode\csriapi.obj"
+         "Debug Unicode\DirectVobSub.obj"
+         "Debug Unicode\DirectVobSubFilter.obj"
+         "Debug Unicode\DirectVobSubPropPage.obj"
+         "Debug Unicode\once_logger.obj"
+         "Debug Unicode\plugins.obj"
+         "Debug Unicode\StdAfx.obj"
+         "Debug Unicode\StyleEditorDialog.obj"
+         "Debug Unicode\Systray.obj"
+         "Debug Unicode\TextInputPin.obj"
+         "Debug Unicode\vfr.obj"
+         "Debug Unicode\VSFilter.obj"
+         "Debug Unicode\xy_logger.obj"
+            正在创建库 E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\Debug Unicode\VSFilter.lib 和对象 E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\Debug Unicode\VSFilter.exp
+         vsfilter_2010.vcxproj -> E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\Debug Unicode\VSFilter.dll
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\Debug Unicode\VSFilter.dll;#2" /manifest "Debug Unicode\VSFilter.dll.intermediate.manifest" "D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\Include\Manifest\dpiaware.manifest"
+       FinalizeBuildStatus:
+         正在删除文件“Debug Unicode\vsfilter_2010.unsuccessfulbuild”。
+         正在对“Debug Unicode\vsfilter_2010.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\GitHub\codesandnotes\xy-vsfilter\src\filters\transform\vsfilter\vsfilter_2010\vsfilter_2010.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:08.04

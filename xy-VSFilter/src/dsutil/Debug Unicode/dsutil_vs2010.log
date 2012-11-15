@@ -1,0 +1,49 @@
+﻿生成启动时间为 2012/11/15 17:18:29。
+     1>项目“E:\GitHub\codesandnotes\xy-vsfilter\src\dsutil\dsutil_vs2010.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在对“Debug Unicode\dsutil.unsuccessfulbuild”执行 Touch 任务。
+       CustomBuild:
+         所有输出均为最新。
+       ClCompile:
+         所有输出均为最新。
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../filters/BaseClasses /I..\..\BaseClasses /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug Unicode\dsutilDU.pch" /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt DSUtil.cpp
+         DSUtil.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(567): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(885): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(892): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(1125): warning C4018: “>”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(1127): warning C4018: “>”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(1129): warning C4018: “>”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(1131): warning C4018: “>”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\dsutil\dsutil.cpp(1133): warning C4018: “>”: 有符号/无符号不匹配
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"../../lib/dsutilDU.lib" vfw32.lib Version.lib /NOLOGO ../../lib/a_yuv2rgb.obj
+         ../../lib/a_yuvtable.obj
+         ../../lib/convert_a.obj
+         "Debug Unicode\DSMPropertyBag.obj"
+         "Debug Unicode\DSUtil.obj"
+         "Debug Unicode\FontInstaller.obj"
+         "Debug Unicode\GolombBuffer.obj"
+         "Debug Unicode\H264Nalu.obj"
+         "Debug Unicode\HdmvClipInfo.obj"
+         "Debug Unicode\MediaTypeEx.obj"
+         "Debug Unicode\MediaTypes.obj"
+         "Debug Unicode\NullRenderers.obj"
+         "Debug Unicode\stdafx.obj"
+         "Debug Unicode\text.obj"
+         "Debug Unicode\vd.obj"
+     1>vfw32.lib(AVIFIL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR 已在 vfw32.lib(AVICAP32.dll) 中定义；已忽略第二个定义
+     1>vfw32.lib(AVIFIL32.dll) : warning LNK4221: 此对象文件未定义任何之前未定义的公共符号，因此任何耗用此库的链接操作都不会使用此文件
+     1>vfw32.lib(MSVFW32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR 已在 vfw32.lib(AVICAP32.dll) 中定义；已忽略第二个定义
+     1>vfw32.lib(MSVFW32.dll) : warning LNK4221: 此对象文件未定义任何之前未定义的公共符号，因此任何耗用此库的链接操作都不会使用此文件
+     1>Version.lib(VERSION.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR 已在 vfw32.lib(AVICAP32.dll) 中定义；已忽略第二个定义
+     1>Version.lib(VERSION.dll) : warning LNK4221: 此对象文件未定义任何之前未定义的公共符号，因此任何耗用此库的链接操作都不会使用此文件
+         dsutil_vs2010.vcxproj -> E:\GitHub\codesandnotes\xy-vsfilter\src\dsutil\../../lib/dsutilDU.lib
+       FinalizeBuildStatus:
+         正在删除文件“Debug Unicode\dsutil.unsuccessfulbuild”。
+         正在对“Debug Unicode\dsutil.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\GitHub\codesandnotes\xy-vsfilter\src\dsutil\dsutil_vs2010.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:01.02

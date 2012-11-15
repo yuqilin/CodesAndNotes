@@ -1,0 +1,107 @@
+﻿生成启动时间为 2012/11/15 17:16:07。
+     1>项目“E:\GitHub\codesandnotes\xy-vsfilter\src\subtitles\subtitles_vs2010.vcxproj”在节点 4 上(rebuild 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug Unicode\subtitles.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Debug Unicode\subtitlesDU.pch" /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt BaseSub.cpp cache_manager.cpp CCDecoder.cpp CompositionObject.cpp draw_item.cpp DVBSub.cpp GFN.cpp HdmvSub.cpp RealTextParser.cpp RenderedHdmvSubtitle.cpp SSF.cpp STS.cpp subpixel_position_controler.cpp SubtitleInputPin.cpp TextFile.cpp USFSubtitles.cpp VobSubFileRipper.cpp VobSubImage.cpp xy_malloc.cpp
+         BaseSub.cpp
+         cache_manager.cpp
+         CCDecoder.cpp
+         CompositionObject.cpp
+         draw_item.cpp
+         DVBSub.cpp
+         GFN.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\gfn.cpp(88): warning C4018: “<”: 有符号/无符号不匹配
+         HdmvSub.cpp
+         RealTextParser.cpp
+         RenderedHdmvSubtitle.cpp
+         SSF.cpp
+         STS.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\sts.cpp(2486): warning C4018: “<=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\sts.cpp(2494): warning C4018: “<=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\sts.cpp(2502): warning C4018: “<=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\sts.cpp(2510): warning C4018: “<=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\sts.cpp(2518): warning C4018: “<=”: 有符号/无符号不匹配
+         subpixel_position_controler.cpp
+         SubtitleInputPin.cpp
+         TextFile.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\textfile.cpp(155): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\textfile.cpp(155): warning C4018: “<”: 有符号/无符号不匹配
+         USFSubtitles.cpp
+         VobSubFileRipper.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfileripper.cpp(507): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfileripper.cpp(1009): warning C4018: “>=”: 有符号/无符号不匹配
+         VobSubImage.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubimage.cpp(505): warning C4018: “>”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubimage.cpp(506): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubimage.cpp(828): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubimage.cpp(830): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubimage.cpp(836): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubimage.cpp(836): warning C4018: “<”: 有符号/无符号不匹配
+         xy_malloc.cpp
+         正在生成代码...
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /FAs /Fa"Debug Unicode\\" /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt Rasterizer.cpp
+         Rasterizer.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1242): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1246): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1343): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1343): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1358): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1358): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1391): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1460): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1460): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rasterizer.cpp(1858): warning C4799: 函数“Overlay::_DoFillAlphaMash”没有 EMMS 指令
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt RTS.cpp
+         RTS.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\rts.cpp(3326): warning C4018: “<”: 有符号/无符号不匹配
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt VobSubFile.cpp
+         VobSubFile.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(315): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(324): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(326): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(1021): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(1080): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(1092): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(1097): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(1550): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(1789): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(1862): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(2016): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\vobsubfile.cpp(2087): warning C4018: “<”: 有符号/无符号不匹配
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"../../lib/subtitlesDU.lib" /NOLOGO "Debug Unicode\BaseSub.obj"
+         "Debug Unicode\cache_manager.obj"
+         "Debug Unicode\CCDecoder.obj"
+         "Debug Unicode\CompositionObject.obj"
+         "Debug Unicode\draw_item.obj"
+         "Debug Unicode\DVBSub.obj"
+         "Debug Unicode\GFN.obj"
+         "Debug Unicode\HdmvSub.obj"
+         "Debug Unicode\Rasterizer.obj"
+         "Debug Unicode\RealTextParser.obj"
+         "Debug Unicode\RenderedHdmvSubtitle.obj"
+         "Debug Unicode\RTS.obj"
+         "Debug Unicode\SSF.obj"
+         "Debug Unicode\stdafx.obj"
+         "Debug Unicode\STS.obj"
+         "Debug Unicode\subpixel_position_controler.obj"
+         "Debug Unicode\SubtitleInputPin.obj"
+         "Debug Unicode\TextFile.obj"
+         "Debug Unicode\USFSubtitles.obj"
+         "Debug Unicode\VobSubFile.obj"
+         "Debug Unicode\VobSubFileRipper.obj"
+         "Debug Unicode\VobSubImage.obj"
+         "Debug Unicode\xy_malloc.obj"
+     1>stdafx.obj : warning LNK4221: 此对象文件未定义任何之前未定义的公共符号，因此任何耗用此库的链接操作都不会使用此文件
+         subtitles_vs2010.vcxproj -> E:\GitHub\codesandnotes\xy-vsfilter\src\subtitles\../../lib/subtitlesDU.lib
+       FinalizeBuildStatus:
+         正在删除文件“Debug Unicode\subtitles.unsuccessfulbuild”。
+         正在对“Debug Unicode\subtitles.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\GitHub\codesandnotes\xy-vsfilter\src\subtitles\subtitles_vs2010.vcxproj”(rebuild 个目标)的操作。
+
+生成成功。
+
+已用时间 00:01:21.50

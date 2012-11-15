@@ -1,0 +1,66 @@
+﻿生成启动时间为 2012/11/15 17:15:58。
+     1>项目“E:\GitHub\codesandnotes\xy-vsfilter\src\subtitles\libssf\libssf_vs2010.vcxproj”在节点 5 上(rebuild 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug Unicode\libssf.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\BaseClasses /I..\..\BaseClasses /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Debug Unicode\libssfDU.pch" /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\BaseClasses /I..\..\BaseClasses /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug Unicode\libssfDU.pch" /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt Arabic.cpp Array.cpp Exception.cpp File.cpp FontWrapper.cpp Glyph.cpp GlyphPath.cpp Node.cpp NodeFactory.cpp Rasterizer.cpp Renderer.cpp Split.cpp Stream.cpp StringMap.cpp Subtitle.cpp SubtitleFile.cpp
+         Arabic.cpp
+         Array.cpp
+         Exception.cpp
+         File.cpp
+         FontWrapper.cpp
+         Glyph.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\glyph.cpp(192): warning C4244: “初始化”: 从“LONG”转换到“float”，可能丢失数据
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\glyph.cpp(256): warning C4244: “=”: 从“float”转换到“LONG”，可能丢失数据
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\glyph.cpp(257): warning C4244: “=”: 从“float”转换到“LONG”，可能丢失数据
+         GlyphPath.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\glyphpath.cpp(102): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\glyphpath.cpp(129): warning C4305: “+=”: 从“double”到“float”截断
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\glyphpath.cpp(130): warning C4305: “-=”: 从“double”到“float”截断
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\glyphpath.cpp(146): warning C4305: “=”: 从“double”到“float”截断
+         Node.cpp
+         NodeFactory.cpp
+         Rasterizer.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\rasterizer.cpp(691): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\rasterizer.cpp(691): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\rasterizer.cpp(697): warning C4018: “>=”: 有符号/无符号不匹配
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\rasterizer.cpp(697): warning C4018: “>=”: 有符号/无符号不匹配
+         Renderer.cpp
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\renderer.cpp(50): warning C4244: “+=”: 从“const float”转换到“LONG”，可能丢失数据
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\renderer.cpp(55): warning C4244: “+=”: 从“const float”转换到“LONG”，可能丢失数据
+     1>e:\github\codesandnotes\xy-vsfilter\src\subtitles\libssf\renderer.cpp(447): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+         Split.cpp
+         Stream.cpp
+         StringMap.cpp
+         Subtitle.cpp
+         SubtitleFile.cpp
+         正在生成代码...
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"..\..\..\lib\libssfDU.lib" /NOLOGO "Debug Unicode\Arabic.obj"
+         "Debug Unicode\Array.obj"
+         "Debug Unicode\Exception.obj"
+         "Debug Unicode\File.obj"
+         "Debug Unicode\FontWrapper.obj"
+         "Debug Unicode\Glyph.obj"
+         "Debug Unicode\GlyphPath.obj"
+         "Debug Unicode\Node.obj"
+         "Debug Unicode\NodeFactory.obj"
+         "Debug Unicode\Rasterizer.obj"
+         "Debug Unicode\Renderer.obj"
+         "Debug Unicode\Split.obj"
+         "Debug Unicode\stdafx.obj"
+         "Debug Unicode\Stream.obj"
+         "Debug Unicode\StringMap.obj"
+         "Debug Unicode\Subtitle.obj"
+         "Debug Unicode\SubtitleFile.obj"
+         libssf_vs2010.vcxproj -> E:\GitHub\codesandnotes\xy-vsfilter\src\subtitles\libssf\..\..\..\lib\libssfDU.lib
+       FinalizeBuildStatus:
+         正在删除文件“Debug Unicode\libssf.unsuccessfulbuild”。
+         正在对“Debug Unicode\libssf.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\GitHub\codesandnotes\xy-vsfilter\src\subtitles\libssf\libssf_vs2010.vcxproj”(rebuild 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:07.12

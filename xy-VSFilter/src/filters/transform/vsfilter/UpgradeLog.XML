@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="VSFilter_vs2008">
+</Property><Property Name="Solution File" Value="E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\VSFilter_vs2008.sln">
+</Property><Property Name="Date" Value="2012年11月15日">
+</Property><Property Name="Time" Value="16:26:11">
+</Property></Properties><Event ErrorLevel="1" Project="baseclasses" Source="..\..\BaseClasses\baseclasses.vcproj" Description="This application has been updated to include settings related to the User Account Control (UAC) feature of Windows Vista. By default, when run on Windows Vista with UAC enabled, this application is marked to run with the same privileges as the process that launched it. This marking also disables the application from running with virtualization. You can change UAC related settings from the Property Pages of the project.">
+</Event><Event ErrorLevel="0" Project="baseclasses" Source="..\..\BaseClasses\baseclasses.vcproj" Description="Project file successfully backed up as 'E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\BaseClasses\baseclasses.vcproj.8.00.old'.">
+</Event><Event ErrorLevel="0" Project="baseclasses" Source="..\..\BaseClasses\baseclasses.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="baseclasses" Source="..\..\BaseClasses\baseclasses.vcproj" Description="Converted">
+</Event></UpgradeLog>

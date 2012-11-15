@@ -26,3 +26,4 @@ ipch
 *.idb
 *.exp
 *.ink
+*.lib

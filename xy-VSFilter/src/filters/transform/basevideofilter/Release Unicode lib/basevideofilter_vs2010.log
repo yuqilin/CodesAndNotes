@@ -1,0 +1,33 @@
+﻿生成启动时间为 2012/11/15 17:19:55。
+     1>项目“E:\GitHub\codesandnotes\xy-vsfilter\src\filters\transform\basevideofilter\basevideofilter_vs2010.vcxproj”在节点 3 上(rebuild 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Release Unicode lib\basevideofilter.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS- /Gy /fp:precise /Zc:wchar_t /Zc:forScope /GR /Yc"StdAfx.h" /Fp"Release Unicode lib\basevideofilterRU.pch" /Fo"Release Unicode lib\\" /Fd"Release Unicode lib\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt stdafx.cpp /MP 
+         stdafx.cpp
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _WIN32_WINNT=0x0501 /D NTDDI_VERSION=NTDDI_WINXPSP2 /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS- /Gy /fp:precise /Zc:wchar_t /Zc:forScope /GR /Yu"StdAfx.h" /Fp"Release Unicode lib\basevideofilterRU.pch" /Fo"Release Unicode lib\\" /Fd"Release Unicode lib\vc100.pdb" /Gd /TP /wd4995 /wd4996 /analyze- /errorReport:prompt BaseVideoFilter.cpp /MP 
+         BaseVideoFilter.cpp
+     1>BaseVideoFilter.cpp(104): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(111): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(375): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(406): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(427): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(648): warning C4800: “int”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>BaseVideoFilter.cpp(779): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(793): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(807): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(816): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(866): warning C4018: “<”: 有符号/无符号不匹配
+     1>BaseVideoFilter.cpp(891): warning C4018: “<”: 有符号/无符号不匹配
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\\..\..\..\..\lib\basevideofilterRU.lib" /NOLOGO /LTCG "Release Unicode lib\BaseVideoFilter.obj"
+         "Release Unicode lib\stdafx.obj"
+         basevideofilter_vs2010.vcxproj -> E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\\..\..\..\..\lib\basevideofilterRU.lib
+       FinalizeBuildStatus:
+         正在删除文件“Release Unicode lib\basevideofilter.unsuccessfulbuild”。
+         正在对“Release Unicode lib\basevideofilter.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\GitHub\codesandnotes\xy-vsfilter\src\filters\transform\basevideofilter\basevideofilter_vs2010.vcxproj”(rebuild 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:04.83

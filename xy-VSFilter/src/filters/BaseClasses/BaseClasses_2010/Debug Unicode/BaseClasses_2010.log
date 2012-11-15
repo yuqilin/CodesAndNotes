@@ -1,0 +1,83 @@
+﻿生成启动时间为 2012/11/15 17:15:58。
+     1>项目“E:\GitHub\codesandnotes\xy-vsfilter\src\filters\BaseClasses\BaseClasses_2010\BaseClasses_2010.vcxproj”在节点 4 上(rebuild 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug Unicode\BaseClasses_2010.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Oy- /D _DEBUG /D _LIB /D _WIN32_DCOM /D DEBUG /D WINVER=0x400 /D WIN32 /D UNICODE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug Unicode\\" /Fd"Debug Unicode\vc100.pdb" /Gz /TP /analyze- /errorReport:prompt /FAu ..\amextra.cpp ..\amfilter.cpp ..\amvideo.cpp ..\combase.cpp ..\cprop.cpp ..\ctlutil.cpp ..\ddmm.cpp ..\dllentry.cpp ..\dllsetup.cpp ..\mtype.cpp ..\outputq.cpp ..\pstream.cpp ..\pullpin.cpp ..\refclock.cpp ..\renbase.cpp ..\schedule.cpp ..\seekpt.cpp ..\source.cpp ..\strmctl.cpp ..\sysclock.cpp ..\transfrm.cpp ..\transip.cpp ..\videoctl.cpp ..\vtrans.cpp ..\winctrl.cpp ..\winutil.cpp ..\wxdebug.cpp ..\wxlist.cpp ..\wxutil.cpp
+         wxutil.cpp
+         wxlist.cpp
+         wxdebug.cpp
+     1>..\wxdebug.cpp(534): warning C4996: '_vsnwprintf': This function or variable may be unsafe. Consider using _vsnwprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(488) : 参见“_vsnwprintf”的声明
+     1>..\wxdebug.cpp(777): warning C4996: 'vswprintf': swprintf has been changed to conform with the ISO C standard, adding an extra character count parameter. To use traditional Microsoft swprintf, set _CRT_NON_CONFORMING_SWPRINTFS.
+                 D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\swprintf.inl(97) : 参见“vswprintf”的声明
+     1>..\wxdebug.cpp(1167): warning C4996: '_swprintf': This function or variable may be unsafe. Consider using _swprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(544) : 参见“_swprintf”的声明
+         winutil.cpp
+         winctrl.cpp
+         vtrans.cpp
+         videoctl.cpp
+         transip.cpp
+         transfrm.cpp
+         sysclock.cpp
+         strmctl.cpp
+         source.cpp
+         seekpt.cpp
+         schedule.cpp
+         renbase.cpp
+         refclock.cpp
+         pullpin.cpp
+         pstream.cpp
+         outputq.cpp
+         mtype.cpp
+         正在生成代码...
+         正在编译...
+         dllsetup.cpp
+         dllentry.cpp
+         ddmm.cpp
+         ctlutil.cpp
+         cprop.cpp
+         combase.cpp
+         amvideo.cpp
+         amfilter.cpp
+         amextra.cpp
+         正在生成代码...
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\..\..\..\..\lib\strmbaseDU.lib" strmiids.lib /NOLOGO "Debug Unicode\amextra.obj"
+         "Debug Unicode\amfilter.obj"
+         "Debug Unicode\amvideo.obj"
+         "Debug Unicode\combase.obj"
+         "Debug Unicode\cprop.obj"
+         "Debug Unicode\ctlutil.obj"
+         "Debug Unicode\ddmm.obj"
+         "Debug Unicode\dllentry.obj"
+         "Debug Unicode\dllsetup.obj"
+         "Debug Unicode\mtype.obj"
+         "Debug Unicode\outputq.obj"
+         "Debug Unicode\pstream.obj"
+         "Debug Unicode\pullpin.obj"
+         "Debug Unicode\refclock.obj"
+         "Debug Unicode\renbase.obj"
+         "Debug Unicode\schedule.obj"
+         "Debug Unicode\seekpt.obj"
+         "Debug Unicode\source.obj"
+         "Debug Unicode\strmctl.obj"
+         "Debug Unicode\sysclock.obj"
+         "Debug Unicode\transfrm.obj"
+         "Debug Unicode\transip.obj"
+         "Debug Unicode\videoctl.obj"
+         "Debug Unicode\vtrans.obj"
+         "Debug Unicode\winctrl.obj"
+         "Debug Unicode\winutil.obj"
+         "Debug Unicode\wxdebug.obj"
+         "Debug Unicode\wxlist.obj"
+         "Debug Unicode\wxutil.obj"
+         BaseClasses_2010.vcxproj -> E:\GitHub\CodesAndNotes\xy-VSFilter\src\filters\transform\vsfilter\..\..\..\..\lib\strmbaseDU.lib
+       FinalizeBuildStatus:
+         正在删除文件“Debug Unicode\BaseClasses_2010.unsuccessfulbuild”。
+         正在对“Debug Unicode\BaseClasses_2010.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\GitHub\codesandnotes\xy-vsfilter\src\filters\BaseClasses\BaseClasses_2010\BaseClasses_2010.vcxproj”(rebuild 个目标)的操作。
+
+生成成功。
+
+已用时间 00:01:17.23
