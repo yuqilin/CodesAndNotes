@@ -231,10 +231,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\baseclasses\baseclasses.vcproj"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
