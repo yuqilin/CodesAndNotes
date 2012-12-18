@@ -5,13 +5,26 @@
 #include "flyfox_media_player_def.h"
 #include "BaseEngine.h"
 
-typedef void (*TypePlayEventCallback)(int nEventCode, long nEventParam, LPVOID pCallbackParam);
+//typedef void (*TypePlayEventCallback)(int nEventCode, long nEventParam, LPVOID pCallbackParam);
+typedef enum MEDIA_LOAD_STATE {
+	MLS_CLOSED,
+	MLS_LOADING,
+	MLS_LOADED,
+	MLS_CLOSING
+};
 
-class CZPlayerCore
+typedef enum PLAY_STATE {
+	PS_PLAY   = 0,
+	PS_PAUSE  = 1,
+	PS_STOP   = 2,
+	PS_UNUSED = 3
+};
+
+class CPlayerCore
 {
 public:
-	CZPlayerCore();
-	~CZPlayerCore();
+	CPlayerCore();
+	~CPlayerCore();
 
 public:
 	// Create/Destroy
@@ -24,6 +37,9 @@ public:
 	HRESULT				Play(void);
 	HRESULT				Stop(void);
 	HRESULT				Pause(void);
+	void				SetMediaLoadState(MEDIA_LOAD_STATE iState);
+	void				SetPlayState(PLAY_STATE iState);
+
 	HRESULT				GetPlayState();
 	HRESULT				GetPlayPos(LONG* pnPlayPos);
 	HRESULT				SetPlayPos(LONG nPlayPos);
@@ -48,10 +64,11 @@ public:
 
 	HWND				GetNotifyWindow();
 
-	static CDShowFilters*	GetFilters();
+	static const CDSFilters& GetFilters();
+	static const CPlayerSettings& GetPlayerSettings();
 protected:
 	// Notify window
-	BOOL				CreateNotifyWindow(void);
+	HRESULT				CreateNotifyWindow(void);
 	void				DestroyNotifyWindow(void);
 	static LONG WINAPI	NotifyWindowProcStatic(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LONG				NotifyWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -59,9 +76,16 @@ protected:
 	void				SetPlayState(PLAY_STATE ePlayState);
 	void				SetPlayError(DWORD dwErrorCode);
 
+	void				OnOpenSuccess();
+	void				OnOpenFailed();
+
 protected:
+
+	MEDIA_LOAD_STATE	m_MediaLoadState;
+	PLAY_STATE			m_PlayState;
+
 	CBaseEngine*		m_pEngine;
-	CMediaInfo*			m_pMediaInfo;
+	CMediaInfo			m_MediaInfo;
 
 	HWND				m_hVideoWindow;
 	BOOL				m_bFullScreen;
@@ -71,7 +95,8 @@ protected:
 	CRITICAL_SECTION	m_csBusy;
 	DWORD				m_dwPlayResult;
 
-	static CDShowFilters* m_spFilters;
+	static CDSFilters	m_Filters;
+	static CPlayerSettings m_Settings;
 };
 
 

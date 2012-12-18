@@ -1,18 +1,18 @@
 
-#ifndef _DSHOW_GRAPH_H_
-#define _DSHOW_GRAPH_H_
+#ifndef _PALYERCORE_DSGRAPH_H_
+#define _PALYERCORE_DSGRAPH_H_
 
-class CDShowGraph
+class CDSGraph
 {
 public:
-	CDShowGraph();
-	~CDShowGraph();
+	CDSGraph();
+	~CDSGraph();
 
 public:
-	HRESULT				Initialize(HWND hVideoWindow,
-								   HWND hNotifyWindow,
-								   CDShowEngine* pEngine);
-	void				UnInitialize();
+	HRESULT				Create(HWND hVideoWindow,
+							   HWND hNotifyWindow,
+							   CDSEngine* pEngine);
+	void				Destroy();
 
 	// Graph build
 	HRESULT				Render(BOOL bOpenChain);
@@ -61,8 +61,7 @@ protected:
 	CMediaInfo*			m_pMediaInfo;
 	HWND				m_hVideoWindow;
 	HWND				m_hNotifyWindow;
-	CDShowEngine*		m_pEngine;
-	CDShowFilters*		m_pFilters;
+	CDSEngine*			m_pEngine;
 
 	CComPtr<IFilterGraph>	m_pFilterGraph;
 

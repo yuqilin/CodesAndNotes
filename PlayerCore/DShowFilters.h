@@ -25,31 +25,31 @@
 #define MAX_DEPENDENCE_PATH			8
 #define MAX_PRELOADDLL_COUNT		32
 
-enum EFilterDevice
+enum FILTER_DEVICE
 {
-	kFilterDeviceUnknown,
-	kFilterDeviceFilter,
-	kFilterDeviceDmo,
-	kFilterDeviceVfw,
-	kFilterDeviceImage,
+	FD_UNKNOWN,
+	FD_FILTER,
+	FD_DMO,
+	FD_VFW,
+	FD_IMAGE,
 };
 
-enum EFilterType
+enum FILTER_TYPE
 {
-	kFilterTypeUnknown,
-	kFilterTypeSource,
-	kFilterTypeSplitter,
-	kFilterTypeAudioEffect,
-	kFilterTypeVideoEffect,
-	kFilterTypeAudioRenderer,
-	kFilterTypeVideoRenderer,
-	kFilterTypeNullRenderer,
-	kFilterTypeAudioDecoder,
-	kFilterTypeVideoDecoder,
-	kFilterTypeAudioEncoder,
-	kFilterTypeVideoEncoder,
-	kFilterTypeMuxer,
-	kFilterTypeWriter,
+	FT_UNKNOWN,
+	FT_SOURCE,
+	FT_SPLITTER,
+	FT_AUDIO_EFFECT,
+	FT_VIDEO_EFFECT,	
+	FT_AUDIO_RENDERER,
+	FT_VIDEO_RENDERER,
+	FT_NULL_RENDERER,
+	FT_AUDIO_DECODER,
+	FT_VIDEO_DECODER,
+	FT_AUDIO_ENCODER,
+	FT_VIDEO_ENCODER,
+	FT_MUXER,
+	FT_WRITER,
 };
 
 struct PathFlagItem
@@ -167,8 +167,8 @@ protected:
 	BOOL					LoadInfo(void);
 	BOOL					ParseInfoBuffer(LPCTSTR pcszInfoBuffer);
 	DShowFilterInfo*		NewInfo(void);
-	BOOL					SetInfo(DShowFilterInfo* pInfo, LPCTSTR pcszKey, LPCTSTR pcszValue);
-	BOOL					SetInfo(DShowFilterInfo* pInfo, rapidxml::xml_node<TCHAR>* node);
+	BOOL					SetInfo(CFGFilter::FilterInfo* pInfo, LPCTSTR pcszKey, LPCTSTR pcszValue);
+	BOOL					SetInfo(CFGFilter::FilterInfo* pInfo, rapidxml::xml_node<TCHAR>* node);
 	BOOL					ParseFilterDevice(DShowFilterInfo* pInfo, LPCTSTR pcszFilterDevice);
 	BOOL					ParseFilterType(DShowFilterInfo* pInfo, LPCTSTR pcszFilterType);
 	BOOL					ParseCheckByte(DShowFilterInfo* pInfo, LPCTSTR pcszCheckBytes);

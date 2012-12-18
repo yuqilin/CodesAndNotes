@@ -35,50 +35,9 @@ BOOL GetFilterName(IBaseFilter* pFilter, CString& strFilterName)
 }
 
 //
-class CPinInfo : public PIN_INFO
-{
-public:
-	CPinInfo() {
-		pFilter = NULL;
-	}
-	~CPinInfo() {
-		if (pFilter) {
-			pFilter->Release();
-		}
-	}
-};
 
-IBaseFilter* GetFilterFromPin(IPin* pPin)
-{
-	if (!pPin) {
-		return NULL;
-	}
-	IBaseFilter* pBF = NULL;
-	CPinInfo pi;
-	if (pPin && SUCCEEDED(pPin->QueryPinInfo(&pi))) {
-		pBF = pi.pFilter;
-	}
-	return pBF;
-}
 
-IBaseFilter* FindFilter(LPCWSTR clsid, IFilterGraph* pFG)
-{
-	CLSID clsid2;
-	CLSIDFromString(CComBSTR(clsid), &clsid2);
-	return FindFilter(clsid2, pFG);
-}
 
-IBaseFilter* FindFilter(const CLSID& clsid, IFilterGraph* pFG)
-{
-	BeginEnumFilters(pFG, pEF, pBF) {
-		CLSID clsid2;
-		if (SUCCEEDED(pBF->GetClassID(&clsid2)) && clsid == clsid2) {
-			return pBF;
-		}
-	}
-	EndEnumFilters;
-	return NULL;
-}
 
 
 //////////////////////////////////////////////////////////////////////////

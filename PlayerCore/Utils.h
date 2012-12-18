@@ -2,6 +2,12 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+
+//////////////////////////////////////////////////////////////////////////
+#define SAFE_DELETE(p)       { if (p) { delete (p);     (p) = NULL; } }
+#define SAFE_DELETE_ARRAY(p) { if (p) { delete [] (p);  (p) = NULL; } }
+#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p) = NULL; } }
+
 //////////////////////////////////////////////////////////////////////////
 
 #define EMPTY_STRING	_T("")

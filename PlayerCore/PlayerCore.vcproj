@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ZPlayerCore"
+	Name="PlayerCore"
 	ProjectGUID="{0E2F48E4-F3E1-4BB2-BD75-DB51EFBCE53C}"
 	RootNamespace="PlayerCore"
 	Keyword="Win32Proj"
@@ -170,15 +170,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DShowEngine.cpp"
+				RelativePath=".\DSEngine.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DShowFilters.cpp"
+				RelativePath=".\DSFilters.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DShowGraph.cpp"
+				RelativePath=".\DSGraph.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerCore.cpp"
 				>
 			</File>
 			<File
@@ -202,11 +206,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Utils.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ZPlayerCore.cpp"
+				RelativePath=".\SysVersion.cpp"
 				>
 			</File>
 		</Filter>
@@ -220,23 +220,31 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DShowControl.h"
+				RelativePath=".\BaseGraph.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DShowEngine.h"
+				RelativePath=".\DSEngine.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DShowFilters.h"
+				RelativePath=".\DSFilters.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DShowGraph.h"
+				RelativePath=".\DSGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IGraphBuilder2.h"
 				>
 			</File>
 			<File
 				RelativePath=".\MediaInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerCore.h"
 				>
 			</File>
 			<File
@@ -253,18 +261,6 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\text.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Utils.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ZPlayerCore.h"
 				>
 			</File>
 			<Filter
@@ -306,7 +302,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ZPlayerCore.rc"
+				RelativePath=".\PlayerCore.rc"
 				>
 			</File>
 		</Filter>
@@ -329,6 +325,34 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="DSUtil"
+			>
+			<File
+				RelativePath=".\DSUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DSUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SysVersion.h"
+				>
+			</File>
+			<File
+				RelativePath=".\text.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Utils.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

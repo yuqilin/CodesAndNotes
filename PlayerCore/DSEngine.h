@@ -1,13 +1,13 @@
 
-#ifndef _DSHOW_ENGINE_H_
-#define _DSHOW_ENGINE_H_
+#ifndef _PLAYERCORE_DSENGINE_H_
+#define _PLAYERCORE_DSENGINE_H_
 
-class CDShowEngine
+class CDSEngine
 	: public CBaseEngine
 {
 public:
-	CDShowEngine();
-	virtual ~CDShowEngine();
+	CDSEngine();
+	virtual ~CDSEngine();
 
 public:
 	// Play Control
@@ -38,10 +38,23 @@ protected:
 	HRESULT				OpenMedia();
 	void				CloseMedia();
 
+	HRESULT				RenderFile(BOOL bOpenChain);
+	HRESULT				EnumSourceFilters(LPCTSTR pcszFileName, CDSFilterList& fl);
+
+	void				Kernel_OrderInfoByExtension(void);
+
+
 protected:
-	CDShowGraph*		m_pGraph;
+
+	struct MatchedSourceFilter
+	{
+		DSFilterInfo* info;
+		CString subtype;
+	};
 
 	BOOL				m_bRenderOpenChain;
+
+	CComPtr<IFilterGraph>	m_pJFilterGraph; 
 
 };
 

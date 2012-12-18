@@ -2,16 +2,24 @@
 #ifndef _BASE_ENGINE_H_
 #define _BASE_ENGINE_H_
 
-enum PLAY_STATE
+typedef enum {
+	ET_INVALID,
+	ET_DIRECTSHOW,
+	ET_REALMEDIA,
+	ET_QUICKTIME,
+	ET_SHOCKWAVE
+} ENGINE_TYPE;
+
+typedef enum
 {
 	PS_INVALID,
 	PS_READY_TO_PLAY,
 	PS_PLAYING,
 	PS_PAUSE,
 	PS_STOP,
-};
+} PLAY_STATE;
 
-enum VIDEO_RENDER_MODE
+typedef enum
 {
 	VRM_DEFAULT,
 	VRM_OLDRENDERER,
@@ -24,18 +32,19 @@ enum VIDEO_RENDER_MODE
 	VRM_VMR9_RENDERLESS,
 	VRM_EVR,
 	VRM_EVRCP,
-};
+} VIDEO_RENDER_MODE;
 
 
 class CBaseEngine
 {
 public:
-	CBaseEngine();
+	CBaseEngine(CPlayerCore* pPlayerCore);
 	virtual ~CBaseEngine();
 
 public:
-	virtual HRESULT		Initialize(CZPlayerCore* pPlayerCore) = 0;
-	virtual void		UnInitialize() = 0;
+// 	virtual HRESULT		Initialize(CZPlayerCore* pPlayerCore) = 0;
+// 	virtual void		UnInitialize() = 0;
+	ENGINE_TYPE			GetEngineType()	{ return m_EngineType; }
 
 	// Play Control
 	virtual HRESULT		Open(CMediaInfo* pMediaInfo) = 0;
@@ -66,6 +75,8 @@ protected:
 	CMediaInfo*			m_pMediaInfo;
 	HWND				m_hVideoWindow;
 	HWND				m_hNotifyWindow;
+	ENGINE_TYPE			m_EngineType;
+
 };
 
 

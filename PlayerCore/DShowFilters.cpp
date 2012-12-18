@@ -881,7 +881,7 @@ DShowFilterInfo* CDShowFilters::NewInfo(void)
 	return pInfo;
 }
 
-BOOL CDShowFilters::SetInfo(DShowFilterInfo* pInfo, LPCTSTR pcszKey, LPCTSTR pcszValue)
+BOOL CDShowFilters::SetInfo(CFGFilter::FilterInfo* pInfo, LPCTSTR pcszKey, LPCTSTR pcszValue)
 {
 	CheckPointer(pInfo, FALSE);
 
@@ -942,7 +942,7 @@ BOOL CDShowFilters::SetInfo(DShowFilterInfo* pInfo, LPCTSTR pcszKey, LPCTSTR pcs
 	return TRUE;
 }
 
-BOOL CDShowFilters::SetInfo(DShowFilterInfo* pInfo, rapidxml::xml_node<TCHAR>* node)
+BOOL CDShowFilters::SetInfo(CFGFilter::FilterInfo* pInfo, rapidxml::xml_node<TCHAR>* node)
 {
 	CheckPointer(pInfo, FALSE);
 	CheckPointer(node, FALSE);

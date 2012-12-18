@@ -2,15 +2,14 @@
 #include "stdafx.h"
 #include "BaseEngine.h"
 
-CBaseEngine::CBaseEngine()
+CBaseEngine::CBaseEngine(CPlayerCore* pPlayerCore)
+	: m_EngineType(ET_INVALID)
+	, m_pPlayerCore(pPlayerCore)
+	, m_pMediaInfo(NULL)
 {
-	m_pPlayerCore = NULL;
-	m_pMediaInfo = NULL;
 }
 
 CBaseEngine::~CBaseEngine()
 {
-	m_pPlayerCore = NULL;
-	m_pMediaInfo = NULL;
 }
 
