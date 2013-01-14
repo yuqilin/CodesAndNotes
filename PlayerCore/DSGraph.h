@@ -12,14 +12,15 @@ public:
 	HRESULT				Create(HWND hVideoWindow,
 							   HWND hNotifyWindow,
 							   CDSEngine* pEngine);
-	void				Destroy();
+	void				Destory();
+
+	HRESULT				OpenMedia(CMediaInfo* pMediaInfo);
+	void				CloseMedia();
 
 	// Graph build
 	HRESULT				Render(BOOL bOpenChain);
-	BOOL				BringInfoToTop(DShowFilterInfo* pInfo);
-	HRESULT				AddFilter(DShowFilterInfo* pInfo,
-						AM_MEDIA_TYPE** pmts = NULL,
-						int nMediaTypeCount = 0,
+	HRESULT				AddFilter(DSFilterInfo* pInfo,
+						CAtlList<MediaTypeItem>& mts,
 						IBaseFilter ** ppFilter = NULL);
 	IBaseFilter *		FindFilter(const TCHAR * pcszClsId);
 	BOOL				IsFilterExists(const TCHAR * pcszClsId);
@@ -32,8 +33,7 @@ public:
 									int * pnOutConnected);
 	HRESULT				RemoveFilter(IBaseFilter * pFilter, const TCHAR * pcszClsId = NULL);
 	void				RemoveAllFilter(void);
-	void				RemoveChain(IPin * pOutputPin);
-
+	//void				RemoveChain(IPin * pOutputPin);
 
 	// Play Control
 	BOOL				Run(void);
@@ -49,7 +49,9 @@ protected:
 	// Kernel Function
 	void				Kernel_SortInfoByExtension();
 
-	BOOL				Kernel_CheckBytes(DShowFilterInfo* pInfo, CString& strSubtype);
+	BOOL				Kernel_CheckBytes(DSFilterInfo* pInfo, CString& strSubtype);
+
+	HRESULT				Kernel_RenderMediaTypes(IPin* pPinOut, CAtlList<MediaTypeItem>& mts);
 
 
 private:
@@ -63,7 +65,9 @@ protected:
 	HWND				m_hNotifyWindow;
 	CDSEngine*			m_pEngine;
 
-	CComPtr<IFilterGraph>	m_pFilterGraph;
+	BOOL				m_bVideoRendered;
+
+	CComPtr<IFilterGraph>	m_pJFilterGraph;
 
 
 private:

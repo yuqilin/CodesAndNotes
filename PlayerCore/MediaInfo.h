@@ -1,6 +1,6 @@
 
-#ifndef _MEDIAINFO_H_
-#define _MEDIAINFO_H_
+#ifndef _PLAYERCORE_MEDIAINFO_H_
+#define _PLAYERCORE_MEDIAINFO_H_
 
 class CMediaInfo
 {

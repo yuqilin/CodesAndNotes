@@ -23,11 +23,30 @@ HRESULT CPlayerCore::Create()
 		return hr;
 	}
 
+	// SetCodecsPath, LoadFilters
 	CString strCodecsPath;
 	strCodecsPath.Format(_T("%s\\Codecs"), g_utility.GetModulePath());
 	hr = m_Filters.SetCodecsPath(strCodecsPath);
 
-	RepaireSystemVolume();
+
+	// Log
+	TCHAR szTempPath[MAX_PATH];
+	TCHAR szLogFilePath[MAX_PATH];
+	if (GetTempPath(_countof(szTempPath), szTempPath) > 0)
+	{
+		if (m_Settings.m_bFixedLogFile)
+		{
+			_stprintf_s(szLogFilePath, _T("%s\\flyfoxLocalPlayer\\flyfoxLocalPlayer.txt"), szTempPath);
+		}
+		else
+		{
+			DWORD dwProcessId = ::GetCurrentProcessId();
+			_stprintf_s(szLogFilePath, _T("%s\\flyfoxLocalPlayer\\flyfoxLocalPlayer_%u.txt"), szTempPath, dwProcessId);
+		}
+		CLog::SetLogFilePath(szLogFilePath);
+	}
+
+	
 
 	return hr;
 }

@@ -22,32 +22,24 @@ class CPlayerSettings : public CCritSec
 protected:
 	CPlayerSettings() {}
 	~CPlayerSettings() {}
-	CPlayerSettings(const CPlayerSettings&) {}
-	CPlayerSettings& operator= (const CPlayerSettings&) {}
-
-	static CAutoPtr<CPlayerSettings> m_pThis;
 
 public:
-	static CPlayerSettings* GetPlayerSettings() 
-	{
-		if (m_pThis == NULL)
-		{
-			this->Lock();
-			if (m_pThis == NULL)
-			{
-				m_pThis = DNew CPlayerSettings();
-			}
-			this->Unlock();
-		}
-		return m_pThis;
-	}
-
 	VIDEO_RENDERER_TYPE m_VideoRendererType;
 
 	int m_nVolume;
 	BOOL m_bAutoPlay;
 
-	BOOL m_bRenderOpenChain;	
+	BOOL m_bRenderOpenChain;
+
+	// Paths
+	TCHAR m_szPlayerPath[MAX_PATH];
+
+	
+
+
+protected:
+	BOOL LoadSettings();
+
 };
 
 

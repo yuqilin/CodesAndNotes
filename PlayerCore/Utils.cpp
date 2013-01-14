@@ -738,8 +738,8 @@ CUtility::CUtility()
 	m_nIEVersion = 0;
 
 	// Log
-	m_bLogEnable = FALSE;
-	memset(m_szLogFile, 0, sizeof(m_szLogFile));
+	m_bEnable = FALSE;
+	memset(m_szFilePath, 0, sizeof(m_szFilePath));
 	m_hFile = INVALID_HANDLE_VALUE;
 }
 
@@ -793,9 +793,9 @@ BOOL CUtility::Initialize(void)
 	// Log filename
 	const TCHAR * pcszLogFileName = _T("FlyfoxLocalPlayerLog");
 	if(this->GetProfileInt(_T("FixLogFile"), 0))
-		wsprintf(m_szLogFile, _T("%s\\%s.txt"), m_szTemporaryPath, pcszLogFileName);
+		wsprintf(m_szFilePath, _T("%s\\%s.txt"), m_szTemporaryPath, pcszLogFileName);
 	else
-		wsprintf(m_szLogFile, _T("%s\\%s_%u.txt"), m_szTemporaryPath, pcszLogFileName, m_dwProcessId);
+		wsprintf(m_szFilePath, _T("%s\\%s_%u.txt"), m_szTemporaryPath, pcszLogFileName, m_dwProcessId);
 
 	// Log enable
 	if(this->GetProfileInt(_T("Log"), 0))
@@ -880,12 +880,12 @@ BOOL CUtility::GetProfileStr(const TCHAR * pcszKey,
 
 void CUtility::EnableLog(BOOL bEnable)
 {
-	if(m_bLogEnable == bEnable)
+	if(m_bEnable == bEnable)
 		return;
 
 	if(bEnable)
 	{
-		m_hFile = ::CreateFile(m_szLogFile, GENERIC_WRITE, FILE_SHARE_WRITE|FILE_SHARE_READ, NULL,
+		m_hFile = ::CreateFile(m_szFilePath, GENERIC_WRITE, FILE_SHARE_WRITE|FILE_SHARE_READ, NULL,
 			CREATE_ALWAYS, 0, NULL);
 		if(m_hFile != INVALID_HANDLE_VALUE)
 		{
@@ -894,11 +894,11 @@ void CUtility::EnableLog(BOOL bEnable)
 			DWORD dwWriteLen = 0;
 			::WriteFile(m_hFile, &dwHeader, sizeof(dwHeader), &dwWriteLen, NULL);
 		}
-		m_bLogEnable = TRUE;
+		m_bEnable = TRUE;
 	}
 	else
 	{
-		m_bLogEnable = FALSE;
+		m_bEnable = FALSE;
 		if(m_hFile != INVALID_HANDLE_VALUE)
 		{
 			::CloseHandle(m_hFile);
@@ -910,7 +910,7 @@ void CUtility::EnableLog(BOOL bEnable)
 
 void CUtility::Log(const TCHAR* pcszFormat, ...)
 {
-	if(!m_bLogEnable)
+	if(!m_bEnable)
 		return;
 
 	CString strLog;
@@ -942,7 +942,7 @@ void CUtility::Log(const TCHAR* pcszFormat, ...)
 
 BOOL CUtility::HaveLog(void)
 {
-	return m_bLogEnable;
+	return m_bEnable;
 }
 
 

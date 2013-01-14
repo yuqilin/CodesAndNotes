@@ -219,8 +219,8 @@ protected:
 	DWORD				m_dwProcessId;
 
 	// Log settings
-	BOOL				m_bLogEnable;
-	TCHAR				m_szLogFile[MAX_PATH];
+	BOOL				m_bEnable;
+	TCHAR				m_szFilePath[MAX_PATH];
 	HANDLE				m_hFile;
 	CRITICAL_SECTION	m_csLog;
 };

@@ -36,8 +36,7 @@ IBaseFilter* FindFilter(LPCWSTR clsid, IFilterGraph* pFG);
 IBaseFilter* FindFilter(const CLSID& clsid, IFilterGraph* pFG);
 
 
-void  ExtractMediaTypes(IPin* pPin, CAtlArray<GUID>& types);
-void  ExtractMediaTypes(IPin* pPin, CAtlList<CMediaType>& mts);
+void  ExtractMediaTypes(IPin* pPin, CAtlList<MediaTypeItem>& mts);
 
 //////////////////////////////////////////////////////////////////////////
 CString GetMediaTypeName(const GUID& guid);

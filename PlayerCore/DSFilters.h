@@ -90,14 +90,15 @@ public:
 	HRESULT SetCodecsPath(CString& strPath);
 	LPCTSTR GetCodecsPath();
 
+	DSFilterInfo* FindFilterByClsid(const CLSID& clsid);
 	DSFilterInfo* FindFilterByClsid(LPCTSTR pcszClsid);
 	DSFilterInfo* FindInfoByName(LPCTSTR pcszName);
 
-	HRESULT CreateCodec(DSFilterInfo* pInfo, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
+	static HRESULT CreateFilter(DSFilterInfo* pInfo, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
 
-	BOOL	CheckTypes(DSFilterInfo* pInfo, const CAtlArray<GUID>& types, bool fExactMatch);
+	BOOL	CheckTypes(DSFilterInfo* pInfo, const CAtlList<MediaTypeItem>& mts);
 
-	void	OrderInfoByExtension(const TCHAR* pcszExtension);
+	void	SortInfoByExtension(const TCHAR* pcszExtension);
 	void	BringInfoToTop(CAtlList<DSFilterInfo*>& InfoList, POSITION& pos);
 
 protected:
@@ -106,7 +107,7 @@ protected:
 	void	UnLoadCodecsInfo();
 	HRESULT ReplaceCodecsPath(CAtlList<DSFilterInfo*>& InfoList);
 
-	void	OrderInfoByExtension(CAtlList<DSFilterInfo*>& InfoList, const TCHAR* pcszExtension);
+	void	SortInfoByExtension(CAtlList<DSFilterInfo*>& InfoList, const TCHAR* pcszExtension);
 
 	// Parse FilterInfo Xml
 	HRESULT ParseInfoBuffer(TCHAR* pszBuffer);

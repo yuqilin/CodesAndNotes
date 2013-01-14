@@ -1,6 +1,6 @@
 
-#ifndef _ZPLAYERCORE_H_
-#define _ZPLAYERCORE_H_
+#ifndef _PLAYERCORE_PLAYERCORE_H_
+#define _PLAYERCORE_PLAYERCORE_H_
 
 #include "flyfox_media_player_def.h"
 #include "BaseEngine.h"
@@ -100,4 +100,4 @@ protected:
 };
 
 
-#endif /*_ZPLAYERCORE_H_*/
+#endif /*_PLAYERCORE_H_*/

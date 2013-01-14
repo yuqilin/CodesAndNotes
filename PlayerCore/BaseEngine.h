@@ -52,7 +52,7 @@ public:
 	virtual HRESULT		Play(void) = 0;
 	virtual HRESULT		Stop(void) = 0;
 	virtual HRESULT		Pause(void) = 0;
-	virtual HRESULT		GetPlayState() = 0;
+	//virtual HRESULT		GetPlayState() = 0;
 	virtual HRESULT		GetPlayPos(LONG* pnPlayPos) = 0;
 	virtual HRESULT		SetPlayPos(LONG nPlayPos) = 0;
 	virtual HRESULT		GetVolume(LONG* pnVolume) = 0;
@@ -71,11 +71,12 @@ public:
 	virtual HRESULT		GetVideoRenderMode(VIDEO_RENDER_MODE* peVideoRenderMode) = 0;
 
 protected:
-	CZPlayerCore*		m_pPlayerCore;
+	CPlayerCore*		m_pPlayerCore;
 	CMediaInfo*			m_pMediaInfo;
 	HWND				m_hVideoWindow;
 	HWND				m_hNotifyWindow;
 	ENGINE_TYPE			m_EngineType;
+	CString				m_strPrefix;
 
 };
 

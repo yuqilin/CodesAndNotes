@@ -35,3 +35,4 @@
 
 extern HINSTANCE		g_hInstance;
 extern CUtility			g_utility;
+

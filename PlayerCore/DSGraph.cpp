@@ -1,15 +1,16 @@
 
 #include "stdafx.h"
-#include "DShowGraph.h"
+#include "DSGraph.h"
 
 #define PREFIX_STRING	_T("   ")
 
 CDSGraph::CDSGraph()
+		: m_hVideoWindow(NULL)
+		, m_hNotifyWindow(NULL)
+		, m_pEngine(NULL)
+		, m_pJFilterGraph(NULL)
 {
-	m_hVideoWindow = NULL;
-	m_hNotifyWindow = NULL;
-	m_pEngine = NULL;
-	m_pFilters = NULL;
+
 }
 
 CDSGraph::~CDSGraph()
@@ -17,7 +18,7 @@ CDSGraph::~CDSGraph()
 
 }
 
-HRESULT CDSGraph::Initialize(HWND hVideoWindow,
+HRESULT CDSGraph::Create(HWND hVideoWindow,
 							   HWND hNotifyWindow,
 							   CDSEngine* pEngine)
 {
@@ -28,16 +29,30 @@ HRESULT CDSGraph::Initialize(HWND hVideoWindow,
 	m_hVideoWindow = hVideoWindow;
 	m_hNotifyWindow = hNotifyWindow;
 	m_pEngine = pEngine;
-	m_pFilters = CZPlayerCore::GetFilters();
 
 	return S_OK;
 }
 
-void CDSGraph::UnInitialize()
+void CDSGraph::Destory()
 {
 	m_hVideoWindow = NULL;
 	m_hNotifyWindow = NULL;
 	m_pEngine = NULL;
+}
+
+HRESULT	CDSGraph::OpenMedia(CMediaInfo* pMediaInfo)
+{
+	HRESULT hr = S_OK;
+
+	const CPlayerSettings& s = CPlayerCore::GetPlayerSettings();
+	hr = this->Render(s.m_bRenderOpenChain);
+
+	return hr;
+}
+
+void CDSGraph::CloseMedia()
+{
+
 }
 
 HRESULT CDSGraph::Render(BOOL bOpenChain)
@@ -54,7 +69,8 @@ HRESULT CDSGraph::Render(BOOL bOpenChain)
 	if(bOpenChain)
 	{
 		LPCWSTR pwszUrl = m_pMediaInfo->GetUrl();
-		hr = m_pGraph->RenderFile(pwszUrl, NULL);
+		if (m_pJFilterGraph)
+			hr = m_pJFilterGraph->RenderFile(pwszUrl, NULL);
 	}
 	else
 		hr = Kernel_Render();
@@ -70,21 +86,16 @@ HRESULT CDSGraph::Render(BOOL bOpenChain)
 	return hr;
 }
 
-BOOL CDSGraph::BringInfoToTop(DSFILTER_INFO * pInfo)
-{
-	BOOL bResult = TRUE;
-	
-	bResult = g_filte.BringInfoToTop(pInfo);
-
-	return bResult;
-}
-
-HRESULT CDSGraph::AddFilter(DSFILTER_INFO * pInfo,
-							  AM_MEDIA_TYPE ** pmts = NULL,
-							  int nMediaTypeCount = 0,
-							  IBaseFilter ** ppFilter = NULL)
+HRESULT CDSGraph::AddFilter(DSFilterInfo* pInfo,
+							CAtlList<MediaTypeItem>& mts,
+							IBaseFilter** ppBF = NULL);
 {
 	HRESULT hr = S_OK;
+
+	CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
+	hr = CDSFilters::CreateFilter(pInfo, ppBF, pUnks);
+	
+	
 
 	return hr;
 }
@@ -122,22 +133,76 @@ BOOL CDSGraph::GetPinsCount(IBaseFilter * pFilter,
 	return bResult;
 }
 
-HRESULT	CDSGraph::RemoveFilter(IBaseFilter * pFilter, const TCHAR * pcszClsId = NULL)
+HRESULT	CDSGraph::RemoveFilter(IBaseFilter * pBF, const TCHAR * pcszClsId = NULL)
 {
 	HRESULT hr = S_OK;
 
-	return hr;
+	if(m_pJFilterGraph == NULL || pBF == NULL)
+		return E_INVALIDARG;
+
+	// Get class id
+	HRESULT hr = E_FAIL;
+	const TCHAR * pClsId = NULL;
+	if(pcszClsId == NULL)
+	{
+		CLSID ClsId;
+		TCHAR szClsId[MAX_GUID_LENGTH];
+		hr = pBF->GetClassID(&ClsId);
+		if(FAILED(hr))
+		{
+			g_utility.Log(_T("%sRemoveFilter: get class id failed, hr=%08x"), m_szPrefix, hr);
+			return hr;
+		}
+		::GuidToString(ClsId, szClsId);
+		pClsId = szClsId;
+	}
+	else
+		pClsId = pcszClsId;
+	if(g_utility.HaveLog())
+		g_utility.Log(_T("%sRemoveFilter: %s"), m_szPrefix, pClsId);
+
+	// Remove filter
+	hr = m_pJFilterGraph->RemoveFilter(pBF);
+	if(FAILED(hr))
+	{
+		g_utility.Log(_T("%sRemoveFilter: m_pGraph->RemoveFilter failed, hr=%08x"), m_szPrefix, hr);
+		return hr;
+	}
+
+	return S_OK;
 }
 
 void CDSGraph::RemoveAllFilter(void)
 {
-	
+	g_utility.Log(_T("CDirectShowGraph::RemoveAllFilter Begin."));
+
+	// Enumerate the filters in the graph.
+	int nRefCount = 0;
+	IEnumFilters *pEnum = NULL;
+	HRESULT hr = m_pJFilterGraph->EnumFilters(&pEnum);
+	if(SUCCEEDED(hr))
+	{
+		int nCounter = 0;
+		IBaseFilter * pFilter = NULL;
+		while (S_OK == pEnum->Next(1, &pFilter, NULL))
+		{
+			// Remove the filter.
+			this->RemoveFilter(pFilter);
+
+			// Reset the enumerator.
+			pEnum->Reset();
+			nRefCount = pFilter->Release();
+		}
+		pEnum->Release();
+	}
+
+	g_utility.Log(_T("CDirectShowGraph::RemoveAllFilter End."));
 }
 
-void CDSGraph::RemoveChain(IPin * pOutputPin)
-{
-	
-}
+// void CDSGraph::RemoveChain(IPin * pOutputPin)
+// {
+// 	
+// }
 
 //-------------------------------------------------------------------------
 // Kernel Functions
@@ -150,10 +215,8 @@ void CDSGraph::Kernel_SortInfoByExtension()
 
 	g_utility.Log(_T("Kernel_SortInfoByExtName: %s"), pcszExtension);
 
-	if (m_pFilters != NULL)
-	{
-		m_pFilters->SortInfoByExtension(pcszExtension);
-	}
+	const CDSFilters& filters = CPlayerCore::GetFilters();
+	filters.SortInfoByExtension(pcszExtension);
 }
 
 // read FilterInfo.xml, store info : source, transform
@@ -166,8 +229,6 @@ void CDSGraph::Kernel_SortInfoByExtension()
 
 HRESULT CDSGraph::Kernel_Render()
 {
-	CheckPointer(m_pFilters, E_INVALIDARG);
-
 	HRESULT hr = S_OK;
 
 	struct MatchingFilterItem
@@ -177,7 +238,7 @@ HRESULT CDSGraph::Kernel_Render()
 	};
 	CAtlList<MatchingFilterItem> MatchingList;
 
-	CAtlList<DSFilterInfo*>& InfoList = m_pFilters->GetInfoList();
+	CAtlList<DSFilterInfo*>& InfoList = CPlayerCore::GetFilters().m_source;
 
 	CString strSubtype;
 	DSFilterInfo* pInfo = NULL;
@@ -220,7 +281,6 @@ HRESULT CDSGraph::Kernel_Render()
 		MatchingFilterItem item;
 		item.info = pInfo;
 		item.subtype = strSubtype;
-
 	}
 
 	pos = MatchingList.GetHeadPosition();
@@ -460,6 +520,14 @@ HRESULT CDSGraph::Kernel_RenderPin(IPin* pPinOut)
 
 	g_utility.Log(_T("%sRenderPin => [%08x]"), m_strPrefix, pPinOut);
 
+	CAtlList<MediaTypeItem> mts;
+	ExtractMediaTypes(pPinOut, mts);
+
+	Kernel_RenderMediaTypes(pPinOut, mts);
+
+	
+
+
 	HRESULT result = VFW_E_CANNOT_RENDER;
 	IEnumMediaTypes * pEMT = NULL;
 	HRESULT hr = pPinOut->EnumMediaTypes(&pEMT);
@@ -523,20 +591,6 @@ HRESULT CDSGraph::Kernel_RenderPin(IPin* pPinOut)
 		pEMT->Release();
 	}
 
-	CAtlArray<GUID> types;
-	ExtractMediaTypes(pPinOut, types);
-
-	POSITION pos = m_transform.GetHeadPosition();
-	while (pos)
-	{
-		CFGFilter* pFGF = m_transform.GetNext(pos);
-		if (pFGF->m_merit < MERIT_DO_USE || pFGF->CheckTypes(types, false))
-		{
-			fl.Insert(pFGF, 0, pFGF->CheckTypes(types, true), false);
-		}
-	}
-
-
 	g_utility.Log(_T("%sRenderPin <= [%08x], result=%08x"), m_strPrefix, pPinOut, result);
 
 	this->LeaveFunction();
@@ -544,35 +598,16 @@ HRESULT CDSGraph::Kernel_RenderPin(IPin* pPinOut)
 	return result;
 }
 
-HRESULT CDSGraph::Kernel_RenderMediaTypes(IPin* pPinOut, AM_MEDIA_TYPE** pmts, int nMediaTypeCount)
+HRESULT CDSGraph::Kernel_RenderMediaTypes(IPin* pPinOut, CAtlList<MediaTypeItem>& mts)
 {
-	this->EnterFunction();
-
-	HRESULT hr = VFW_E_CANNOT_RENDER;
-
-	g_utility.Log(_T("%sRenderMediaTypes => [%08x]"), m_strPrefix, pPinOut);
-
-	if (g_utility.HaveLog())
-	{
-		CString strMediaType;
-		for(int i=0; i<nMediaTypeCount; i++)
-		{
-			if(MediaTypeToString(pmts[i], strMediaType))
-				g_utility.Log(_T("%sMediaType: %s"), m_strPrefix, strMediaType);
-		}
-	}
-
-// 	const int kMaxFilterCount = 64; // Max filter number 64
-// 	IBaseFilter * pFilterList[kMaxFilterCount];
-// 	ZeroMemory(pFilterList, sizeof(IBaseFilter*) * kMaxFilterCount);
-
-	CInterfaceList<IBaseFilter*> pBFs;
+	HRESULT result = VFW_E_CANNOT_RENDER;
 
 	// 1. Try filters in the graph
 	g_utility.Log(_T("%sRenderMediaType, try connect filter in graph."), m_strPrefix);
 	{
+		CInterfaceList<IBaseFilter*> pBFs;
 		//int nFilterCount = 0;
-		BeginEnumFilters(m_pFilterGraph, pEF, pBF)
+		BeginEnumFilters(m_pJFilterGraph, pEF, pBF)
 		{
 			if (GetFilterFromPin(pPinOut) == pBF)
 			{
@@ -590,7 +625,7 @@ HRESULT CDSGraph::Kernel_RenderMediaTypes(IPin* pPinOut, AM_MEDIA_TYPE** pmts, i
 			pBF = pBFs.GetNext(pos);
 			::GetFilterName(pBF, strFilterName);
 
-			hr = Kernel_ConnectDirect(pPinOut, pBF, NULL);
+			HRESULT hr = Kernel_ConnectDirect(pPinOut, pBF, NULL);
 			if (SUCCEEDED(hr))
 			{
 				g_utility.Log(_T("%sRenderMediaType [%08x], connect filter [%08x]%s okay."),
@@ -615,107 +650,122 @@ HRESULT CDSGraph::Kernel_RenderMediaTypes(IPin* pPinOut, AM_MEDIA_TYPE** pmts, i
 			}
 		}
 	}
-
 	// 2. Try filters in the g_filters (the global filter table/list)
+	BOOL bAudioMediaType = FALSE;
+	BOOL bVideoMediaType = FALSE;
+	POSITION pos2 = mts.GetHeadPosition();
+	if (pos2 != NULL && mts.GetAt(pos2).majortype == MEDIATYPE_Audio)
+		bAudioMediaType = TRUE;
+	if (pos2 != NULL && mts.GetAt(pos2).majortype == MEDIATYPE_Video)
+		bVideoMediaType = TRUE;
+
 	g_utility.Log(_T("%sRenderMediaType, try connect filter in the global filter list."), m_strPrefix);
 	{
-		SFilterInfo* pInfo = NULL;
-		int nInfoCount = g_filters.GetCount();
-		for (int i=0; i<nInfoCount; i++)
+		DSFilterInfo* pInfo = NULL;
+		CAtlList<DSFilterInfo*>& transforms = CPlayerCore::GetFilters().m_transform;
+		POSITION pos = transforms.GetHeadPosition();
+		while (pos)
 		{
-			//pInfo = m_pInfo[i];
-			pInfo = g_filters.GetInfo(i);
-
-			if (pInfo->filtertype == FT_SOURCE)
-				continue;
+			DSFilterInfo* pInfo = transforms.GetNext(pos);
 
 			if (pInfo->merit <= MERIT_DO_NOT_USE)
 				continue;
 
-			EFilterType nType = pInfo->filtertype;
+			FILTER_TYPE type = pInfo->filtertype;
+
 			BOOL bAudioFilter = 
-				(nType == kFilterTypeAudioDecoder		||
-				nType == kFilterTypeAudioEffect			||
-				nType == kFilterTypeAudioRenderer
+				(type == FT_AUDIO_DECODER		||
+				type == FT_AUDIO_EFFECT			||
+				type == FT_AUDIO_ENCODER
 				);
 			BOOL bVideoFilter = 
-				(nType == kFilterTypeVideoDecoder		||
-				nType == kFilterTypeVideoEffect			||
-				nType == kFilterTypeVideoRenderer
+				(type == FT_VIDEO_DECODER		||
+				type == FT_VIDEO_EFFECT			||
+				type == FT_VIDEO_ENCODER
 				);
 
-			if (pmts[0]->majortype == MEDIATYPE_Audio && !bAudioFilter)
+			if (bAudioMediaType && !bAudioFilter)
 				continue;
-			if (pmts[0]->majortype == MEDIATYPE_Video && !bVideoFilter)
-				continue;
-			if ((pmts[0]->majortype == MEDIATYPE_Text || 
-				pmts[0]->majortype == MEDIATYPE_Subtitle ||
-				pmts[0]->majortype == MEDIATYPE_ScriptCommand)
-				&& nType != kFilterTypeVideoEffect)
+			if (bVideoMediaType && !bVideoFilter)
 				continue;
 
 			// add only one vsfilter or audioswitcher
-			if (IsFilterExists(pInfo->clsid) &&
-				(_tcsicmp(pInfo->clsid, sCLSID_VsFilter) == 0 ||
-				_tcsicmp(pInfo->clsid, sCLSID_AudioSwitcher) == 0))
-				continue;
-			// skip EVRRender in WinXP OS
-			if (_tcsicmp(pInfo->clsid, sCLSID_EVR) == 0 && g_utility.GetOS() != OS_VISTAWIN7)
-				continue;
+// 			if ((pInfo->clsid == CLSID_VsFilter ||
+// 				pInfo->clsid == CLSID_AudioSwitcher == 0) &&
+// 				FindFilter(pInfo->clsid, m_pJFilterGraph))
+// 				continue;
 
-			BOOL bMatching = g_filters.IsSupportsMediaTypes(pInfo, pmts, nMediaTypeCount);
-			if (!bMatching)
-				continue;
-
-			// Create source filter
-			IBaseFilter* pFilter = NULL;
-			hr = this->AddFilter(pInfo, NULL, 0, &pFilter);
-			if(SUCCEEDED(hr))
+			const CDSFilters& filters = CPlayerCore::GetFilters();
+			if (filters.CheckTypes(pInfo, mts))
 			{
-				BOOL bNeedRemove = FALSE;
-				hr = Kernel_ConnectDirect(pPinOut, pFilter, NULL);
-				if (SUCCEEDED(hr))
+				// Check we can add this filter to graph
+				if(this->Kernel_CanAddFilter(pInfo->clsid))
 				{
-					g_utility.Log(_T("%sRenderMediaType, %08x, connect filter %s[%08x] okay."),
-						m_strPrefix, pPinOut, pInfo->name, pFilter);
+					// Create filter
+					IBaseFilter* pBF = NULL;
+					hr = this->AddFilter(pInfo, mts, &pBF);
+					if(SUCCEEDED(hr))
+					{
+						// Connect to filter
+						BOOL bNeedRemove = FALSE;
+						HRESULT hr = Kernel_ConnectDirect(pPinOut, pBF, pInfo->clsid, NULL);
+						if(hr == S_OK)
+						{
+							g_utility.Log(_T("%sRenderMediaType, %08x, connect filter %s[%08x] okay."),
+								m_szPrefix, pPinOut, pInfo->name, pBF);
 
-					hr = Kernel_RenderFilter(pFilter);
-					if (SUCCEEDED(hr))
-					{
+							// Render the filter
+							hr = this->Kernel_RenderFilter(pBF);
+							if(SUCCEEDED(hr))
+							{
+								result = S_OK;
+							}
+							else
+							{
+								g_utility.Log(_T("%sRender \"%s\" failed, disconnect and remove it."), m_szPrefix, pInfo->name);
+
+								hr = pPinOut->Disconnect();
+								if(hr != S_OK)
+								{
+									g_utility.Log(_T("%sDisconnect \"%s\" failed, hr=%08x."), m_szPrefix, pInfo->name, hr);
+								}
+								bNeedRemove = TRUE;
+							}
+						}
+						else
+						{
+							g_utility.Log(_T("%sConnect to \"%s\" failed, remove it."), m_szPrefix, pInfo->name);
+							bNeedRemove = TRUE;
+						}
+
+						if(bNeedRemove)
+						{
+							hr = this->RemoveFilter(pBF, pInfo->clsid);
+							if(FAILED(hr))
+							{
+								g_utility.Log(_T("%sRemoveFilter \"%s\" failed, hr=%08x."), m_szPrefix, pInfo->name, hr);
+							}
+						}
+
+						// We render succeeded
+						if(result == S_OK)
+							break;
 					}
-					else
-					{
-						bNeedRemove = TRUE;
-						g_utility.Log(_T("%sRender \"%s\" failed, disconnect and remove it."), m_strPrefix, pInfo->name);
-						HRESULT hr2 = pPinOut->Disconnect();
-					}
-				}
-				else
-				{
-					bNeedRemove = TRUE;
-				}
-				if (bNeedRemove)
-				{
-					RemoveFilter(pFilter, pInfo->clsid);
 				}
 			}
-
-			if (SUCCEEDED(hr))
-				break;
 		}
 	}
 
-	this->LeaveFunction();
-	return hr;
+	return result;
 }
 
-HRESULT CDSGraph::Kernel_ConnectDirect(IPin* pPinOut, IBaseFilter* pFilter, AM_MEDIA_TYPE* pMediaType)
+HRESULT CDSGraph::Kernel_ConnectDirect(IPin* pPinOut, IBaseFilter* pBF, AM_MEDIA_TYPE* pMediaType)
 {
 	this->EnterFunction();
 
 	CString strFilterName(_T("Unknown"));
-	::GetFilterName(pFilter, strFilterName);
-	g_utility.Log(_T("%sConnectDirect => %s[%08x]"), m_strPrefix, strFilterName, pFilter);
+	::GetFilterName(pBF, strFilterName);
+	g_utility.Log(_T("%sConnectDirect => %s[%08x]"), m_strPrefix, strFilterName, pBF);
 
 	if (S_OK != IsPinDirection(pPinOut, PINDIR_OUTPUT))
 	{
@@ -724,43 +774,77 @@ HRESULT CDSGraph::Kernel_ConnectDirect(IPin* pPinOut, IBaseFilter* pFilter, AM_M
 		return VFW_E_INVALID_DIRECTION;
 	}
 
-	BeginEnumPins(pFilter, pEP, pPin)
+	BeginEnumPins(pBF, pEP, pPin)
 	{
 		if (S_OK == IsPinDirection(pPin, PINDIR_INPUT)
 			&& S_OK != IsPinConnected(pPin))
 		{
-			HRESULT hr = m_pFilterGraph->ConnectDirect(pPinOut, pPin, pMediaType);
-			if (SUCCEEDED(hr))
+			if (m_pJFilterGraph != NULL)
 			{
-				AM_MEDIA_TYPE mt;
-				HRESULT hr2 = pPinOut->ConnectionMediaType(&mt);
-				if(hr2 == S_OK)
+				HRESULT hr = m_pJFilterGraph->ConnectDirect(pPinOut, pPin, pMediaType);
+				if (SUCCEEDED(hr))
 				{
-					if (g_utility.HaveLog())
+					AM_MEDIA_TYPE mt;
+					HRESULT hr2 = pPinOut->ConnectionMediaType(&mt);
+					if(hr2 == S_OK)
 					{
-						CString strMediaType;
-						if(::MediaTypeToString(&mt, strMediaType))
-							g_utility.Log(_T("%sConnectDirect Okay: %s"), m_strPrefix, strMediaType);
+						if (g_utility.HaveLog())
+						{
+							CString strMediaType;
+							if(::MediaTypeToString(&mt, strMediaType))
+								g_utility.Log(_T("%sConnectDirect Okay: %s"), m_strPrefix, strMediaType);
 
+						}
+						FreeMediaType(mt);
 					}
-					FreeMediaType(mt);
+					this->LeaveFunction();
+					return hr;
 				}
-				this->LeaveFunction();
-				return hr;
-			}
-			else
-			{
-				g_utility.Log(_T("%sConnectToFilter, connect pin failed, hr=%08x"), m_strPrefix, hr);
-			}
+				else
+				{
+					g_utility.Log(_T("%sConnectToFilter, connect pin failed, hr=%08x"), m_strPrefix, hr);
+				}
+			}			
 		}
 	}
 	EndEnumPins;
 
-	g_utility.Log(_T("%sConnectDirect <= %s[%08x]"), m_strPrefix, strFilterName, pFilter);
+	g_utility.Log(_T("%sConnectDirect <= %s[%08x]"), m_strPrefix, strFilterName, pBF);
 
 	this->LeaveFunction();
 
 	return VFW_E_CANNOT_CONNECT;
+}
+
+BOOL CDSGraph::Kernel_CanAddFilter(DSFilterInfo* pInfo)
+{
+	BOOL bCanAdded = TRUE;
+
+	// only one vsfilter or audioswitcher
+	if ((pInfo->clsid == CLSID_VsFilter ||
+				pInfo->clsid == CLSID_AudioSwitcher == 0) &&
+				FindFilter(pInfo->clsid, m_pJFilterGraph))
+	{
+		bCanAdded = FALSE;
+	}
+
+	return bCanAdded;
+}
+
+void CDSGraph::Kernel_ResetGraph(HRESULT hrLast)
+{
+	g_utility.Log(_T("Kernel_ResetGraph begin"));
+
+	////Save params
+	//CMediaInfo * pMediaInfo = m_pMediaInfo;
+
+	//// Reset graph
+	//this->Kernel_AfterRender(hrLast);
+	//this->Destroy();
+	//this->Create(pMediaInfo);
+	//this->Kernel_BeforeRender();
+
+	g_utility.Log(_T("Kernel_ResetGraph end"));
 }
 
 void CDSGraph::EnterFunction()
@@ -826,4 +910,202 @@ HRESULT CDSGraph::IsPinConnected(IPin* pPin)
 
 	CComPtr<IPin> pPinTo;
 	return SUCCEEDED(pPin->ConnectedTo(&pPinTo)) && pPinTo ? S_OK : S_FALSE;
+}
+
+void CDSGraph::Kernel_BeforeRender(void)
+{
+	
+}
+
+void CDSGraph::Kernel_AfterRender(HRESULT hrResult)
+{
+	if(SUCCEEDED(hrResult))
+	{
+		// Apply start stop position
+		if(m_nStartPosition > 0 || m_nStopPosition > 0)
+		{
+			IMediaSeeking * pSeeking = this->GetSeeking();
+			if(pSeeking != NULL)
+			{
+				LONGLONG llCurrent = LONGLONG(m_nStartPosition) * MSNS;
+				LONGLONG llStop = LONGLONG(m_nStopPosition) * MSNS;
+
+				HRESULT hr = pSeeking->SetPositions
+					(&llCurrent, AM_SEEKING_AbsolutePositioning, &llStop, AM_SEEKING_AbsolutePositioning);
+				if(FAILED(hr))
+					g_utility.Log(_T("SetPositions for applay start stop position failed, hr=%08x"), hr);
+			}
+		}
+
+		// Remove unused filter
+		this->Kernel_RemoveUnusedFilters();
+	}
+
+	// Call control
+	m_pControl->OnAfterRender(hrResult);
+}
+
+BOOL CDSGraph::OnSpecialParse(CMediaInfo * pMediaInfo,
+							   DSFilterInfo** ppInfo,
+							   CString& strSubtype)
+{
+	BOOL bOK = FALSE;
+	if(!bOK)
+		bOK = this->SpecialParse_Extension(pMediaInfo, ppInfo, strSubtype);
+	if(!bOK)
+		bOK = this->SpecialParse_Header(pMediaInfo, ppInfo, strSubtype);
+	return bOK;
+}
+
+BOOL CDSGraph::SpecialParse_Extension(CMediaInfo* pMediaInfo, DSFilterInfo** ppInfo, CString& strSubtype)
+{
+	CheckPointer(ppInfo, FALSE);
+
+	// Extname parser list
+	typedef BOOL (*ParseExtname)(CMediaInfo * pMediaInfo);
+	struct PARSEEXTNAME_ITEM
+	{
+		const TCHAR *	extname;
+		ParseExtname	parse;
+		const TCHAR *	clsid;
+	};
+	PARSEEXTNAME_ITEM list[] =
+	{
+		{_T(".avs"), ParseExtname_AVS, _T("{D3588AB0-0781-11CE-B03A-0020AF0BA770}")},
+		{_T(".asx"), ParseExtname_ASX, _T("{187463A0-5BB7-11D3-ACBE-0080C75E246E}")},
+	};
+	int list_count = _countof(list);
+
+	// Loop parse list
+	BOOL bResult = FALSE;
+	const CDSFilters& filters = CPlayerCore::GetFilters();
+	for(int i=0; i<list_count; i++)
+	{
+		if(lstrcmpi(pMediaInfo->GetExtname(), list[i].extname) == 0)
+		{
+			if(list[i].parse(pMediaInfo))
+			{
+				DSFilterInfo* pInfo = filters.FindFilterByClsid(list[i].clsid);
+				if(pInfo != NULL)
+				{
+					g_utility.Log(_T("Add source by parse extname: \"%s\" => \"%s\""), list[i].extname, pInfo->name);
+					*ppInfo = pInfo;
+					strSubtype.Empty();
+					bResult = TRUE;
+				}
+			}
+			break;
+		}
+	}
+	return bResult;
+}
+
+BOOL CDSGraph::SpecialParse_Header(CMediaInfo* pMediaInfo, DSFilterInfo** ppInfo, CString& strSubtype)
+{
+	const CDSFilters& filters = CPlayerCore::GetFilters();
+	DSFilterInfo* pInfo = filters.FindFilterByClsid(CLSID_FileSourceAsync);
+	if(pInfo == NULL)
+		return FALSE;
+
+	// Header paser list
+	typedef BOOL (*ParseHeader)(CMediaInfo* pMediaInfo);
+	struct PARSEHEADER_ITEM
+	{
+		ParseHeader		parse;
+		const TCHAR *	subtype;
+	};
+	PARSEHEADER_ITEM list[] =
+	{
+		{ ParseHeader_TS,	_T("{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}") }, //MEDIASUBTYPE_MPEG2_TRANSPORT
+		// { ParseHeader_MP3,	_T("{E436EB87-524F-11CE-9F53-0020AF0BA770}") }, no splitter
+	};
+	int list_count = _countof(list);
+
+	// Loop parse list
+	BOOL bResult = FALSE;
+	for(int i=0; i<list_count; i++)
+	{
+		if(list[i].parse(pMediaInfo))
+		{
+			g_utility.Log(_T("Add source by parse header: \"%s\""), list[i].subtype);
+			*ppInfo = pInfo;
+			strSubtype = list[i].subtype;
+			bResult = TRUE;
+			break;
+		}
+	}
+	return bResult;
+}
+
+BOOL CDSGraph::ParseHeader_TS(CMediaInfo* pMediaInfo)
+{
+	// Check param
+	if(pMediaInfo == NULL)
+		return FALSE;
+
+	MEMORY_DATA* pHeader = pMediaInfo->GetHeader();
+	if(pHeader->size < 1024) // We need 1KB
+		return FALSE;
+	if(pHeader->data == NULL)
+		return FALSE;
+
+	// Find TS length
+	int nTsStart = 0;
+	int nTsLength = 0;
+	int i=0;
+	int nCount = 0;
+	const int kMinMatchingCount = 3;
+	const int kMaxMatchingCount = 10;
+	for(i=0; i<pHeader->size && nCount<kMaxMatchingCount;)
+	{
+		if(pHeader->data[i] == 0x47)
+		{
+			nTsStart = i;
+			if(pHeader->data[i+188] == 0x47)
+			{
+				ASSERT(nTsLength == 188 || nTsLength == 0);
+				nTsLength = 188; // TS
+				nCount++;
+			}
+			else if(pHeader->data[i+192] == 0x47)
+			{
+				ASSERT(nTsLength == 192 || nTsLength == 0);
+				nTsLength = 192; // M2TS
+				nCount++;
+			}
+		}
+		i += (nTsLength==0)?1:nTsLength;
+	}
+
+	BOOL bResult = nCount>kMinMatchingCount;
+
+	g_utility.Log(_T("CDirectShowControl::ParseHeader_TS, bResult=%d, nTsLength=%d"), bResult, nTsLength);
+
+	return bResult;
+}
+
+
+LONGLONG CDSGraph::GetCurrentPlayPos()
+{
+	HRESULT hr = S_OK;
+
+	LONGLONG llCurrent = 0, llStop = 0;
+	IMediaSeeking * pSeeking = NULL;
+	if (m_pJFilterGraph != NULL)
+	{
+		HRESULT hr = m_pJFilterGraph->QueryInterface(IID_IMediaSeeking, (void **)&pSeeking);
+		if (SUCCEEDED(hr))
+		{
+			hr = pSeeking->GetPositions(&llCurrent, &llStop);
+			if (FAILED(hr))
+			{
+				DSLOG(_T("pSeeking->GetPositions failed, hr=%08x"), hr);
+			}
+		}
+	}
+	else
+	{
+
+	}
+	return llCurrent;
 }

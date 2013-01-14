@@ -186,6 +186,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlayerSettings.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -217,10 +221,6 @@
 			>
 			<File
 				RelativePath=".\BaseEngine.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseGraph.h"
 				>
 			</File>
 			<File
@@ -330,11 +330,27 @@
 			Name="DSUtil"
 			>
 			<File
+				RelativePath=".\CpuId.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CpuId.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DSUtil.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\DSUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Log.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Log.h"
 				>
 			</File>
 			<File

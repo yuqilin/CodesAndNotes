@@ -155,6 +155,26 @@ LPCTSTR CDSFilters::GetCodecsPath()
 	return m_strCodecsPath;
 }
 
+HRESULT CDSFilters::CreateFilter(DSFilterInfo* pInfo, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+{
+	HRESULT hr = S_OK;
+	
+	// check exist
+	//IsCodecExist();
+
+	// download
+	//DownloadCodec();
+
+	// create instance
+	IBaseFilter* pBF = NULL;
+	if (pInfo->pathflag.CompareNoCase(_T("codecs")))
+	{
+		hr = LoadExternalFilter(pInfo->path, pInfo->clsid, &pBF);
+	}
+
+	return hr;
+}
+
 HRESULT CDSFilters::ParseInfoBuffer(TCHAR* pszBuffer)
 {
 	HRESULT hr = S_OK;
@@ -390,13 +410,13 @@ BOOL CDSFilters::ParseCheckByte(DSFilterInfo* pInfo, const TCHAR* pcszValue)
 	return TRUE;
 }
 
-void CDSFilters::OrderInfoByExtension(const TCHAR* pcszExtension)
+void CDSFilters::SortInfoByExtension(const TCHAR* pcszExtension)
 {
-	OrderInfoByExtension(m_source, pcszExtension);
-	OrderInfoByExtension(m_transform, pcszExtension);
+	SortInfoByExtension(m_source, pcszExtension);
+	SortInfoByExtension(m_transform, pcszExtension);
 }
 
-void CDSFilters::OrderInfoByExtension(CAtlList<DSFilterInfo*>& InfoList, const TCHAR* pcszExtension)
+void CDSFilters::SortInfoByExtension(CAtlList<DSFilterInfo*>& InfoList, const TCHAR* pcszExtension)
 {
 	DSFilterInfo* pInfo = NULL;
 	POSITION pos = InfoList.GetHeadPosition();
@@ -425,5 +445,26 @@ void CDSFilters::OrderInfoByExtension(CAtlList<DSFilterInfo*>& InfoList, const T
 	}
 }
 
+BOOL CDSFilters::CheckTypes(DSFilterInfo* pInfo, const CAtlList<MediaTypeItem>& mts)
+{
+	CheckPointer(pInfo, FALSE);
+
+	POSITION pos = mts.GetHeadPosition();
+	while (pos)
+	{
+		MediaTypeItem& mt_from_pin = mts.GetNext(pos);
+		POSITION pos2 = pInfo->mediatypes.GetHeadPosition();
+		while (pos2)
+		{
+			MediaTypeItem& mt_from_info = pInfo->mediatypes.GetNext(pos2);
+			if( (mt_from_info.majortype == mt_from_pin.majortype || mt_from_info.majortype == GUID_NULL) &&
+				(mt_from_info.subtype == mt_from_pin.subtype || mt_from_info.subtype == GUID_NULL) )
+			{
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
+}
 //////////////////////////////////////////////////////////////////////////
 //

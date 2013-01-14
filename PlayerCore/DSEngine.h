@@ -16,7 +16,7 @@ public:
 	virtual HRESULT		Play(void);
 	virtual HRESULT		Stop(void);
 	virtual HRESULT		Pause(void);
-	virtual HRESULT		GetPlayState();
+	//virtual HRESULT		GetPlayState();
 	virtual HRESULT		GetPlayPos(LONG* pnPlayPos);
 	virtual HRESULT		SetPlayPos(LONG nPlayPos);
 	virtual HRESULT		GetVolume(LONG* pnVolume);
@@ -35,16 +35,7 @@ public:
 	virtual HRESULT		GetVideoRenderMode(VIDEO_RENDER_MODE* peVideoRenderMode);
 
 protected:
-	HRESULT				OpenMedia();
-	void				CloseMedia();
-
-	HRESULT				RenderFile(BOOL bOpenChain);
-	HRESULT				EnumSourceFilters(LPCTSTR pcszFileName, CDSFilterList& fl);
-
-	void				Kernel_OrderInfoByExtension(void);
-
-
-protected:
+	CDSGraph			m_Graph;
 
 	struct MatchedSourceFilter
 	{
@@ -54,7 +45,8 @@ protected:
 
 	BOOL				m_bRenderOpenChain;
 
-	CComPtr<IFilterGraph>	m_pJFilterGraph; 
+	CComPtr<IFilterGraph>	m_pJFilterGraph;
+	
 
 };
 
