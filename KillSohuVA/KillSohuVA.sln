@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KillSohuVA", "KillSohuVA\KillSohuVA.vcproj", "{98E35F95-5D85-4DF5-B972-623ED83D0732}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KillSohuVA2", "KillSohuVA2\KillSohuVA2.vcproj", "{439B2A53-4441-4CC9-8208-000A90322D28}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98E35F95-5D85-4DF5-B972-623ED83D0732}.Debug|Win32.ActiveCfg = Debug|Win32
+		{98E35F95-5D85-4DF5-B972-623ED83D0732}.Debug|Win32.Build.0 = Debug|Win32
+		{98E35F95-5D85-4DF5-B972-623ED83D0732}.Release|Win32.ActiveCfg = Release|Win32
+		{98E35F95-5D85-4DF5-B972-623ED83D0732}.Release|Win32.Build.0 = Release|Win32
+		{439B2A53-4441-4CC9-8208-000A90322D28}.Debug|Win32.ActiveCfg = Debug|Win32
+		{439B2A53-4441-4CC9-8208-000A90322D28}.Debug|Win32.Build.0 = Debug|Win32
+		{439B2A53-4441-4CC9-8208-000A90322D28}.Release|Win32.ActiveCfg = Release|Win32
+		{439B2A53-4441-4CC9-8208-000A90322D28}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
