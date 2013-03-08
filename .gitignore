@@ -1,13 +1,4 @@
 /bin
-/build.user.bat
-/distrib/*.exe
-/docs/[Aa][Ss]tyle.exe
-/include/version_rev.h
-/src/filters/transform/VSFilter/installer/*.exe
-/src/mpc-hc/mpcresources/backup
-/src/mpc-hc/mpcresources/newrc
-/src/mpc-hc/res/mpc-hc.exe.manifest
-/src/MPCTestAPI/bin
 ipch
 *.a
 *.aps
@@ -27,3 +18,5 @@ ipch
 *.exp
 *.ink
 *.lib
+Debug/
+Release/
