@@ -1,0 +1,407 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9704724312BFE4D900F9D88C /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9704724212BFE4D900F9D88C /* libstdc++.dylib */; };
+		9704747712C041F500F9D88C /* ServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9704747612C041F500F9D88C /* ServerViewController.m */; };
+		975228A012C158BB00F4639C /* SpeakerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9752289F12C158BB00F4639C /* SpeakerListController.m */; };
+		975228A712C1591800F4639C /* SpeakerViewController.m in Resources */ = {isa = PBXBuildFile; fileRef = 975228A512C1591800F4639C /* SpeakerViewController.m */; };
+		975228A812C1591800F4639C /* SpeakerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 975228A612C1591800F4639C /* SpeakerViewController.xib */; };
+		9752291F12C174CF00F4639C /* SpeakerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 975228A512C1591800F4639C /* SpeakerViewController.m */; };
+		977D7A1012B81B1F00D406E1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 977D7A0F12B81B1F00D406E1 /* CoreGraphics.framework */; };
+		977D7A1212B81B1F00D406E1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 977D7A1112B81B1F00D406E1 /* Foundation.framework */; };
+		977D7A1412B81B1F00D406E1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 977D7A1312B81B1F00D406E1 /* UIKit.framework */; };
+		97A8391D1303685300048A03 /* libPlatinum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97A8391C1303685300048A03 /* libPlatinum.a */; };
+		E4A7DC061085A49400E6ADE2 /* CocoaTouchBrowserAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4A7DC021085A49400E6ADE2 /* CocoaTouchBrowserAppDelegate.m */; };
+		E4A7DC071085A49400E6ADE2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E4A7DC031085A49400E6ADE2 /* main.m */; };
+		E4A7DC081085A49400E6ADE2 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4A7DC051085A49400E6ADE2 /* RootViewController.m */; };
+		E4A7DC0B1085A4B300E6ADE2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4A7DC091085A4B300E6ADE2 /* MainWindow.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		97A839171303683F00048A03 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97A839101303683E00048A03 /* Platinum.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = Platinum;
+		};
+		97A8391E1303685A00048A03 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97A839101303683E00048A03 /* Platinum.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = Platinum;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1D6058910D05DD3D006BFB54 /* CocoaTouchBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaTouchBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		28A0AAE50D9B0CCF005BE974 /* CocoaTouchBrowser_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaTouchBrowser_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* CocoaTouchBrowser-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CocoaTouchBrowser-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		970471A012BFDBD200F9D88C /* PPMediaContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPMediaContainer.h; path = ../../../../Source/Extras/ObjectiveC/PPMediaContainer.h; sourceTree = SOURCE_ROOT; };
+		970471A112BFDBD200F9D88C /* PPMediaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPMediaController.h; path = ../../../../Source/Extras/ObjectiveC/PPMediaController.h; sourceTree = SOURCE_ROOT; };
+		970471A212BFDBD200F9D88C /* PPMediaDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPMediaDevice.h; path = ../../../../Source/Extras/ObjectiveC/PPMediaDevice.h; sourceTree = SOURCE_ROOT; };
+		970471A312BFDBD200F9D88C /* PPMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPMediaItem.h; path = ../../../../Source/Extras/ObjectiveC/PPMediaItem.h; sourceTree = SOURCE_ROOT; };
+		970471A412BFDBD200F9D88C /* PPMediaObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPMediaObject.h; path = ../../../../Source/Extras/ObjectiveC/PPMediaObject.h; sourceTree = SOURCE_ROOT; };
+		970471A512BFDBD200F9D88C /* PPUPnP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPUPnP.h; path = ../../../../Source/Extras/ObjectiveC/PPUPnP.h; sourceTree = SOURCE_ROOT; };
+		9704724212BFE4D900F9D88C /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		9704747512C041F500F9D88C /* ServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ServerViewController.h; path = ../../../../Source/Apps/CocoaTouchBrowser/ServerViewController.h; sourceTree = SOURCE_ROOT; };
+		9704747612C041F500F9D88C /* ServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ServerViewController.m; path = ../../../../Source/Apps/CocoaTouchBrowser/ServerViewController.m; sourceTree = SOURCE_ROOT; };
+		9752289E12C158BB00F4639C /* SpeakerListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpeakerListController.h; path = ../../../../Source/Apps/CocoaTouchBrowser/SpeakerListController.h; sourceTree = SOURCE_ROOT; };
+		9752289F12C158BB00F4639C /* SpeakerListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SpeakerListController.m; path = ../../../../Source/Apps/CocoaTouchBrowser/SpeakerListController.m; sourceTree = SOURCE_ROOT; };
+		975228A412C1591800F4639C /* SpeakerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpeakerViewController.h; path = ../../../../Source/Apps/CocoaTouchBrowser/SpeakerViewController.h; sourceTree = SOURCE_ROOT; };
+		975228A512C1591800F4639C /* SpeakerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SpeakerViewController.m; path = ../../../../Source/Apps/CocoaTouchBrowser/SpeakerViewController.m; sourceTree = SOURCE_ROOT; };
+		975228A612C1591800F4639C /* SpeakerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SpeakerViewController.xib; path = ../../../../Source/Apps/CocoaTouchBrowser/SpeakerViewController.xib; sourceTree = SOURCE_ROOT; };
+		977D7A0F12B81B1F00D406E1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		977D7A1112B81B1F00D406E1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		977D7A1312B81B1F00D406E1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		97A839101303683E00048A03 /* Platinum.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Platinum.xcodeproj; path = ../Platinum/Platinum.xcodeproj; sourceTree = "<group>"; };
+		97A8391C1303685300048A03 /* libPlatinum.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlatinum.a; sourceTree = SOURCE_ROOT; };
+		E4A7DC011085A49400E6ADE2 /* CocoaTouchBrowserAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CocoaTouchBrowserAppDelegate.h; path = ../../../../Source/Apps/CocoaTouchBrowser/CocoaTouchBrowserAppDelegate.h; sourceTree = SOURCE_ROOT; };
+		E4A7DC021085A49400E6ADE2 /* CocoaTouchBrowserAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CocoaTouchBrowserAppDelegate.m; path = ../../../../Source/Apps/CocoaTouchBrowser/CocoaTouchBrowserAppDelegate.m; sourceTree = SOURCE_ROOT; };
+		E4A7DC031085A49400E6ADE2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../../../../Source/Apps/CocoaTouchBrowser/main.m; sourceTree = SOURCE_ROOT; };
+		E4A7DC041085A49400E6ADE2 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootViewController.h; path = ../../../../Source/Apps/CocoaTouchBrowser/RootViewController.h; sourceTree = SOURCE_ROOT; };
+		E4A7DC051085A49400E6ADE2 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootViewController.m; path = ../../../../Source/Apps/CocoaTouchBrowser/RootViewController.m; sourceTree = SOURCE_ROOT; };
+		E4A7DC091085A4B300E6ADE2 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = ../../../../Source/Apps/CocoaTouchBrowser/MainWindow.xib; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97A8391D1303685300048A03 /* libPlatinum.a in Frameworks */,
+				977D7A1012B81B1F00D406E1 /* CoreGraphics.framework in Frameworks */,
+				977D7A1212B81B1F00D406E1 /* Foundation.framework in Frameworks */,
+				977D7A1412B81B1F00D406E1 /* UIKit.framework in Frameworks */,
+				9704724312BFE4D900F9D88C /* libstdc++.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* CocoaTouchBrowser.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				E4A7DC131085A4DB00E6ADE2 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E4A7DC031085A49400E6ADE2 /* main.m */,
+				28A0AAE50D9B0CCF005BE974 /* CocoaTouchBrowser_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E4A7DC091085A4B300E6ADE2 /* MainWindow.xib */,
+				8D1107310486CEB800E47090 /* CocoaTouchBrowser-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				977D7A3012B81B9100D406E1 /* Platinum.framework */,
+				9704724212BFE4D900F9D88C /* libstdc++.dylib */,
+				977D7A0F12B81B1F00D406E1 /* CoreGraphics.framework */,
+				977D7A1112B81B1F00D406E1 /* Foundation.framework */,
+				977D7A1312B81B1F00D406E1 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		977D7A3012B81B9100D406E1 /* Platinum.framework */ = {
+			isa = PBXGroup;
+			children = (
+				97A839101303683E00048A03 /* Platinum.xcodeproj */,
+				97A8391C1303685300048A03 /* libPlatinum.a */,
+				977D7A3112B81BAB00D406E1 /* Headers */,
+			);
+			name = Platinum.framework;
+			sourceTree = "<group>";
+		};
+		977D7A3112B81BAB00D406E1 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				970471A512BFDBD200F9D88C /* PPUPnP.h */,
+				970471A112BFDBD200F9D88C /* PPMediaController.h */,
+				970471A212BFDBD200F9D88C /* PPMediaDevice.h */,
+				970471A412BFDBD200F9D88C /* PPMediaObject.h */,
+				970471A012BFDBD200F9D88C /* PPMediaContainer.h */,
+				970471A312BFDBD200F9D88C /* PPMediaItem.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		97A839111303683E00048A03 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				97A839181303683F00048A03 /* libPlatinum.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E4A7DC131085A4DB00E6ADE2 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				E4A7DC011085A49400E6ADE2 /* CocoaTouchBrowserAppDelegate.h */,
+				E4A7DC021085A49400E6ADE2 /* CocoaTouchBrowserAppDelegate.m */,
+				E4A7DC041085A49400E6ADE2 /* RootViewController.h */,
+				E4A7DC051085A49400E6ADE2 /* RootViewController.m */,
+				9704747512C041F500F9D88C /* ServerViewController.h */,
+				9704747612C041F500F9D88C /* ServerViewController.m */,
+				9752289E12C158BB00F4639C /* SpeakerListController.h */,
+				9752289F12C158BB00F4639C /* SpeakerListController.m */,
+				975228A412C1591800F4639C /* SpeakerViewController.h */,
+				975228A512C1591800F4639C /* SpeakerViewController.m */,
+				975228A612C1591800F4639C /* SpeakerViewController.xib */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* CocoaTouchBrowser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "CocoaTouchBrowser" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				97A8391F1303685A00048A03 /* PBXTargetDependency */,
+			);
+			name = CocoaTouchBrowser;
+			productName = CocoaTouchBrowser;
+			productReference = 1D6058910D05DD3D006BFB54 /* CocoaTouchBrowser.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CocoaTouchBrowser" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				en,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 97A839111303683E00048A03 /* Products */;
+					ProjectRef = 97A839101303683E00048A03 /* Platinum.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* CocoaTouchBrowser */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		97A839181303683F00048A03 /* libPlatinum.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libPlatinum.a;
+			remoteRef = 97A839171303683F00048A03 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4A7DC0B1085A4B300E6ADE2 /* MainWindow.xib in Resources */,
+				975228A712C1591800F4639C /* SpeakerViewController.m in Resources */,
+				975228A812C1591800F4639C /* SpeakerViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4A7DC061085A49400E6ADE2 /* CocoaTouchBrowserAppDelegate.m in Sources */,
+				E4A7DC071085A49400E6ADE2 /* main.m in Sources */,
+				E4A7DC081085A49400E6ADE2 /* RootViewController.m in Sources */,
+				9704747712C041F500F9D88C /* ServerViewController.m in Sources */,
+				975228A012C158BB00F4639C /* SpeakerListController.m in Sources */,
+				9752291F12C174CF00F4639C /* SpeakerViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		97A8391F1303685A00048A03 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Platinum;
+			targetProxy = 97A8391E1303685A00048A03 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CocoaTouchBrowser_Prefix.pch;
+				GCC_VERSION = "";
+				INFOPLIST_FILE = "CocoaTouchBrowser-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = CocoaTouchBrowser;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CocoaTouchBrowser_Prefix.pch;
+				GCC_VERSION = "";
+				INFOPLIST_FILE = "CocoaTouchBrowser-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = CocoaTouchBrowser;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../../../../Neptune/Source/Core,
+					../../../../Source/Platinum,
+					../../../../Source/Core,
+					../../../../Source/Devices/MediaServer,
+				);
+				PREBINDING = NO;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../../../../Neptune/Source/Core,
+					../../../../Source/Platinum,
+					../../../../Source/Core,
+					../../../../Source/Devices/MediaServer,
+				);
+				PREBINDING = NO;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "CocoaTouchBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CocoaTouchBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

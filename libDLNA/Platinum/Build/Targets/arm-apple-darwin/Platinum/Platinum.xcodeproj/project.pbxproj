@@ -1,0 +1,1270 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9704749A12C11FB200F9D88C /* PP_MediaObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 9704749812C11FB200F9D88C /* PP_MediaObject.h */; };
+		977D756F12B8099D00D406E1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 977D756E12B8099D00D406E1 /* Foundation.framework */; };
+		977D766112B809D600D406E1 /* PltAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D758C12B809D600D406E1 /* PltAction.cpp */; };
+		977D766212B809D600D406E1 /* PltAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D758D12B809D600D406E1 /* PltAction.h */; };
+		977D766312B809D600D406E1 /* PltArgument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D758E12B809D600D406E1 /* PltArgument.cpp */; };
+		977D766412B809D600D406E1 /* PltArgument.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D758F12B809D600D406E1 /* PltArgument.h */; };
+		977D766512B809D600D406E1 /* PltConstants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759012B809D600D406E1 /* PltConstants.cpp */; };
+		977D766612B809D600D406E1 /* PltConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759112B809D600D406E1 /* PltConstants.h */; };
+		977D766712B809D600D406E1 /* PltCtrlPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759212B809D600D406E1 /* PltCtrlPoint.cpp */; };
+		977D766812B809D600D406E1 /* PltCtrlPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759312B809D600D406E1 /* PltCtrlPoint.h */; };
+		977D766912B809D600D406E1 /* PltCtrlPointTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759412B809D600D406E1 /* PltCtrlPointTask.cpp */; };
+		977D766A12B809D600D406E1 /* PltCtrlPointTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759512B809D600D406E1 /* PltCtrlPointTask.h */; };
+		977D766B12B809D600D406E1 /* PltDatagramStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759612B809D600D406E1 /* PltDatagramStream.cpp */; };
+		977D766C12B809D600D406E1 /* PltDatagramStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759712B809D600D406E1 /* PltDatagramStream.h */; };
+		977D766D12B809D600D406E1 /* PltDeviceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759812B809D600D406E1 /* PltDeviceData.cpp */; };
+		977D766E12B809D600D406E1 /* PltDeviceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759912B809D600D406E1 /* PltDeviceData.h */; };
+		977D766F12B809D600D406E1 /* PltDeviceHost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759A12B809D600D406E1 /* PltDeviceHost.cpp */; };
+		977D767012B809D600D406E1 /* PltDeviceHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759B12B809D600D406E1 /* PltDeviceHost.h */; };
+		977D767112B809D600D406E1 /* PltEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759C12B809D600D406E1 /* PltEvent.cpp */; };
+		977D767212B809D600D406E1 /* PltEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759D12B809D600D406E1 /* PltEvent.h */; };
+		977D767312B809D600D406E1 /* PltHttp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D759E12B809D600D406E1 /* PltHttp.cpp */; };
+		977D767412B809D600D406E1 /* PltHttp.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D759F12B809D600D406E1 /* PltHttp.h */; };
+		977D767512B809D600D406E1 /* PltHttpClientTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75A012B809D600D406E1 /* PltHttpClientTask.cpp */; };
+		977D767612B809D600D406E1 /* PltHttpClientTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75A112B809D600D406E1 /* PltHttpClientTask.h */; };
+		977D767712B809D600D406E1 /* PltHttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75A212B809D600D406E1 /* PltHttpServer.cpp */; };
+		977D767812B809D600D406E1 /* PltHttpServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75A312B809D600D406E1 /* PltHttpServer.h */; };
+		977D767912B809D600D406E1 /* PltHttpServerTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75A412B809D600D406E1 /* PltHttpServerTask.cpp */; };
+		977D767A12B809D600D406E1 /* PltHttpServerTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75A512B809D600D406E1 /* PltHttpServerTask.h */; };
+		977D767B12B809D600D406E1 /* PltIconsData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75A612B809D600D406E1 /* PltIconsData.cpp */; };
+		977D767C12B809D600D406E1 /* PltService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75A712B809D600D406E1 /* PltService.cpp */; };
+		977D767D12B809D600D406E1 /* PltService.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75A812B809D600D406E1 /* PltService.h */; };
+		977D767E12B809D600D406E1 /* PltSsdp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75A912B809D600D406E1 /* PltSsdp.cpp */; };
+		977D767F12B809D600D406E1 /* PltSsdp.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75AA12B809D600D406E1 /* PltSsdp.h */; };
+		977D768012B809D600D406E1 /* PltStateVariable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75AB12B809D600D406E1 /* PltStateVariable.cpp */; };
+		977D768112B809D600D406E1 /* PltStateVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75AC12B809D600D406E1 /* PltStateVariable.h */; };
+		977D768212B809D600D406E1 /* PltTaskManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75AD12B809D600D406E1 /* PltTaskManager.cpp */; };
+		977D768312B809D600D406E1 /* PltTaskManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75AE12B809D600D406E1 /* PltTaskManager.h */; };
+		977D768412B809D600D406E1 /* PltThreadTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75AF12B809D600D406E1 /* PltThreadTask.cpp */; };
+		977D768512B809D600D406E1 /* PltThreadTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75B012B809D600D406E1 /* PltThreadTask.h */; };
+		977D768612B809D600D406E1 /* PltUPnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75B112B809D600D406E1 /* PltUPnP.cpp */; };
+		977D768712B809D600D406E1 /* PltUPnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75B212B809D600D406E1 /* PltUPnP.h */; };
+		977D768812B809D600D406E1 /* PltUPnPHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75B312B809D600D406E1 /* PltUPnPHelper.h */; };
+		977D768912B809D600D406E1 /* PltXmlHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75B412B809D600D406E1 /* PltXmlHelper.h */; };
+		977D768A12B809D600D406E1 /* PltMediaConnect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75B712B809D600D406E1 /* PltMediaConnect.cpp */; };
+		977D768B12B809D600D406E1 /* PltMediaConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75B812B809D600D406E1 /* PltMediaConnect.h */; };
+		977D768C12B809D600D406E1 /* PltXbox360.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75B912B809D600D406E1 /* PltXbox360.cpp */; };
+		977D768D12B809D600D406E1 /* PltXbox360.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75BA12B809D600D406E1 /* PltXbox360.h */; };
+		977D768E12B809D600D406E1 /* X_MS_MediaReceiverRegistrarSCPD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75BC12B809D600D406E1 /* X_MS_MediaReceiverRegistrarSCPD.cpp */; };
+		977D768F12B809D600D406E1 /* AVTransportSCPD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75BF12B809D600D406E1 /* AVTransportSCPD.cpp */; };
+		977D769012B809D600D406E1 /* PltMediaController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75C212B809D600D406E1 /* PltMediaController.cpp */; };
+		977D769112B809D600D406E1 /* PltMediaController.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75C312B809D600D406E1 /* PltMediaController.h */; };
+		977D769212B809D600D406E1 /* PltMediaRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75C412B809D600D406E1 /* PltMediaRenderer.cpp */; };
+		977D769312B809D600D406E1 /* PltMediaRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75C512B809D600D406E1 /* PltMediaRenderer.h */; };
+		977D769412B809D600D406E1 /* RdrConnectionManagerSCPD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75C712B809D600D406E1 /* RdrConnectionManagerSCPD.cpp */; };
+		977D769512B809D600D406E1 /* RenderingControlSCPD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75C912B809D600D406E1 /* RenderingControlSCPD.cpp */; };
+		977D769612B809D600D406E1 /* ConnectionManagerSCPD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75CD12B809D600D406E1 /* ConnectionManagerSCPD.cpp */; };
+		977D769712B809D600D406E1 /* ContentDirectorySCPD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75CF12B809D600D406E1 /* ContentDirectorySCPD.cpp */; };
+		977D769812B809D600D406E1 /* ContentDirectorywSearchSCPD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75D112B809D600D406E1 /* ContentDirectorywSearchSCPD.cpp */; };
+		977D769912B809D600D406E1 /* PltDidl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75D312B809D600D406E1 /* PltDidl.cpp */; };
+		977D769A12B809D600D406E1 /* PltDidl.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75D412B809D600D406E1 /* PltDidl.h */; };
+		977D769B12B809D600D406E1 /* PltFileMediaServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75D512B809D600D406E1 /* PltFileMediaServer.cpp */; };
+		977D769C12B809D600D406E1 /* PltFileMediaServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75D612B809D600D406E1 /* PltFileMediaServer.h */; };
+		977D769D12B809D600D406E1 /* PltMediaBrowser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75D712B809D600D406E1 /* PltMediaBrowser.cpp */; };
+		977D769E12B809D600D406E1 /* PltMediaBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75D812B809D600D406E1 /* PltMediaBrowser.h */; };
+		977D769F12B809D600D406E1 /* PltMediaCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75D912B809D600D406E1 /* PltMediaCache.cpp */; };
+		977D76A012B809D600D406E1 /* PltMediaCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75DA12B809D600D406E1 /* PltMediaCache.h */; };
+		977D76A112B809D600D406E1 /* PltMediaItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75DB12B809D600D406E1 /* PltMediaItem.cpp */; };
+		977D76A212B809D600D406E1 /* PltMediaItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75DC12B809D600D406E1 /* PltMediaItem.h */; };
+		977D76A312B809D600D406E1 /* PltMediaServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75DD12B809D600D406E1 /* PltMediaServer.cpp */; };
+		977D76A412B809D600D406E1 /* PltMediaServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75DE12B809D600D406E1 /* PltMediaServer.h */; };
+		977D76A512B809D600D406E1 /* PltMimeType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75DF12B809D600D406E1 /* PltMimeType.cpp */; };
+		977D76A612B809D600D406E1 /* PltMimeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75E012B809D600D406E1 /* PltMimeType.h */; };
+		977D76A712B809D600D406E1 /* PltProtocolInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75E112B809D600D406E1 /* PltProtocolInfo.cpp */; };
+		977D76A812B809D600D406E1 /* PltProtocolInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75E212B809D600D406E1 /* PltProtocolInfo.h */; };
+		977D76A912B809D600D406E1 /* PltSyncMediaBrowser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D75E312B809D600D406E1 /* PltSyncMediaBrowser.cpp */; };
+		977D76AA12B809D600D406E1 /* PltSyncMediaBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D75E412B809D600D406E1 /* PltSyncMediaBrowser.h */; };
+		977D76D712B809D600D406E1 /* PPUPnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D761512B809D600D406E1 /* PPUPnP.h */; };
+		977D76D812B809D600D406E1 /* PPUPnP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D761612B809D600D406E1 /* PPUPnP.mm */; };
+		977D76D912B809D600D406E1 /* PltDownloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D761712B809D600D406E1 /* PltDownloader.cpp */; };
+		977D76DA12B809D600D406E1 /* PltDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D761812B809D600D406E1 /* PltDownloader.h */; };
+		977D76DB12B809D600D406E1 /* PltFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D761912B809D600D406E1 /* PltFrameBuffer.cpp */; };
+		977D76DC12B809D600D406E1 /* PltFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D761A12B809D600D406E1 /* PltFrameBuffer.h */; };
+		977D76DD12B809D600D406E1 /* PltFrameServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D761B12B809D600D406E1 /* PltFrameServer.cpp */; };
+		977D76DE12B809D600D406E1 /* PltFrameServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D761C12B809D600D406E1 /* PltFrameServer.h */; };
+		977D76DF12B809D600D406E1 /* PltFrameStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D761D12B809D600D406E1 /* PltFrameStream.cpp */; };
+		977D76E012B809D600D406E1 /* PltFrameStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D761E12B809D600D406E1 /* PltFrameStream.h */; };
+		977D76E112B809D600D406E1 /* PltLeaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D761F12B809D600D406E1 /* PltLeaks.cpp */; };
+		977D76E212B809D600D406E1 /* PltLeaks.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D762012B809D600D406E1 /* PltLeaks.h */; };
+		977D76E312B809D600D406E1 /* PltMetadataHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D762112B809D600D406E1 /* PltMetadataHandler.cpp */; };
+		977D76E412B809D600D406E1 /* PltMetadataHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D762212B809D600D406E1 /* PltMetadataHandler.h */; };
+		977D76E512B809D600D406E1 /* PltRingBufferStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D762312B809D600D406E1 /* PltRingBufferStream.cpp */; };
+		977D76E612B809D600D406E1 /* PltRingBufferStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D762412B809D600D406E1 /* PltRingBufferStream.h */; };
+		977D76E712B809D600D406E1 /* PltStreamPump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D762512B809D600D406E1 /* PltStreamPump.cpp */; };
+		977D76E812B809D600D406E1 /* PltStreamPump.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D762612B809D600D406E1 /* PltStreamPump.h */; };
+		977D76E912B809D600D406E1 /* Platinum.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D762812B809D600D406E1 /* Platinum.h */; };
+		977D76EA12B809D600D406E1 /* PltSvnVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D762912B809D600D406E1 /* PltSvnVersion.h */; };
+		977D76EB12B809D600D406E1 /* PltVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D762A12B809D600D406E1 /* PltVersion.h */; };
+		977D787D12B80AE100D406E1 /* Neptune.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D771612B80AE000D406E1 /* Neptune.cpp */; };
+		977D787E12B80AE100D406E1 /* Neptune.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D771712B80AE000D406E1 /* Neptune.h */; };
+		977D787F12B80AE100D406E1 /* NptArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D771812B80AE000D406E1 /* NptArray.h */; };
+		977D788012B80AE100D406E1 /* NptBase64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D771912B80AE000D406E1 /* NptBase64.cpp */; };
+		977D788112B80AE100D406E1 /* NptBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D771A12B80AE000D406E1 /* NptBase64.h */; };
+		977D788212B80AE100D406E1 /* NptBufferedStreams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D771B12B80AE000D406E1 /* NptBufferedStreams.cpp */; };
+		977D788312B80AE100D406E1 /* NptBufferedStreams.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D771C12B80AE000D406E1 /* NptBufferedStreams.h */; };
+		977D788412B80AE100D406E1 /* NptCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D771D12B80AE000D406E1 /* NptCommon.cpp */; };
+		977D788512B80AE100D406E1 /* NptCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D771E12B80AE000D406E1 /* NptCommon.h */; };
+		977D788612B80AE100D406E1 /* NptConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D771F12B80AE000D406E1 /* NptConfig.h */; };
+		977D788712B80AE100D406E1 /* NptConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D772012B80AE000D406E1 /* NptConsole.cpp */; };
+		977D788812B80AE100D406E1 /* NptConsole.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772112B80AE000D406E1 /* NptConsole.h */; };
+		977D788912B80AE100D406E1 /* NptConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772212B80AE000D406E1 /* NptConstants.h */; };
+		977D788A12B80AE100D406E1 /* NptDataBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D772312B80AE000D406E1 /* NptDataBuffer.cpp */; };
+		977D788B12B80AE100D406E1 /* NptDataBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772412B80AE000D406E1 /* NptDataBuffer.h */; };
+		977D788C12B80AE100D406E1 /* NptDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D772512B80AE000D406E1 /* NptDebug.cpp */; };
+		977D788D12B80AE100D406E1 /* NptDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772612B80AE000D406E1 /* NptDebug.h */; };
+		977D788E12B80AE100D406E1 /* NptDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772712B80AE000D406E1 /* NptDefs.h */; };
+		977D788F12B80AE100D406E1 /* NptDynamicCast.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772812B80AE000D406E1 /* NptDynamicCast.h */; };
+		977D789012B80AE100D406E1 /* NptDynamicLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D772912B80AE000D406E1 /* NptDynamicLibraries.cpp */; };
+		977D789112B80AE100D406E1 /* NptDynamicLibraries.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772A12B80AE000D406E1 /* NptDynamicLibraries.h */; };
+		977D789212B80AE100D406E1 /* NptFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D772B12B80AE000D406E1 /* NptFile.cpp */; };
+		977D789312B80AE100D406E1 /* NptFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772C12B80AE000D406E1 /* NptFile.h */; };
+		977D789412B80AE100D406E1 /* NptHttp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D772D12B80AE000D406E1 /* NptHttp.cpp */; };
+		977D789512B80AE100D406E1 /* NptHttp.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772E12B80AE000D406E1 /* NptHttp.h */; };
+		977D789612B80AE100D406E1 /* NptInterfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D772F12B80AE000D406E1 /* NptInterfaces.h */; };
+		977D789712B80AE100D406E1 /* NptList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D773012B80AE000D406E1 /* NptList.cpp */; };
+		977D789812B80AE100D406E1 /* NptList.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773112B80AE000D406E1 /* NptList.h */; };
+		977D789912B80AE100D406E1 /* NptLogging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D773212B80AE000D406E1 /* NptLogging.cpp */; };
+		977D789A12B80AE100D406E1 /* NptLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773312B80AE000D406E1 /* NptLogging.h */; };
+		977D789B12B80AE100D406E1 /* NptMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773412B80AE000D406E1 /* NptMap.h */; };
+		977D789C12B80AE100D406E1 /* NptMessaging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D773512B80AE000D406E1 /* NptMessaging.cpp */; };
+		977D789D12B80AE100D406E1 /* NptMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773612B80AE000D406E1 /* NptMessaging.h */; };
+		977D789E12B80AE100D406E1 /* NptNetwork.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D773712B80AE000D406E1 /* NptNetwork.cpp */; };
+		977D789F12B80AE100D406E1 /* NptNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773812B80AE000D406E1 /* NptNetwork.h */; };
+		977D78A012B80AE100D406E1 /* NptQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D773912B80AE000D406E1 /* NptQueue.cpp */; };
+		977D78A112B80AE100D406E1 /* NptQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773A12B80AE000D406E1 /* NptQueue.h */; };
+		977D78A212B80AE100D406E1 /* NptReferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773B12B80AE000D406E1 /* NptReferences.h */; };
+		977D78A312B80AE100D406E1 /* NptResults.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D773C12B80AE000D406E1 /* NptResults.cpp */; };
+		977D78A412B80AE100D406E1 /* NptResults.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773D12B80AE000D406E1 /* NptResults.h */; };
+		977D78A512B80AE100D406E1 /* NptRingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D773E12B80AE000D406E1 /* NptRingBuffer.cpp */; };
+		977D78A612B80AE100D406E1 /* NptRingBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D773F12B80AE000D406E1 /* NptRingBuffer.h */; };
+		977D78A712B80AE100D406E1 /* NptSelectableMessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774012B80AE000D406E1 /* NptSelectableMessageQueue.h */; };
+		977D78A812B80AE100D406E1 /* NptSerialPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774112B80AE000D406E1 /* NptSerialPort.h */; };
+		977D78A912B80AE100D406E1 /* NptSimpleMessageQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D774212B80AE000D406E1 /* NptSimpleMessageQueue.cpp */; };
+		977D78AA12B80AE100D406E1 /* NptSimpleMessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774312B80AE000D406E1 /* NptSimpleMessageQueue.h */; };
+		977D78AB12B80AE100D406E1 /* NptSockets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D774412B80AE000D406E1 /* NptSockets.cpp */; };
+		977D78AC12B80AE100D406E1 /* NptSockets.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774512B80AE000D406E1 /* NptSockets.h */; };
+		977D78AD12B80AE100D406E1 /* NptStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774612B80AE000D406E1 /* NptStack.h */; };
+		977D78AE12B80AE100D406E1 /* NptStreams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D774712B80AE000D406E1 /* NptStreams.cpp */; };
+		977D78AF12B80AE100D406E1 /* NptStreams.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774812B80AE000D406E1 /* NptStreams.h */; };
+		977D78B012B80AE100D406E1 /* NptStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D774912B80AE000D406E1 /* NptStrings.cpp */; };
+		977D78B112B80AE100D406E1 /* NptStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774A12B80AE000D406E1 /* NptStrings.h */; };
+		977D78B212B80AE100D406E1 /* NptSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D774B12B80AE000D406E1 /* NptSystem.cpp */; };
+		977D78B312B80AE100D406E1 /* NptSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774C12B80AE000D406E1 /* NptSystem.h */; };
+		977D78B412B80AE100D406E1 /* NptThreads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D774D12B80AE000D406E1 /* NptThreads.cpp */; };
+		977D78B512B80AE100D406E1 /* NptThreads.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D774E12B80AE000D406E1 /* NptThreads.h */; };
+		977D78B612B80AE100D406E1 /* NptTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D774F12B80AE000D406E1 /* NptTime.cpp */; };
+		977D78B712B80AE100D406E1 /* NptTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775012B80AE000D406E1 /* NptTime.h */; };
+		977D78B812B80AE100D406E1 /* NptTls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D775112B80AE000D406E1 /* NptTls.cpp */; };
+		977D78B912B80AE100D406E1 /* NptTls.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775212B80AE000D406E1 /* NptTls.h */; };
+		977D78BA12B80AE100D406E1 /* NptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775312B80AE000D406E1 /* NptTypes.h */; };
+		977D78BB12B80AE100D406E1 /* NptUri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D775412B80AE000D406E1 /* NptUri.cpp */; };
+		977D78BC12B80AE100D406E1 /* NptUri.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775512B80AE000D406E1 /* NptUri.h */; };
+		977D78BD12B80AE100D406E1 /* NptUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D775612B80AE000D406E1 /* NptUtils.cpp */; };
+		977D78BE12B80AE100D406E1 /* NptUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775712B80AE000D406E1 /* NptUtils.h */; };
+		977D78BF12B80AE100D406E1 /* NptVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775812B80AE000D406E1 /* NptVersion.h */; };
+		977D78C012B80AE100D406E1 /* NptXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D775912B80AE000D406E1 /* NptXml.cpp */; };
+		977D78C112B80AE100D406E1 /* NptXml.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775A12B80AE000D406E1 /* NptXml.h */; };
+		977D78C212B80AE100D406E1 /* NptZip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D775B12B80AE000D406E1 /* NptZip.cpp */; };
+		977D78C312B80AE100D406E1 /* NptZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D775C12B80AE000D406E1 /* NptZip.h */; };
+		977D795E12B80AE100D406E1 /* NptBsdNetwork.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D77FD12B80AE100D406E1 /* NptBsdNetwork.cpp */; };
+		977D795F12B80AE100D406E1 /* NptBsdSockets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D77FE12B80AE100D406E1 /* NptBsdSockets.cpp */; };
+		977D796012B80AE100D406E1 /* NptCocoaConsole.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D780012B80AE100D406E1 /* NptCocoaConsole.mm */; };
+		977D796112B80AE100D406E1 /* NptCocoaMessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D780112B80AE100D406E1 /* NptCocoaMessageQueue.h */; };
+		977D796212B80AE100D406E1 /* NptCocoaMessageQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D780212B80AE100D406E1 /* NptCocoaMessageQueue.mm */; };
+		977D796412B80AE100D406E1 /* NptNullHttpProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D780512B80AE100D406E1 /* NptNullHttpProxy.cpp */; };
+		977D796712B80AE100D406E1 /* NptNullSerialPort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D780812B80AE100D406E1 /* NptNullSerialPort.cpp */; };
+		977D796A12B80AE100D406E1 /* NptPosixDynamicLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D780C12B80AE100D406E1 /* NptPosixDynamicLibraries.cpp */; };
+		977D796B12B80AE100D406E1 /* NptPosixFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D780D12B80AE100D406E1 /* NptPosixFile.cpp */; };
+		977D796C12B80AE100D406E1 /* NptPosixNetwork.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D780E12B80AE100D406E1 /* NptPosixNetwork.cpp */; };
+		977D796D12B80AE100D406E1 /* NptPosixQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D780F12B80AE100D406E1 /* NptPosixQueue.cpp */; };
+		977D796E12B80AE100D406E1 /* NptPosixSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D781012B80AE100D406E1 /* NptPosixSystem.cpp */; };
+		977D796F12B80AE100D406E1 /* NptPosixThreads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D781112B80AE100D406E1 /* NptPosixThreads.cpp */; };
+		977D797012B80AE100D406E1 /* NptPosixTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D781212B80AE100D406E1 /* NptPosixTime.cpp */; };
+		977D797112B80AE100D406E1 /* NptSelectableMessageQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D781312B80AE100D406E1 /* NptSelectableMessageQueue.cpp */; };
+		977D797912B80AE100D406E1 /* NptStdcConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D781E12B80AE100D406E1 /* NptStdcConsole.cpp */; };
+		977D797A12B80AE100D406E1 /* NptStdcDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D781F12B80AE100D406E1 /* NptStdcDebug.cpp */; };
+		977D797B12B80AE100D406E1 /* NptStdcEnvironment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D782012B80AE100D406E1 /* NptStdcEnvironment.cpp */; };
+		977D797C12B80AE100D406E1 /* NptStdcFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 977D782112B80AE100D406E1 /* NptStdcFile.cpp */; };
+		977D7B7A12B9393800D406E1 /* PPMediaController.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D7B7812B9393800D406E1 /* PPMediaController.h */; };
+		977D7B7B12B9393800D406E1 /* PPMediaController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D7B7912B9393800D406E1 /* PPMediaController.mm */; };
+		977D7B8412B944E500D406E1 /* PPMediaObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D7B8212B944E500D406E1 /* PPMediaObject.h */; };
+		977D7B8512B944E500D406E1 /* PPMediaObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D7B8312B944E500D406E1 /* PPMediaObject.mm */; };
+		977D7B8812B944F800D406E1 /* PPMediaContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D7B8612B944F800D406E1 /* PPMediaContainer.h */; };
+		977D7B8912B944F800D406E1 /* PPMediaContainer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D7B8712B944F800D406E1 /* PPMediaContainer.mm */; };
+		977D7B8C12B9452000D406E1 /* PPMediaItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D7B8A12B9452000D406E1 /* PPMediaItem.h */; };
+		977D7B8D12B9452000D406E1 /* PPMediaItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D7B8B12B9452000D406E1 /* PPMediaItem.mm */; };
+		977D7CFF12BB1F3900D406E1 /* PPMediaDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D7CFD12BB1F3900D406E1 /* PPMediaDevice.h */; };
+		977D7D0012BB1F3900D406E1 /* PPMediaDevice.mm in Sources */ = {isa = PBXBuildFile; fileRef = 977D7CFE12BB1F3900D406E1 /* PPMediaDevice.mm */; };
+		977D7D5012BB370800D406E1 /* PP_MediaDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 977D7D4E12BB370800D406E1 /* PP_MediaDevice.h */; };
+		97F00E1212FA322800837C2E /* PPMediaDevice.hh in Headers */ = {isa = PBXBuildFile; fileRef = 97F00E1112FA322800837C2E /* PPMediaDevice.hh */; };
+		AA747D9F0F9514B9006C5449 /* Platinum_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* Platinum_Prefix.pch */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9704749812C11FB200F9D88C /* PP_MediaObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PP_MediaObject.h; sourceTree = "<group>"; };
+		977D756E12B8099D00D406E1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		977D758C12B809D600D406E1 /* PltAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltAction.cpp; sourceTree = "<group>"; };
+		977D758D12B809D600D406E1 /* PltAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltAction.h; sourceTree = "<group>"; };
+		977D758E12B809D600D406E1 /* PltArgument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltArgument.cpp; sourceTree = "<group>"; };
+		977D758F12B809D600D406E1 /* PltArgument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltArgument.h; sourceTree = "<group>"; };
+		977D759012B809D600D406E1 /* PltConstants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltConstants.cpp; sourceTree = "<group>"; };
+		977D759112B809D600D406E1 /* PltConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltConstants.h; sourceTree = "<group>"; };
+		977D759212B809D600D406E1 /* PltCtrlPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltCtrlPoint.cpp; sourceTree = "<group>"; };
+		977D759312B809D600D406E1 /* PltCtrlPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltCtrlPoint.h; sourceTree = "<group>"; };
+		977D759412B809D600D406E1 /* PltCtrlPointTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltCtrlPointTask.cpp; sourceTree = "<group>"; };
+		977D759512B809D600D406E1 /* PltCtrlPointTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltCtrlPointTask.h; sourceTree = "<group>"; };
+		977D759612B809D600D406E1 /* PltDatagramStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltDatagramStream.cpp; sourceTree = "<group>"; };
+		977D759712B809D600D406E1 /* PltDatagramStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltDatagramStream.h; sourceTree = "<group>"; };
+		977D759812B809D600D406E1 /* PltDeviceData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltDeviceData.cpp; sourceTree = "<group>"; };
+		977D759912B809D600D406E1 /* PltDeviceData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltDeviceData.h; sourceTree = "<group>"; };
+		977D759A12B809D600D406E1 /* PltDeviceHost.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltDeviceHost.cpp; sourceTree = "<group>"; };
+		977D759B12B809D600D406E1 /* PltDeviceHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltDeviceHost.h; sourceTree = "<group>"; };
+		977D759C12B809D600D406E1 /* PltEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltEvent.cpp; sourceTree = "<group>"; };
+		977D759D12B809D600D406E1 /* PltEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltEvent.h; sourceTree = "<group>"; };
+		977D759E12B809D600D406E1 /* PltHttp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltHttp.cpp; sourceTree = "<group>"; };
+		977D759F12B809D600D406E1 /* PltHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltHttp.h; sourceTree = "<group>"; };
+		977D75A012B809D600D406E1 /* PltHttpClientTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltHttpClientTask.cpp; sourceTree = "<group>"; };
+		977D75A112B809D600D406E1 /* PltHttpClientTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltHttpClientTask.h; sourceTree = "<group>"; };
+		977D75A212B809D600D406E1 /* PltHttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltHttpServer.cpp; sourceTree = "<group>"; };
+		977D75A312B809D600D406E1 /* PltHttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltHttpServer.h; sourceTree = "<group>"; };
+		977D75A412B809D600D406E1 /* PltHttpServerTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltHttpServerTask.cpp; sourceTree = "<group>"; };
+		977D75A512B809D600D406E1 /* PltHttpServerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltHttpServerTask.h; sourceTree = "<group>"; };
+		977D75A612B809D600D406E1 /* PltIconsData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltIconsData.cpp; sourceTree = "<group>"; };
+		977D75A712B809D600D406E1 /* PltService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltService.cpp; sourceTree = "<group>"; };
+		977D75A812B809D600D406E1 /* PltService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltService.h; sourceTree = "<group>"; };
+		977D75A912B809D600D406E1 /* PltSsdp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltSsdp.cpp; sourceTree = "<group>"; };
+		977D75AA12B809D600D406E1 /* PltSsdp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltSsdp.h; sourceTree = "<group>"; };
+		977D75AB12B809D600D406E1 /* PltStateVariable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltStateVariable.cpp; sourceTree = "<group>"; };
+		977D75AC12B809D600D406E1 /* PltStateVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltStateVariable.h; sourceTree = "<group>"; };
+		977D75AD12B809D600D406E1 /* PltTaskManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltTaskManager.cpp; sourceTree = "<group>"; };
+		977D75AE12B809D600D406E1 /* PltTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltTaskManager.h; sourceTree = "<group>"; };
+		977D75AF12B809D600D406E1 /* PltThreadTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltThreadTask.cpp; sourceTree = "<group>"; };
+		977D75B012B809D600D406E1 /* PltThreadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltThreadTask.h; sourceTree = "<group>"; };
+		977D75B112B809D600D406E1 /* PltUPnP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltUPnP.cpp; sourceTree = "<group>"; };
+		977D75B212B809D600D406E1 /* PltUPnP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltUPnP.h; sourceTree = "<group>"; };
+		977D75B312B809D600D406E1 /* PltUPnPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltUPnPHelper.h; sourceTree = "<group>"; };
+		977D75B412B809D600D406E1 /* PltXmlHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltXmlHelper.h; sourceTree = "<group>"; };
+		977D75B712B809D600D406E1 /* PltMediaConnect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMediaConnect.cpp; sourceTree = "<group>"; };
+		977D75B812B809D600D406E1 /* PltMediaConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMediaConnect.h; sourceTree = "<group>"; };
+		977D75B912B809D600D406E1 /* PltXbox360.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltXbox360.cpp; sourceTree = "<group>"; };
+		977D75BA12B809D600D406E1 /* PltXbox360.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltXbox360.h; sourceTree = "<group>"; };
+		977D75BB12B809D600D406E1 /* process_scpds.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = process_scpds.sh; sourceTree = "<group>"; };
+		977D75BC12B809D600D406E1 /* X_MS_MediaReceiverRegistrarSCPD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = X_MS_MediaReceiverRegistrarSCPD.cpp; sourceTree = "<group>"; };
+		977D75BD12B809D600D406E1 /* X_MS_MediaReceiverRegistrarSCPD.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = X_MS_MediaReceiverRegistrarSCPD.xml; sourceTree = "<group>"; };
+		977D75BF12B809D600D406E1 /* AVTransportSCPD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVTransportSCPD.cpp; sourceTree = "<group>"; };
+		977D75C012B809D600D406E1 /* AVTransportSCPD.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AVTransportSCPD.xml; sourceTree = "<group>"; };
+		977D75C112B809D600D406E1 /* AVTransportSCPDFull.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AVTransportSCPDFull.xml; sourceTree = "<group>"; };
+		977D75C212B809D600D406E1 /* PltMediaController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMediaController.cpp; sourceTree = "<group>"; };
+		977D75C312B809D600D406E1 /* PltMediaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMediaController.h; sourceTree = "<group>"; };
+		977D75C412B809D600D406E1 /* PltMediaRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMediaRenderer.cpp; sourceTree = "<group>"; };
+		977D75C512B809D600D406E1 /* PltMediaRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMediaRenderer.h; sourceTree = "<group>"; };
+		977D75C612B809D600D406E1 /* process_scpds.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = process_scpds.sh; sourceTree = "<group>"; };
+		977D75C712B809D600D406E1 /* RdrConnectionManagerSCPD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RdrConnectionManagerSCPD.cpp; sourceTree = "<group>"; };
+		977D75C812B809D600D406E1 /* RdrConnectionManagerSCPD.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RdrConnectionManagerSCPD.xml; sourceTree = "<group>"; };
+		977D75C912B809D600D406E1 /* RenderingControlSCPD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderingControlSCPD.cpp; sourceTree = "<group>"; };
+		977D75CA12B809D600D406E1 /* RenderingControlSCPD.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RenderingControlSCPD.xml; sourceTree = "<group>"; };
+		977D75CB12B809D600D406E1 /* RenderingControlSCPD_Full.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RenderingControlSCPD_Full.xml; sourceTree = "<group>"; };
+		977D75CD12B809D600D406E1 /* ConnectionManagerSCPD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectionManagerSCPD.cpp; sourceTree = "<group>"; };
+		977D75CE12B809D600D406E1 /* ConnectionManagerSCPD.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ConnectionManagerSCPD.xml; sourceTree = "<group>"; };
+		977D75CF12B809D600D406E1 /* ContentDirectorySCPD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ContentDirectorySCPD.cpp; sourceTree = "<group>"; };
+		977D75D012B809D600D406E1 /* ContentDirectorySCPD.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ContentDirectorySCPD.xml; sourceTree = "<group>"; };
+		977D75D112B809D600D406E1 /* ContentDirectorywSearchSCPD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ContentDirectorywSearchSCPD.cpp; sourceTree = "<group>"; };
+		977D75D212B809D600D406E1 /* ContentDirectorywSearchSCPD.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ContentDirectorywSearchSCPD.xml; sourceTree = "<group>"; };
+		977D75D312B809D600D406E1 /* PltDidl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltDidl.cpp; sourceTree = "<group>"; };
+		977D75D412B809D600D406E1 /* PltDidl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltDidl.h; sourceTree = "<group>"; };
+		977D75D512B809D600D406E1 /* PltFileMediaServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltFileMediaServer.cpp; sourceTree = "<group>"; };
+		977D75D612B809D600D406E1 /* PltFileMediaServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltFileMediaServer.h; sourceTree = "<group>"; };
+		977D75D712B809D600D406E1 /* PltMediaBrowser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMediaBrowser.cpp; sourceTree = "<group>"; };
+		977D75D812B809D600D406E1 /* PltMediaBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMediaBrowser.h; sourceTree = "<group>"; };
+		977D75D912B809D600D406E1 /* PltMediaCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMediaCache.cpp; sourceTree = "<group>"; };
+		977D75DA12B809D600D406E1 /* PltMediaCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMediaCache.h; sourceTree = "<group>"; };
+		977D75DB12B809D600D406E1 /* PltMediaItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMediaItem.cpp; sourceTree = "<group>"; };
+		977D75DC12B809D600D406E1 /* PltMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMediaItem.h; sourceTree = "<group>"; };
+		977D75DD12B809D600D406E1 /* PltMediaServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMediaServer.cpp; sourceTree = "<group>"; };
+		977D75DE12B809D600D406E1 /* PltMediaServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMediaServer.h; sourceTree = "<group>"; };
+		977D75DF12B809D600D406E1 /* PltMimeType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMimeType.cpp; sourceTree = "<group>"; };
+		977D75E012B809D600D406E1 /* PltMimeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMimeType.h; sourceTree = "<group>"; };
+		977D75E112B809D600D406E1 /* PltProtocolInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltProtocolInfo.cpp; sourceTree = "<group>"; };
+		977D75E212B809D600D406E1 /* PltProtocolInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltProtocolInfo.h; sourceTree = "<group>"; };
+		977D75E312B809D600D406E1 /* PltSyncMediaBrowser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltSyncMediaBrowser.cpp; sourceTree = "<group>"; };
+		977D75E412B809D600D406E1 /* PltSyncMediaBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltSyncMediaBrowser.h; sourceTree = "<group>"; };
+		977D75E512B809D600D406E1 /* process_scpds.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = process_scpds.sh; sourceTree = "<group>"; };
+		977D761512B809D600D406E1 /* PPUPnP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPUPnP.h; sourceTree = "<group>"; };
+		977D761612B809D600D406E1 /* PPUPnP.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPUPnP.mm; sourceTree = "<group>"; };
+		977D761712B809D600D406E1 /* PltDownloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltDownloader.cpp; sourceTree = "<group>"; };
+		977D761812B809D600D406E1 /* PltDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltDownloader.h; sourceTree = "<group>"; };
+		977D761912B809D600D406E1 /* PltFrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltFrameBuffer.cpp; sourceTree = "<group>"; };
+		977D761A12B809D600D406E1 /* PltFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltFrameBuffer.h; sourceTree = "<group>"; };
+		977D761B12B809D600D406E1 /* PltFrameServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltFrameServer.cpp; sourceTree = "<group>"; };
+		977D761C12B809D600D406E1 /* PltFrameServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltFrameServer.h; sourceTree = "<group>"; };
+		977D761D12B809D600D406E1 /* PltFrameStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltFrameStream.cpp; sourceTree = "<group>"; };
+		977D761E12B809D600D406E1 /* PltFrameStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltFrameStream.h; sourceTree = "<group>"; };
+		977D761F12B809D600D406E1 /* PltLeaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltLeaks.cpp; sourceTree = "<group>"; };
+		977D762012B809D600D406E1 /* PltLeaks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltLeaks.h; sourceTree = "<group>"; };
+		977D762112B809D600D406E1 /* PltMetadataHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltMetadataHandler.cpp; sourceTree = "<group>"; };
+		977D762212B809D600D406E1 /* PltMetadataHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltMetadataHandler.h; sourceTree = "<group>"; };
+		977D762312B809D600D406E1 /* PltRingBufferStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltRingBufferStream.cpp; sourceTree = "<group>"; };
+		977D762412B809D600D406E1 /* PltRingBufferStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltRingBufferStream.h; sourceTree = "<group>"; };
+		977D762512B809D600D406E1 /* PltStreamPump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltStreamPump.cpp; sourceTree = "<group>"; };
+		977D762612B809D600D406E1 /* PltStreamPump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltStreamPump.h; sourceTree = "<group>"; };
+		977D762812B809D600D406E1 /* Platinum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platinum.h; sourceTree = "<group>"; };
+		977D762912B809D600D406E1 /* PltSvnVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltSvnVersion.h; sourceTree = "<group>"; };
+		977D762A12B809D600D406E1 /* PltVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PltVersion.h; sourceTree = "<group>"; };
+		977D771612B80AE000D406E1 /* Neptune.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Neptune.cpp; sourceTree = "<group>"; };
+		977D771712B80AE000D406E1 /* Neptune.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Neptune.h; sourceTree = "<group>"; };
+		977D771812B80AE000D406E1 /* NptArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptArray.h; sourceTree = "<group>"; };
+		977D771912B80AE000D406E1 /* NptBase64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptBase64.cpp; sourceTree = "<group>"; };
+		977D771A12B80AE000D406E1 /* NptBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptBase64.h; sourceTree = "<group>"; };
+		977D771B12B80AE000D406E1 /* NptBufferedStreams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptBufferedStreams.cpp; sourceTree = "<group>"; };
+		977D771C12B80AE000D406E1 /* NptBufferedStreams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptBufferedStreams.h; sourceTree = "<group>"; };
+		977D771D12B80AE000D406E1 /* NptCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptCommon.cpp; sourceTree = "<group>"; };
+		977D771E12B80AE000D406E1 /* NptCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptCommon.h; sourceTree = "<group>"; };
+		977D771F12B80AE000D406E1 /* NptConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptConfig.h; sourceTree = "<group>"; };
+		977D772012B80AE000D406E1 /* NptConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptConsole.cpp; sourceTree = "<group>"; };
+		977D772112B80AE000D406E1 /* NptConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptConsole.h; sourceTree = "<group>"; };
+		977D772212B80AE000D406E1 /* NptConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptConstants.h; sourceTree = "<group>"; };
+		977D772312B80AE000D406E1 /* NptDataBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptDataBuffer.cpp; sourceTree = "<group>"; };
+		977D772412B80AE000D406E1 /* NptDataBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptDataBuffer.h; sourceTree = "<group>"; };
+		977D772512B80AE000D406E1 /* NptDebug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptDebug.cpp; sourceTree = "<group>"; };
+		977D772612B80AE000D406E1 /* NptDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptDebug.h; sourceTree = "<group>"; };
+		977D772712B80AE000D406E1 /* NptDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptDefs.h; sourceTree = "<group>"; };
+		977D772812B80AE000D406E1 /* NptDynamicCast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptDynamicCast.h; sourceTree = "<group>"; };
+		977D772912B80AE000D406E1 /* NptDynamicLibraries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptDynamicLibraries.cpp; sourceTree = "<group>"; };
+		977D772A12B80AE000D406E1 /* NptDynamicLibraries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptDynamicLibraries.h; sourceTree = "<group>"; };
+		977D772B12B80AE000D406E1 /* NptFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptFile.cpp; sourceTree = "<group>"; };
+		977D772C12B80AE000D406E1 /* NptFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptFile.h; sourceTree = "<group>"; };
+		977D772D12B80AE000D406E1 /* NptHttp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptHttp.cpp; sourceTree = "<group>"; };
+		977D772E12B80AE000D406E1 /* NptHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptHttp.h; sourceTree = "<group>"; };
+		977D772F12B80AE000D406E1 /* NptInterfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptInterfaces.h; sourceTree = "<group>"; };
+		977D773012B80AE000D406E1 /* NptList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptList.cpp; sourceTree = "<group>"; };
+		977D773112B80AE000D406E1 /* NptList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptList.h; sourceTree = "<group>"; };
+		977D773212B80AE000D406E1 /* NptLogging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptLogging.cpp; sourceTree = "<group>"; };
+		977D773312B80AE000D406E1 /* NptLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptLogging.h; sourceTree = "<group>"; };
+		977D773412B80AE000D406E1 /* NptMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptMap.h; sourceTree = "<group>"; };
+		977D773512B80AE000D406E1 /* NptMessaging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptMessaging.cpp; sourceTree = "<group>"; };
+		977D773612B80AE000D406E1 /* NptMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptMessaging.h; sourceTree = "<group>"; };
+		977D773712B80AE000D406E1 /* NptNetwork.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptNetwork.cpp; sourceTree = "<group>"; };
+		977D773812B80AE000D406E1 /* NptNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptNetwork.h; sourceTree = "<group>"; };
+		977D773912B80AE000D406E1 /* NptQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptQueue.cpp; sourceTree = "<group>"; };
+		977D773A12B80AE000D406E1 /* NptQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptQueue.h; sourceTree = "<group>"; };
+		977D773B12B80AE000D406E1 /* NptReferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptReferences.h; sourceTree = "<group>"; };
+		977D773C12B80AE000D406E1 /* NptResults.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptResults.cpp; sourceTree = "<group>"; };
+		977D773D12B80AE000D406E1 /* NptResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptResults.h; sourceTree = "<group>"; };
+		977D773E12B80AE000D406E1 /* NptRingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptRingBuffer.cpp; sourceTree = "<group>"; };
+		977D773F12B80AE000D406E1 /* NptRingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptRingBuffer.h; sourceTree = "<group>"; };
+		977D774012B80AE000D406E1 /* NptSelectableMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptSelectableMessageQueue.h; sourceTree = "<group>"; };
+		977D774112B80AE000D406E1 /* NptSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptSerialPort.h; sourceTree = "<group>"; };
+		977D774212B80AE000D406E1 /* NptSimpleMessageQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptSimpleMessageQueue.cpp; sourceTree = "<group>"; };
+		977D774312B80AE000D406E1 /* NptSimpleMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptSimpleMessageQueue.h; sourceTree = "<group>"; };
+		977D774412B80AE000D406E1 /* NptSockets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptSockets.cpp; sourceTree = "<group>"; };
+		977D774512B80AE000D406E1 /* NptSockets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptSockets.h; sourceTree = "<group>"; };
+		977D774612B80AE000D406E1 /* NptStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptStack.h; sourceTree = "<group>"; };
+		977D774712B80AE000D406E1 /* NptStreams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptStreams.cpp; sourceTree = "<group>"; };
+		977D774812B80AE000D406E1 /* NptStreams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptStreams.h; sourceTree = "<group>"; };
+		977D774912B80AE000D406E1 /* NptStrings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptStrings.cpp; sourceTree = "<group>"; };
+		977D774A12B80AE000D406E1 /* NptStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptStrings.h; sourceTree = "<group>"; };
+		977D774B12B80AE000D406E1 /* NptSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptSystem.cpp; sourceTree = "<group>"; };
+		977D774C12B80AE000D406E1 /* NptSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptSystem.h; sourceTree = "<group>"; };
+		977D774D12B80AE000D406E1 /* NptThreads.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptThreads.cpp; sourceTree = "<group>"; };
+		977D774E12B80AE000D406E1 /* NptThreads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptThreads.h; sourceTree = "<group>"; };
+		977D774F12B80AE000D406E1 /* NptTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptTime.cpp; sourceTree = "<group>"; };
+		977D775012B80AE000D406E1 /* NptTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptTime.h; sourceTree = "<group>"; };
+		977D775112B80AE000D406E1 /* NptTls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptTls.cpp; sourceTree = "<group>"; };
+		977D775212B80AE000D406E1 /* NptTls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptTls.h; sourceTree = "<group>"; };
+		977D775312B80AE000D406E1 /* NptTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptTypes.h; sourceTree = "<group>"; };
+		977D775412B80AE000D406E1 /* NptUri.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptUri.cpp; sourceTree = "<group>"; };
+		977D775512B80AE000D406E1 /* NptUri.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptUri.h; sourceTree = "<group>"; };
+		977D775612B80AE000D406E1 /* NptUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptUtils.cpp; sourceTree = "<group>"; };
+		977D775712B80AE000D406E1 /* NptUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptUtils.h; sourceTree = "<group>"; };
+		977D775812B80AE000D406E1 /* NptVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptVersion.h; sourceTree = "<group>"; };
+		977D775912B80AE000D406E1 /* NptXml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptXml.cpp; sourceTree = "<group>"; };
+		977D775A12B80AE000D406E1 /* NptXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptXml.h; sourceTree = "<group>"; };
+		977D775B12B80AE000D406E1 /* NptZip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptZip.cpp; sourceTree = "<group>"; };
+		977D775C12B80AE000D406E1 /* NptZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptZip.h; sourceTree = "<group>"; };
+		977D77FD12B80AE100D406E1 /* NptBsdNetwork.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptBsdNetwork.cpp; sourceTree = "<group>"; };
+		977D77FE12B80AE100D406E1 /* NptBsdSockets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptBsdSockets.cpp; sourceTree = "<group>"; };
+		977D780012B80AE100D406E1 /* NptCocoaConsole.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NptCocoaConsole.mm; sourceTree = "<group>"; };
+		977D780112B80AE100D406E1 /* NptCocoaMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NptCocoaMessageQueue.h; sourceTree = "<group>"; };
+		977D780212B80AE100D406E1 /* NptCocoaMessageQueue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NptCocoaMessageQueue.mm; sourceTree = "<group>"; };
+		977D780512B80AE100D406E1 /* NptNullHttpProxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptNullHttpProxy.cpp; sourceTree = "<group>"; };
+		977D780812B80AE100D406E1 /* NptNullSerialPort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptNullSerialPort.cpp; sourceTree = "<group>"; };
+		977D780C12B80AE100D406E1 /* NptPosixDynamicLibraries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptPosixDynamicLibraries.cpp; sourceTree = "<group>"; };
+		977D780D12B80AE100D406E1 /* NptPosixFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptPosixFile.cpp; sourceTree = "<group>"; };
+		977D780E12B80AE100D406E1 /* NptPosixNetwork.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptPosixNetwork.cpp; sourceTree = "<group>"; };
+		977D780F12B80AE100D406E1 /* NptPosixQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptPosixQueue.cpp; sourceTree = "<group>"; };
+		977D781012B80AE100D406E1 /* NptPosixSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptPosixSystem.cpp; sourceTree = "<group>"; };
+		977D781112B80AE100D406E1 /* NptPosixThreads.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptPosixThreads.cpp; sourceTree = "<group>"; };
+		977D781212B80AE100D406E1 /* NptPosixTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptPosixTime.cpp; sourceTree = "<group>"; };
+		977D781312B80AE100D406E1 /* NptSelectableMessageQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptSelectableMessageQueue.cpp; sourceTree = "<group>"; };
+		977D781E12B80AE100D406E1 /* NptStdcConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptStdcConsole.cpp; sourceTree = "<group>"; };
+		977D781F12B80AE100D406E1 /* NptStdcDebug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptStdcDebug.cpp; sourceTree = "<group>"; };
+		977D782012B80AE100D406E1 /* NptStdcEnvironment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptStdcEnvironment.cpp; sourceTree = "<group>"; };
+		977D782112B80AE100D406E1 /* NptStdcFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NptStdcFile.cpp; sourceTree = "<group>"; };
+		977D7B7812B9393800D406E1 /* PPMediaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPMediaController.h; sourceTree = "<group>"; };
+		977D7B7912B9393800D406E1 /* PPMediaController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPMediaController.mm; sourceTree = "<group>"; };
+		977D7B8212B944E500D406E1 /* PPMediaObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPMediaObject.h; sourceTree = "<group>"; };
+		977D7B8312B944E500D406E1 /* PPMediaObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPMediaObject.mm; sourceTree = "<group>"; };
+		977D7B8612B944F800D406E1 /* PPMediaContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPMediaContainer.h; sourceTree = "<group>"; };
+		977D7B8712B944F800D406E1 /* PPMediaContainer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPMediaContainer.mm; sourceTree = "<group>"; };
+		977D7B8A12B9452000D406E1 /* PPMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPMediaItem.h; sourceTree = "<group>"; };
+		977D7B8B12B9452000D406E1 /* PPMediaItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPMediaItem.mm; sourceTree = "<group>"; };
+		977D7CFD12BB1F3900D406E1 /* PPMediaDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPMediaDevice.h; sourceTree = "<group>"; };
+		977D7CFE12BB1F3900D406E1 /* PPMediaDevice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPMediaDevice.mm; sourceTree = "<group>"; };
+		977D7D4E12BB370800D406E1 /* PP_MediaDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PP_MediaDevice.h; sourceTree = "<group>"; };
+		97F00E1112FA322800837C2E /* PPMediaDevice.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PPMediaDevice.hh; sourceTree = "<group>"; };
+		AA747D9E0F9514B9006C5449 /* Platinum_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platinum_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		D2AAC07E0554694100DB518D /* libPlatinum.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPlatinum.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				977D756F12B8099D00D406E1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libPlatinum.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* Platinum */ = {
+			isa = PBXGroup;
+			children = (
+				977D757212B809D600D406E1 /* Source */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = Platinum;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				977D756E12B8099D00D406E1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AA747D9E0F9514B9006C5449 /* Platinum_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		977D757212B809D600D406E1 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				977D758B12B809D600D406E1 /* Core */,
+				977D75B512B809D600D406E1 /* Devices */,
+				977D75E612B809D600D406E1 /* Extras */,
+				977D762712B809D600D406E1 /* Platinum */,
+				977D79BA12B8153400D406E1 /* Third Party */,
+			);
+			name = Source;
+			path = ../../../../Source;
+			sourceTree = SOURCE_ROOT;
+		};
+		977D758B12B809D600D406E1 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				977D758C12B809D600D406E1 /* PltAction.cpp */,
+				977D758D12B809D600D406E1 /* PltAction.h */,
+				977D758E12B809D600D406E1 /* PltArgument.cpp */,
+				977D758F12B809D600D406E1 /* PltArgument.h */,
+				977D759012B809D600D406E1 /* PltConstants.cpp */,
+				977D759112B809D600D406E1 /* PltConstants.h */,
+				977D759212B809D600D406E1 /* PltCtrlPoint.cpp */,
+				977D759312B809D600D406E1 /* PltCtrlPoint.h */,
+				977D759412B809D600D406E1 /* PltCtrlPointTask.cpp */,
+				977D759512B809D600D406E1 /* PltCtrlPointTask.h */,
+				977D759612B809D600D406E1 /* PltDatagramStream.cpp */,
+				977D759712B809D600D406E1 /* PltDatagramStream.h */,
+				977D759812B809D600D406E1 /* PltDeviceData.cpp */,
+				977D759912B809D600D406E1 /* PltDeviceData.h */,
+				977D759A12B809D600D406E1 /* PltDeviceHost.cpp */,
+				977D759B12B809D600D406E1 /* PltDeviceHost.h */,
+				977D759C12B809D600D406E1 /* PltEvent.cpp */,
+				977D759D12B809D600D406E1 /* PltEvent.h */,
+				977D759E12B809D600D406E1 /* PltHttp.cpp */,
+				977D759F12B809D600D406E1 /* PltHttp.h */,
+				977D75A012B809D600D406E1 /* PltHttpClientTask.cpp */,
+				977D75A112B809D600D406E1 /* PltHttpClientTask.h */,
+				977D75A212B809D600D406E1 /* PltHttpServer.cpp */,
+				977D75A312B809D600D406E1 /* PltHttpServer.h */,
+				977D75A412B809D600D406E1 /* PltHttpServerTask.cpp */,
+				977D75A512B809D600D406E1 /* PltHttpServerTask.h */,
+				977D75A612B809D600D406E1 /* PltIconsData.cpp */,
+				977D75A712B809D600D406E1 /* PltService.cpp */,
+				977D75A812B809D600D406E1 /* PltService.h */,
+				977D75A912B809D600D406E1 /* PltSsdp.cpp */,
+				977D75AA12B809D600D406E1 /* PltSsdp.h */,
+				977D75AB12B809D600D406E1 /* PltStateVariable.cpp */,
+				977D75AC12B809D600D406E1 /* PltStateVariable.h */,
+				977D75AD12B809D600D406E1 /* PltTaskManager.cpp */,
+				977D75AE12B809D600D406E1 /* PltTaskManager.h */,
+				977D75AF12B809D600D406E1 /* PltThreadTask.cpp */,
+				977D75B012B809D600D406E1 /* PltThreadTask.h */,
+				977D75B112B809D600D406E1 /* PltUPnP.cpp */,
+				977D75B212B809D600D406E1 /* PltUPnP.h */,
+				977D75B312B809D600D406E1 /* PltUPnPHelper.h */,
+				977D75B412B809D600D406E1 /* PltXmlHelper.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		977D75B512B809D600D406E1 /* Devices */ = {
+			isa = PBXGroup;
+			children = (
+				977D75B612B809D600D406E1 /* MediaConnect */,
+				977D75BE12B809D600D406E1 /* MediaRenderer */,
+				977D75CC12B809D600D406E1 /* MediaServer */,
+			);
+			path = Devices;
+			sourceTree = "<group>";
+		};
+		977D75B612B809D600D406E1 /* MediaConnect */ = {
+			isa = PBXGroup;
+			children = (
+				977D75B712B809D600D406E1 /* PltMediaConnect.cpp */,
+				977D75B812B809D600D406E1 /* PltMediaConnect.h */,
+				977D75B912B809D600D406E1 /* PltXbox360.cpp */,
+				977D75BA12B809D600D406E1 /* PltXbox360.h */,
+				977D75BB12B809D600D406E1 /* process_scpds.sh */,
+				977D75BC12B809D600D406E1 /* X_MS_MediaReceiverRegistrarSCPD.cpp */,
+				977D75BD12B809D600D406E1 /* X_MS_MediaReceiverRegistrarSCPD.xml */,
+			);
+			path = MediaConnect;
+			sourceTree = "<group>";
+		};
+		977D75BE12B809D600D406E1 /* MediaRenderer */ = {
+			isa = PBXGroup;
+			children = (
+				977D75BF12B809D600D406E1 /* AVTransportSCPD.cpp */,
+				977D75C012B809D600D406E1 /* AVTransportSCPD.xml */,
+				977D75C112B809D600D406E1 /* AVTransportSCPDFull.xml */,
+				977D75C212B809D600D406E1 /* PltMediaController.cpp */,
+				977D75C312B809D600D406E1 /* PltMediaController.h */,
+				977D75C412B809D600D406E1 /* PltMediaRenderer.cpp */,
+				977D75C512B809D600D406E1 /* PltMediaRenderer.h */,
+				977D75C612B809D600D406E1 /* process_scpds.sh */,
+				977D75C712B809D600D406E1 /* RdrConnectionManagerSCPD.cpp */,
+				977D75C812B809D600D406E1 /* RdrConnectionManagerSCPD.xml */,
+				977D75C912B809D600D406E1 /* RenderingControlSCPD.cpp */,
+				977D75CA12B809D600D406E1 /* RenderingControlSCPD.xml */,
+				977D75CB12B809D600D406E1 /* RenderingControlSCPD_Full.xml */,
+			);
+			path = MediaRenderer;
+			sourceTree = "<group>";
+		};
+		977D75CC12B809D600D406E1 /* MediaServer */ = {
+			isa = PBXGroup;
+			children = (
+				977D75CD12B809D600D406E1 /* ConnectionManagerSCPD.cpp */,
+				977D75CE12B809D600D406E1 /* ConnectionManagerSCPD.xml */,
+				977D75CF12B809D600D406E1 /* ContentDirectorySCPD.cpp */,
+				977D75D012B809D600D406E1 /* ContentDirectorySCPD.xml */,
+				977D75D112B809D600D406E1 /* ContentDirectorywSearchSCPD.cpp */,
+				977D75D212B809D600D406E1 /* ContentDirectorywSearchSCPD.xml */,
+				977D75D312B809D600D406E1 /* PltDidl.cpp */,
+				977D75D412B809D600D406E1 /* PltDidl.h */,
+				977D75D512B809D600D406E1 /* PltFileMediaServer.cpp */,
+				977D75D612B809D600D406E1 /* PltFileMediaServer.h */,
+				977D75D712B809D600D406E1 /* PltMediaBrowser.cpp */,
+				977D75D812B809D600D406E1 /* PltMediaBrowser.h */,
+				977D75D912B809D600D406E1 /* PltMediaCache.cpp */,
+				977D75DA12B809D600D406E1 /* PltMediaCache.h */,
+				977D75DB12B809D600D406E1 /* PltMediaItem.cpp */,
+				977D75DC12B809D600D406E1 /* PltMediaItem.h */,
+				977D75DD12B809D600D406E1 /* PltMediaServer.cpp */,
+				977D75DE12B809D600D406E1 /* PltMediaServer.h */,
+				977D75DF12B809D600D406E1 /* PltMimeType.cpp */,
+				977D75E012B809D600D406E1 /* PltMimeType.h */,
+				977D75E112B809D600D406E1 /* PltProtocolInfo.cpp */,
+				977D75E212B809D600D406E1 /* PltProtocolInfo.h */,
+				977D75E312B809D600D406E1 /* PltSyncMediaBrowser.cpp */,
+				977D75E412B809D600D406E1 /* PltSyncMediaBrowser.h */,
+				977D75E512B809D600D406E1 /* process_scpds.sh */,
+			);
+			path = MediaServer;
+			sourceTree = "<group>";
+		};
+		977D75E612B809D600D406E1 /* Extras */ = {
+			isa = PBXGroup;
+			children = (
+				977D761212B809D600D406E1 /* ObjectiveC */,
+				977D761712B809D600D406E1 /* PltDownloader.cpp */,
+				977D761812B809D600D406E1 /* PltDownloader.h */,
+				977D761912B809D600D406E1 /* PltFrameBuffer.cpp */,
+				977D761A12B809D600D406E1 /* PltFrameBuffer.h */,
+				977D761B12B809D600D406E1 /* PltFrameServer.cpp */,
+				977D761C12B809D600D406E1 /* PltFrameServer.h */,
+				977D761D12B809D600D406E1 /* PltFrameStream.cpp */,
+				977D761E12B809D600D406E1 /* PltFrameStream.h */,
+				977D761F12B809D600D406E1 /* PltLeaks.cpp */,
+				977D762012B809D600D406E1 /* PltLeaks.h */,
+				977D762112B809D600D406E1 /* PltMetadataHandler.cpp */,
+				977D762212B809D600D406E1 /* PltMetadataHandler.h */,
+				977D762312B809D600D406E1 /* PltRingBufferStream.cpp */,
+				977D762412B809D600D406E1 /* PltRingBufferStream.h */,
+				977D762512B809D600D406E1 /* PltStreamPump.cpp */,
+				977D762612B809D600D406E1 /* PltStreamPump.h */,
+			);
+			path = Extras;
+			sourceTree = "<group>";
+		};
+		977D761212B809D600D406E1 /* ObjectiveC */ = {
+			isa = PBXGroup;
+			children = (
+				977D761512B809D600D406E1 /* PPUPnP.h */,
+				977D761612B809D600D406E1 /* PPUPnP.mm */,
+				977D7B7812B9393800D406E1 /* PPMediaController.h */,
+				977D7B7912B9393800D406E1 /* PPMediaController.mm */,
+				977D7CFD12BB1F3900D406E1 /* PPMediaDevice.h */,
+				97F00E1112FA322800837C2E /* PPMediaDevice.hh */,
+				977D7D4E12BB370800D406E1 /* PP_MediaDevice.h */,
+				977D7CFE12BB1F3900D406E1 /* PPMediaDevice.mm */,
+				977D7B8212B944E500D406E1 /* PPMediaObject.h */,
+				9704749812C11FB200F9D88C /* PP_MediaObject.h */,
+				977D7B8312B944E500D406E1 /* PPMediaObject.mm */,
+				977D7B8612B944F800D406E1 /* PPMediaContainer.h */,
+				977D7B8712B944F800D406E1 /* PPMediaContainer.mm */,
+				977D7B8A12B9452000D406E1 /* PPMediaItem.h */,
+				977D7B8B12B9452000D406E1 /* PPMediaItem.mm */,
+			);
+			path = ObjectiveC;
+			sourceTree = "<group>";
+		};
+		977D762712B809D600D406E1 /* Platinum */ = {
+			isa = PBXGroup;
+			children = (
+				977D762812B809D600D406E1 /* Platinum.h */,
+				977D762912B809D600D406E1 /* PltSvnVersion.h */,
+				977D762A12B809D600D406E1 /* PltVersion.h */,
+			);
+			path = Platinum;
+			sourceTree = "<group>";
+		};
+		977D770912B80AC500D406E1 /* Neptune */ = {
+			isa = PBXGroup;
+			children = (
+				977D771512B80AE000D406E1 /* Core */,
+				977D77F612B80AE100D406E1 /* System */,
+			);
+			name = Neptune;
+			sourceTree = "<group>";
+		};
+		977D771512B80AE000D406E1 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				977D771612B80AE000D406E1 /* Neptune.cpp */,
+				977D771712B80AE000D406E1 /* Neptune.h */,
+				977D771812B80AE000D406E1 /* NptArray.h */,
+				977D771912B80AE000D406E1 /* NptBase64.cpp */,
+				977D771A12B80AE000D406E1 /* NptBase64.h */,
+				977D771B12B80AE000D406E1 /* NptBufferedStreams.cpp */,
+				977D771C12B80AE000D406E1 /* NptBufferedStreams.h */,
+				977D771D12B80AE000D406E1 /* NptCommon.cpp */,
+				977D771E12B80AE000D406E1 /* NptCommon.h */,
+				977D771F12B80AE000D406E1 /* NptConfig.h */,
+				977D772012B80AE000D406E1 /* NptConsole.cpp */,
+				977D772112B80AE000D406E1 /* NptConsole.h */,
+				977D772212B80AE000D406E1 /* NptConstants.h */,
+				977D772312B80AE000D406E1 /* NptDataBuffer.cpp */,
+				977D772412B80AE000D406E1 /* NptDataBuffer.h */,
+				977D772512B80AE000D406E1 /* NptDebug.cpp */,
+				977D772612B80AE000D406E1 /* NptDebug.h */,
+				977D772712B80AE000D406E1 /* NptDefs.h */,
+				977D772812B80AE000D406E1 /* NptDynamicCast.h */,
+				977D772912B80AE000D406E1 /* NptDynamicLibraries.cpp */,
+				977D772A12B80AE000D406E1 /* NptDynamicLibraries.h */,
+				977D772B12B80AE000D406E1 /* NptFile.cpp */,
+				977D772C12B80AE000D406E1 /* NptFile.h */,
+				977D772D12B80AE000D406E1 /* NptHttp.cpp */,
+				977D772E12B80AE000D406E1 /* NptHttp.h */,
+				977D772F12B80AE000D406E1 /* NptInterfaces.h */,
+				977D773012B80AE000D406E1 /* NptList.cpp */,
+				977D773112B80AE000D406E1 /* NptList.h */,
+				977D773212B80AE000D406E1 /* NptLogging.cpp */,
+				977D773312B80AE000D406E1 /* NptLogging.h */,
+				977D773412B80AE000D406E1 /* NptMap.h */,
+				977D773512B80AE000D406E1 /* NptMessaging.cpp */,
+				977D773612B80AE000D406E1 /* NptMessaging.h */,
+				977D773712B80AE000D406E1 /* NptNetwork.cpp */,
+				977D773812B80AE000D406E1 /* NptNetwork.h */,
+				977D773912B80AE000D406E1 /* NptQueue.cpp */,
+				977D773A12B80AE000D406E1 /* NptQueue.h */,
+				977D773B12B80AE000D406E1 /* NptReferences.h */,
+				977D773C12B80AE000D406E1 /* NptResults.cpp */,
+				977D773D12B80AE000D406E1 /* NptResults.h */,
+				977D773E12B80AE000D406E1 /* NptRingBuffer.cpp */,
+				977D773F12B80AE000D406E1 /* NptRingBuffer.h */,
+				977D774012B80AE000D406E1 /* NptSelectableMessageQueue.h */,
+				977D774112B80AE000D406E1 /* NptSerialPort.h */,
+				977D774212B80AE000D406E1 /* NptSimpleMessageQueue.cpp */,
+				977D774312B80AE000D406E1 /* NptSimpleMessageQueue.h */,
+				977D774412B80AE000D406E1 /* NptSockets.cpp */,
+				977D774512B80AE000D406E1 /* NptSockets.h */,
+				977D774612B80AE000D406E1 /* NptStack.h */,
+				977D774712B80AE000D406E1 /* NptStreams.cpp */,
+				977D774812B80AE000D406E1 /* NptStreams.h */,
+				977D774912B80AE000D406E1 /* NptStrings.cpp */,
+				977D774A12B80AE000D406E1 /* NptStrings.h */,
+				977D774B12B80AE000D406E1 /* NptSystem.cpp */,
+				977D774C12B80AE000D406E1 /* NptSystem.h */,
+				977D774D12B80AE000D406E1 /* NptThreads.cpp */,
+				977D774E12B80AE000D406E1 /* NptThreads.h */,
+				977D774F12B80AE000D406E1 /* NptTime.cpp */,
+				977D775012B80AE000D406E1 /* NptTime.h */,
+				977D775112B80AE000D406E1 /* NptTls.cpp */,
+				977D775212B80AE000D406E1 /* NptTls.h */,
+				977D775312B80AE000D406E1 /* NptTypes.h */,
+				977D775412B80AE000D406E1 /* NptUri.cpp */,
+				977D775512B80AE000D406E1 /* NptUri.h */,
+				977D775612B80AE000D406E1 /* NptUtils.cpp */,
+				977D775712B80AE000D406E1 /* NptUtils.h */,
+				977D775812B80AE000D406E1 /* NptVersion.h */,
+				977D775912B80AE000D406E1 /* NptXml.cpp */,
+				977D775A12B80AE000D406E1 /* NptXml.h */,
+				977D775B12B80AE000D406E1 /* NptZip.cpp */,
+				977D775C12B80AE000D406E1 /* NptZip.h */,
+			);
+			name = Core;
+			path = ../../../../../Neptune/Source/Core;
+			sourceTree = SOURCE_ROOT;
+		};
+		977D77F612B80AE100D406E1 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				977D77FC12B80AE100D406E1 /* Bsd */,
+				977D77FF12B80AE100D406E1 /* Cocoa */,
+				977D780412B80AE100D406E1 /* Null */,
+				977D780B12B80AE100D406E1 /* Posix */,
+				977D781D12B80AE100D406E1 /* StdC */,
+			);
+			name = System;
+			path = ../../../../../Neptune/Source/System;
+			sourceTree = SOURCE_ROOT;
+		};
+		977D77FC12B80AE100D406E1 /* Bsd */ = {
+			isa = PBXGroup;
+			children = (
+				977D77FD12B80AE100D406E1 /* NptBsdNetwork.cpp */,
+				977D77FE12B80AE100D406E1 /* NptBsdSockets.cpp */,
+			);
+			path = Bsd;
+			sourceTree = "<group>";
+		};
+		977D77FF12B80AE100D406E1 /* Cocoa */ = {
+			isa = PBXGroup;
+			children = (
+				977D780012B80AE100D406E1 /* NptCocoaConsole.mm */,
+				977D780112B80AE100D406E1 /* NptCocoaMessageQueue.h */,
+				977D780212B80AE100D406E1 /* NptCocoaMessageQueue.mm */,
+			);
+			path = Cocoa;
+			sourceTree = "<group>";
+		};
+		977D780412B80AE100D406E1 /* Null */ = {
+			isa = PBXGroup;
+			children = (
+				977D780512B80AE100D406E1 /* NptNullHttpProxy.cpp */,
+				977D780812B80AE100D406E1 /* NptNullSerialPort.cpp */,
+			);
+			path = Null;
+			sourceTree = "<group>";
+		};
+		977D780B12B80AE100D406E1 /* Posix */ = {
+			isa = PBXGroup;
+			children = (
+				977D780C12B80AE100D406E1 /* NptPosixDynamicLibraries.cpp */,
+				977D780D12B80AE100D406E1 /* NptPosixFile.cpp */,
+				977D780E12B80AE100D406E1 /* NptPosixNetwork.cpp */,
+				977D780F12B80AE100D406E1 /* NptPosixQueue.cpp */,
+				977D781012B80AE100D406E1 /* NptPosixSystem.cpp */,
+				977D781112B80AE100D406E1 /* NptPosixThreads.cpp */,
+				977D781212B80AE100D406E1 /* NptPosixTime.cpp */,
+				977D781312B80AE100D406E1 /* NptSelectableMessageQueue.cpp */,
+			);
+			path = Posix;
+			sourceTree = "<group>";
+		};
+		977D781D12B80AE100D406E1 /* StdC */ = {
+			isa = PBXGroup;
+			children = (
+				977D781E12B80AE100D406E1 /* NptStdcConsole.cpp */,
+				977D781F12B80AE100D406E1 /* NptStdcDebug.cpp */,
+				977D782012B80AE100D406E1 /* NptStdcEnvironment.cpp */,
+				977D782112B80AE100D406E1 /* NptStdcFile.cpp */,
+			);
+			path = StdC;
+			sourceTree = "<group>";
+		};
+		977D79BA12B8153400D406E1 /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				977D770912B80AC500D406E1 /* Neptune */,
+			);
+			name = "Third Party";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA747D9F0F9514B9006C5449 /* Platinum_Prefix.pch in Headers */,
+				977D766212B809D600D406E1 /* PltAction.h in Headers */,
+				977D766412B809D600D406E1 /* PltArgument.h in Headers */,
+				977D766612B809D600D406E1 /* PltConstants.h in Headers */,
+				977D766812B809D600D406E1 /* PltCtrlPoint.h in Headers */,
+				977D766A12B809D600D406E1 /* PltCtrlPointTask.h in Headers */,
+				977D766C12B809D600D406E1 /* PltDatagramStream.h in Headers */,
+				977D766E12B809D600D406E1 /* PltDeviceData.h in Headers */,
+				977D767012B809D600D406E1 /* PltDeviceHost.h in Headers */,
+				977D767212B809D600D406E1 /* PltEvent.h in Headers */,
+				977D767412B809D600D406E1 /* PltHttp.h in Headers */,
+				977D767612B809D600D406E1 /* PltHttpClientTask.h in Headers */,
+				977D767812B809D600D406E1 /* PltHttpServer.h in Headers */,
+				977D767A12B809D600D406E1 /* PltHttpServerTask.h in Headers */,
+				977D767D12B809D600D406E1 /* PltService.h in Headers */,
+				977D767F12B809D600D406E1 /* PltSsdp.h in Headers */,
+				977D768112B809D600D406E1 /* PltStateVariable.h in Headers */,
+				977D768312B809D600D406E1 /* PltTaskManager.h in Headers */,
+				977D768512B809D600D406E1 /* PltThreadTask.h in Headers */,
+				977D768712B809D600D406E1 /* PltUPnP.h in Headers */,
+				977D768812B809D600D406E1 /* PltUPnPHelper.h in Headers */,
+				977D768912B809D600D406E1 /* PltXmlHelper.h in Headers */,
+				977D768B12B809D600D406E1 /* PltMediaConnect.h in Headers */,
+				977D768D12B809D600D406E1 /* PltXbox360.h in Headers */,
+				977D769112B809D600D406E1 /* PltMediaController.h in Headers */,
+				977D769312B809D600D406E1 /* PltMediaRenderer.h in Headers */,
+				977D769A12B809D600D406E1 /* PltDidl.h in Headers */,
+				977D769C12B809D600D406E1 /* PltFileMediaServer.h in Headers */,
+				977D769E12B809D600D406E1 /* PltMediaBrowser.h in Headers */,
+				977D76A012B809D600D406E1 /* PltMediaCache.h in Headers */,
+				977D76A212B809D600D406E1 /* PltMediaItem.h in Headers */,
+				977D76A412B809D600D406E1 /* PltMediaServer.h in Headers */,
+				977D76A612B809D600D406E1 /* PltMimeType.h in Headers */,
+				977D76A812B809D600D406E1 /* PltProtocolInfo.h in Headers */,
+				977D76AA12B809D600D406E1 /* PltSyncMediaBrowser.h in Headers */,
+				977D76D712B809D600D406E1 /* PPUPnP.h in Headers */,
+				977D76DA12B809D600D406E1 /* PltDownloader.h in Headers */,
+				977D76DC12B809D600D406E1 /* PltFrameBuffer.h in Headers */,
+				977D76DE12B809D600D406E1 /* PltFrameServer.h in Headers */,
+				977D76E012B809D600D406E1 /* PltFrameStream.h in Headers */,
+				977D76E212B809D600D406E1 /* PltLeaks.h in Headers */,
+				977D76E412B809D600D406E1 /* PltMetadataHandler.h in Headers */,
+				977D76E612B809D600D406E1 /* PltRingBufferStream.h in Headers */,
+				977D76E812B809D600D406E1 /* PltStreamPump.h in Headers */,
+				977D76E912B809D600D406E1 /* Platinum.h in Headers */,
+				977D76EA12B809D600D406E1 /* PltSvnVersion.h in Headers */,
+				977D76EB12B809D600D406E1 /* PltVersion.h in Headers */,
+				977D787E12B80AE100D406E1 /* Neptune.h in Headers */,
+				977D787F12B80AE100D406E1 /* NptArray.h in Headers */,
+				977D788112B80AE100D406E1 /* NptBase64.h in Headers */,
+				977D788312B80AE100D406E1 /* NptBufferedStreams.h in Headers */,
+				977D788512B80AE100D406E1 /* NptCommon.h in Headers */,
+				977D788612B80AE100D406E1 /* NptConfig.h in Headers */,
+				977D788812B80AE100D406E1 /* NptConsole.h in Headers */,
+				977D788912B80AE100D406E1 /* NptConstants.h in Headers */,
+				977D788B12B80AE100D406E1 /* NptDataBuffer.h in Headers */,
+				977D788D12B80AE100D406E1 /* NptDebug.h in Headers */,
+				977D788E12B80AE100D406E1 /* NptDefs.h in Headers */,
+				977D788F12B80AE100D406E1 /* NptDynamicCast.h in Headers */,
+				977D789112B80AE100D406E1 /* NptDynamicLibraries.h in Headers */,
+				977D789312B80AE100D406E1 /* NptFile.h in Headers */,
+				977D789512B80AE100D406E1 /* NptHttp.h in Headers */,
+				977D789612B80AE100D406E1 /* NptInterfaces.h in Headers */,
+				977D789812B80AE100D406E1 /* NptList.h in Headers */,
+				977D789A12B80AE100D406E1 /* NptLogging.h in Headers */,
+				977D789B12B80AE100D406E1 /* NptMap.h in Headers */,
+				977D789D12B80AE100D406E1 /* NptMessaging.h in Headers */,
+				977D789F12B80AE100D406E1 /* NptNetwork.h in Headers */,
+				977D78A112B80AE100D406E1 /* NptQueue.h in Headers */,
+				977D78A212B80AE100D406E1 /* NptReferences.h in Headers */,
+				977D78A412B80AE100D406E1 /* NptResults.h in Headers */,
+				977D78A612B80AE100D406E1 /* NptRingBuffer.h in Headers */,
+				977D78A712B80AE100D406E1 /* NptSelectableMessageQueue.h in Headers */,
+				977D78A812B80AE100D406E1 /* NptSerialPort.h in Headers */,
+				977D78AA12B80AE100D406E1 /* NptSimpleMessageQueue.h in Headers */,
+				977D78AC12B80AE100D406E1 /* NptSockets.h in Headers */,
+				977D78AD12B80AE100D406E1 /* NptStack.h in Headers */,
+				977D78AF12B80AE100D406E1 /* NptStreams.h in Headers */,
+				977D78B112B80AE100D406E1 /* NptStrings.h in Headers */,
+				977D78B312B80AE100D406E1 /* NptSystem.h in Headers */,
+				977D78B512B80AE100D406E1 /* NptThreads.h in Headers */,
+				977D78B712B80AE100D406E1 /* NptTime.h in Headers */,
+				977D78B912B80AE100D406E1 /* NptTls.h in Headers */,
+				977D78BA12B80AE100D406E1 /* NptTypes.h in Headers */,
+				977D78BC12B80AE100D406E1 /* NptUri.h in Headers */,
+				977D78BE12B80AE100D406E1 /* NptUtils.h in Headers */,
+				977D78BF12B80AE100D406E1 /* NptVersion.h in Headers */,
+				977D78C112B80AE100D406E1 /* NptXml.h in Headers */,
+				977D78C312B80AE100D406E1 /* NptZip.h in Headers */,
+				977D796112B80AE100D406E1 /* NptCocoaMessageQueue.h in Headers */,
+				977D7B7A12B9393800D406E1 /* PPMediaController.h in Headers */,
+				977D7B8412B944E500D406E1 /* PPMediaObject.h in Headers */,
+				977D7B8812B944F800D406E1 /* PPMediaContainer.h in Headers */,
+				977D7B8C12B9452000D406E1 /* PPMediaItem.h in Headers */,
+				977D7CFF12BB1F3900D406E1 /* PPMediaDevice.h in Headers */,
+				977D7D5012BB370800D406E1 /* PP_MediaDevice.h in Headers */,
+				9704749A12C11FB200F9D88C /* PP_MediaObject.h in Headers */,
+				97F00E1212FA322800837C2E /* PPMediaDevice.hh in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* Platinum */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "Platinum" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Platinum;
+			productName = Platinum;
+			productReference = D2AAC07E0554694100DB518D /* libPlatinum.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "Platinum" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* Platinum */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* Platinum */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				977D766112B809D600D406E1 /* PltAction.cpp in Sources */,
+				977D766312B809D600D406E1 /* PltArgument.cpp in Sources */,
+				977D766512B809D600D406E1 /* PltConstants.cpp in Sources */,
+				977D766712B809D600D406E1 /* PltCtrlPoint.cpp in Sources */,
+				977D766912B809D600D406E1 /* PltCtrlPointTask.cpp in Sources */,
+				977D766B12B809D600D406E1 /* PltDatagramStream.cpp in Sources */,
+				977D766D12B809D600D406E1 /* PltDeviceData.cpp in Sources */,
+				977D766F12B809D600D406E1 /* PltDeviceHost.cpp in Sources */,
+				977D767112B809D600D406E1 /* PltEvent.cpp in Sources */,
+				977D767312B809D600D406E1 /* PltHttp.cpp in Sources */,
+				977D767512B809D600D406E1 /* PltHttpClientTask.cpp in Sources */,
+				977D767712B809D600D406E1 /* PltHttpServer.cpp in Sources */,
+				977D767912B809D600D406E1 /* PltHttpServerTask.cpp in Sources */,
+				977D767B12B809D600D406E1 /* PltIconsData.cpp in Sources */,
+				977D767C12B809D600D406E1 /* PltService.cpp in Sources */,
+				977D767E12B809D600D406E1 /* PltSsdp.cpp in Sources */,
+				977D768012B809D600D406E1 /* PltStateVariable.cpp in Sources */,
+				977D768212B809D600D406E1 /* PltTaskManager.cpp in Sources */,
+				977D768412B809D600D406E1 /* PltThreadTask.cpp in Sources */,
+				977D768612B809D600D406E1 /* PltUPnP.cpp in Sources */,
+				977D768A12B809D600D406E1 /* PltMediaConnect.cpp in Sources */,
+				977D769D12B809D600D406E1 /* PltMediaBrowser.cpp in Sources */,
+				977D768C12B809D600D406E1 /* PltXbox360.cpp in Sources */,
+				977D768E12B809D600D406E1 /* X_MS_MediaReceiverRegistrarSCPD.cpp in Sources */,
+				977D768F12B809D600D406E1 /* AVTransportSCPD.cpp in Sources */,
+				977D769012B809D600D406E1 /* PltMediaController.cpp in Sources */,
+				977D769212B809D600D406E1 /* PltMediaRenderer.cpp in Sources */,
+				977D769412B809D600D406E1 /* RdrConnectionManagerSCPD.cpp in Sources */,
+				977D769512B809D600D406E1 /* RenderingControlSCPD.cpp in Sources */,
+				977D769612B809D600D406E1 /* ConnectionManagerSCPD.cpp in Sources */,
+				977D769712B809D600D406E1 /* ContentDirectorySCPD.cpp in Sources */,
+				977D769812B809D600D406E1 /* ContentDirectorywSearchSCPD.cpp in Sources */,
+				977D769912B809D600D406E1 /* PltDidl.cpp in Sources */,
+				977D769B12B809D600D406E1 /* PltFileMediaServer.cpp in Sources */,
+				977D769F12B809D600D406E1 /* PltMediaCache.cpp in Sources */,
+				977D76A112B809D600D406E1 /* PltMediaItem.cpp in Sources */,
+				977D76A312B809D600D406E1 /* PltMediaServer.cpp in Sources */,
+				977D76A512B809D600D406E1 /* PltMimeType.cpp in Sources */,
+				977D76A712B809D600D406E1 /* PltProtocolInfo.cpp in Sources */,
+				977D76A912B809D600D406E1 /* PltSyncMediaBrowser.cpp in Sources */,
+				977D76D812B809D600D406E1 /* PPUPnP.mm in Sources */,
+				977D76D912B809D600D406E1 /* PltDownloader.cpp in Sources */,
+				977D76DB12B809D600D406E1 /* PltFrameBuffer.cpp in Sources */,
+				977D76DD12B809D600D406E1 /* PltFrameServer.cpp in Sources */,
+				977D76DF12B809D600D406E1 /* PltFrameStream.cpp in Sources */,
+				977D76E112B809D600D406E1 /* PltLeaks.cpp in Sources */,
+				977D76E312B809D600D406E1 /* PltMetadataHandler.cpp in Sources */,
+				977D76E512B809D600D406E1 /* PltRingBufferStream.cpp in Sources */,
+				977D76E712B809D600D406E1 /* PltStreamPump.cpp in Sources */,
+				977D787D12B80AE100D406E1 /* Neptune.cpp in Sources */,
+				977D788012B80AE100D406E1 /* NptBase64.cpp in Sources */,
+				977D788212B80AE100D406E1 /* NptBufferedStreams.cpp in Sources */,
+				977D788412B80AE100D406E1 /* NptCommon.cpp in Sources */,
+				977D788712B80AE100D406E1 /* NptConsole.cpp in Sources */,
+				977D788A12B80AE100D406E1 /* NptDataBuffer.cpp in Sources */,
+				977D788C12B80AE100D406E1 /* NptDebug.cpp in Sources */,
+				977D789012B80AE100D406E1 /* NptDynamicLibraries.cpp in Sources */,
+				977D789212B80AE100D406E1 /* NptFile.cpp in Sources */,
+				977D789412B80AE100D406E1 /* NptHttp.cpp in Sources */,
+				977D789712B80AE100D406E1 /* NptList.cpp in Sources */,
+				977D789912B80AE100D406E1 /* NptLogging.cpp in Sources */,
+				977D789C12B80AE100D406E1 /* NptMessaging.cpp in Sources */,
+				977D789E12B80AE100D406E1 /* NptNetwork.cpp in Sources */,
+				977D78A012B80AE100D406E1 /* NptQueue.cpp in Sources */,
+				977D78A312B80AE100D406E1 /* NptResults.cpp in Sources */,
+				977D78A512B80AE100D406E1 /* NptRingBuffer.cpp in Sources */,
+				977D78A912B80AE100D406E1 /* NptSimpleMessageQueue.cpp in Sources */,
+				977D78AB12B80AE100D406E1 /* NptSockets.cpp in Sources */,
+				977D78AE12B80AE100D406E1 /* NptStreams.cpp in Sources */,
+				977D78B012B80AE100D406E1 /* NptStrings.cpp in Sources */,
+				977D78B212B80AE100D406E1 /* NptSystem.cpp in Sources */,
+				977D78B412B80AE100D406E1 /* NptThreads.cpp in Sources */,
+				977D78B612B80AE100D406E1 /* NptTime.cpp in Sources */,
+				977D78B812B80AE100D406E1 /* NptTls.cpp in Sources */,
+				977D78BB12B80AE100D406E1 /* NptUri.cpp in Sources */,
+				977D78BD12B80AE100D406E1 /* NptUtils.cpp in Sources */,
+				977D78C012B80AE100D406E1 /* NptXml.cpp in Sources */,
+				977D78C212B80AE100D406E1 /* NptZip.cpp in Sources */,
+				977D795E12B80AE100D406E1 /* NptBsdNetwork.cpp in Sources */,
+				977D795F12B80AE100D406E1 /* NptBsdSockets.cpp in Sources */,
+				977D796012B80AE100D406E1 /* NptCocoaConsole.mm in Sources */,
+				977D796212B80AE100D406E1 /* NptCocoaMessageQueue.mm in Sources */,
+				977D796412B80AE100D406E1 /* NptNullHttpProxy.cpp in Sources */,
+				977D796712B80AE100D406E1 /* NptNullSerialPort.cpp in Sources */,
+				977D796A12B80AE100D406E1 /* NptPosixDynamicLibraries.cpp in Sources */,
+				977D796B12B80AE100D406E1 /* NptPosixFile.cpp in Sources */,
+				977D796C12B80AE100D406E1 /* NptPosixNetwork.cpp in Sources */,
+				977D796D12B80AE100D406E1 /* NptPosixQueue.cpp in Sources */,
+				977D796E12B80AE100D406E1 /* NptPosixSystem.cpp in Sources */,
+				977D796F12B80AE100D406E1 /* NptPosixThreads.cpp in Sources */,
+				977D797012B80AE100D406E1 /* NptPosixTime.cpp in Sources */,
+				977D797112B80AE100D406E1 /* NptSelectableMessageQueue.cpp in Sources */,
+				977D797912B80AE100D406E1 /* NptStdcConsole.cpp in Sources */,
+				977D797A12B80AE100D406E1 /* NptStdcDebug.cpp in Sources */,
+				977D797B12B80AE100D406E1 /* NptStdcEnvironment.cpp in Sources */,
+				977D797C12B80AE100D406E1 /* NptStdcFile.cpp in Sources */,
+				977D7B7B12B9393800D406E1 /* PPMediaController.mm in Sources */,
+				977D7B8512B944E500D406E1 /* PPMediaObject.mm in Sources */,
+				977D7B8912B944F800D406E1 /* PPMediaContainer.mm in Sources */,
+				977D7B8D12B9452000D406E1 /* PPMediaItem.mm in Sources */,
+				977D7D0012BB1F3900D406E1 /* PPMediaDevice.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0E652E2512D658DC0094A89E /* Build-Server-Demo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = "Build-Server-Demo";
+		};
+		0E652E2612D658DC0094A89E /* Build-Server-Demo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/Platinum.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Platinum_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.0.1\"",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.2.1\"",
+				);
+				PRODUCT_NAME = Platinum;
+			};
+			name = "Build-Server-Demo";
+		};
+		0E652E2712D658E50094A89E /* Build-Server-Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = "Build-Server-Test";
+		};
+		0E652E2812D658E50094A89E /* Build-Server-Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/Platinum.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Platinum_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.0.1\"",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.2.1\"",
+				);
+				PRODUCT_NAME = Platinum;
+			};
+			name = "Build-Server-Test";
+		};
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/Platinum.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Platinum_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.0.1\"",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.2.1\"",
+				);
+				PRODUCT_NAME = Platinum;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/Platinum.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Platinum_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.0.1\"",
+					"\"$(SDKROOT)/usr/lib/gcc/arm-apple-darwin10/4.2.1\"",
+				);
+				PRODUCT_NAME = Platinum;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "Platinum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+				0E652E2812D658E50094A89E /* Build-Server-Test */,
+				0E652E2612D658DC0094A89E /* Build-Server-Demo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Build-Server-Test";
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "Platinum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+				0E652E2712D658E50094A89E /* Build-Server-Test */,
+				0E652E2512D658DC0094A89E /* Build-Server-Demo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Build-Server-Test";
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
