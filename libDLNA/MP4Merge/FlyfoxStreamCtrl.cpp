@@ -95,6 +95,7 @@ int CFlyfoxStreamCtrl::Close()
 	m_fileSize=0;
 	m_available=0;
 	m_curPos=0;
+	m_openFile = NULL;
 
 	return ret;
 }
@@ -162,7 +163,8 @@ int CFlyfoxStreamCtrl::Seek(unsigned __int64 offset)
 	int ret=0;
 	if (m_type==1)
 	{
-		ret=fseek(m_openFile,(long)offset,SEEK_CUR);
+		/*if (m_openFile)*/
+			ret=fseek(m_openFile,(long)offset,SEEK_CUR);
 	}
 	else if (m_type==2)
 	{
@@ -176,7 +178,10 @@ int CFlyfoxStreamCtrl::Tell(unsigned __int64* offset)
 	if (m_type==1)
 	{
 		//On failure, -1L is returned
-		*offset=ftell(m_openFile);
+		/*if (m_openFile)*/
+			*offset=ftell(m_openFile);
+// 		else
+// 			*offset = 0;
 		return (int)*offset;
 	}
 	else if (m_type==2)

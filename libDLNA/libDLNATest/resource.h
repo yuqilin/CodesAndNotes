@@ -19,6 +19,8 @@
 #define IDC_COMBO1                      1012
 #define IDC_COMBO_MEDIARENDERERS        1012
 
+#define IDC_BTN_OPEN_LOCAL                1013
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

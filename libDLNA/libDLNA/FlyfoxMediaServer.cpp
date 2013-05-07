@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "FlyfoxMediaServer.h"
 
-//NPT_SET_LOCAL_LOGGER("libdlna.flyfoxmediaserver")
+NPT_SET_LOCAL_LOGGER("libdlna.flyfoxmediaserver")
 
 static NPT_File* s_pFile = NULL;
 
@@ -114,6 +114,7 @@ CFlyfoxMediaServerDelegate::ProcessFileRequest(NPT_HttpRequest&              req
 
 	if (request.GetMethod().Compare("GET") && request.GetMethod().Compare("HEAD")) {
 		response.SetStatus(500, "Internal Server Error");
+		NPT_LOG_SEVERE("request parse got: Internal Server Error");
 		return NPT_SUCCESS;
 	}
 
@@ -124,14 +125,14 @@ CFlyfoxMediaServerDelegate::ProcessFileRequest(NPT_HttpRequest&              req
 		goto failure;
 	NPT_ParseInteger(query.GetField("type"), file_type);
 
-	file_path = "¹¦·òÐÜÃ¨2[³¬Çå°æ]";
+	//file_path = "¹¦·òÐÜÃ¨2[³¬Çå°æ]";
 	//file_path = "Z:\\Shared\\Media\\2013Oscar.mp4";
 
 	stream = new CFlyfoxFileInputStream(file_path, file_type/*, CLibDLNA::GetStreamCtrl()*//*CLibDLNA::GetIOCallbacks()*/);
 // 	if (NPT_FAILED((stream)->Open(file_path, file_type)))
 // 		goto failure;
 
-	return ServeStream(request, context, response, stream, PLT_MimeType::GetMimeType(file_path, &tmp_context));
+	return ServeStream(request, context, response, stream, "video/mp4"/*PLT_MimeType::GetMimeType(file_path, &tmp_context)*/);
 
 failure:
 	response.SetStatus(404, "File Not Found");

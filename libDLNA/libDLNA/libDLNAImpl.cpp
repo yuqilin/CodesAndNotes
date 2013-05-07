@@ -7,7 +7,7 @@
 
 #define IP_LOCAL_HOST	"127.0.0.1"
 
-//NPT_SET_LOCAL_LOGGER("libdlna.libdlnaimpl")
+NPT_SET_LOCAL_LOGGER("libdlna.libdlnaimpl")
 
 IOCallbacks* CLibDLNA::m_spIO = NULL;
 
@@ -130,7 +130,7 @@ NPT_Result CLibDLNA::Open(const char* url, int file_type)
 			NPT_HttpUrl base_uri(IP_LOCAL_HOST, port, NPT_HttpUrl::PercentEncode("/", NPT_Uri::PathCharsToEncode));
 			http_url = CFlyfoxMediaServerDelegate::BuildSafeResourceUri(base_uri, ip, /*url*/url, file_type);
 
-			NPT_LOG_INFO("SetAVTransportURI http_url=%s");//, http_url.GetChars());
+			//NPT_LOG_INFO("SetAVTransportURI http_url=%s");//, http_url.GetChars());
 			result = m_MediaController->SetAVTransportURI(device, 0, http_url/*url*/, "", NULL);
 		}
 	}

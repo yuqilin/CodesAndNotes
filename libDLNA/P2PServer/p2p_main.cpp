@@ -18,7 +18,8 @@ int main()
 
 	PLT_HttpServer cdn_server(NPT_IpAddress::Any,8082);
 	char* url="/功夫熊猫2[超清版]";
-	NPT_HttpDynamicRequestHandler dynamic_handle(true,NULL,"Z:\\Shared\\Media\\功夫熊猫2");
+	//NPT_HttpDynamicRequestHandler dynamic_handle(true,NULL,"Z:\\Shared\\Media\\功夫熊猫2");
+	NPT_HttpDynamicRequestHandler dynamic_handle(true,NULL,"C:\\功夫熊猫2");
 	cdn_server.AddRequestHandler(&dynamic_handle,url);
 	NPT_String url2="/人再囧途之泰囧[高清版]";
 	cdn_server.AddRequestHandler(&dynamic_handle,url2.GetChars());

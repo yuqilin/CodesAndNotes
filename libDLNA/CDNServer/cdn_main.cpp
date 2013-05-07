@@ -64,7 +64,8 @@ int main()
 
 	NPT_String url="/功夫熊猫2[超清版]";
 	GetDataBufferCallBack func=GetMP4HeaderData;
-	NPT_HttpDynamicRequestHandler dynamic_handle(false,func,"Z:\\Shared\\Media\\功夫熊猫2");
+	//NPT_HttpDynamicRequestHandler dynamic_handle(false,func,"Z:\\Shared\\Media\\功夫熊猫2");
+	NPT_HttpDynamicRequestHandler dynamic_handle(false,func,"C:\\功夫熊猫2");
 	cdn_server.AddRequestHandler(&dynamic_handle,url.GetChars());
 	NPT_String url2="/人再囧途之泰囧[高清版]";
 	cdn_server.AddRequestHandler(&dynamic_handle,url2.GetChars());

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\Neptune\Source\Core;..\Platinum\Source\Core;..\Platinum\Source\Platinum;..\Platinum\Source\Extras;..\Platinum\Source\Devices\MediaServer;..\Platinum\Source\Devices\MediaRenderer;..\Platinum\Source\Devices\MediaConnect;..\MP4Merge"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBDLNA_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBDLNA_EXPORTS;NPT_CONFIG_ENABLE_LOGGING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -117,7 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBDLNA_EXPORTS"
+				AdditionalIncludeDirectories="..\Neptune\Source\Core;..\Platinum\Source\Core;..\Platinum\Source\Platinum;..\Platinum\Source\Extras;..\Platinum\Source\Devices\MediaServer;..\Platinum\Source\Devices\MediaRenderer;..\Platinum\Source\Devices\MediaConnect;..\MP4Merge"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBDLNA_EXPORTS;NPT_CONFIG_ENABLE_LOGGING"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -135,7 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Neptune.lib Platinum.lib MP4Merge.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

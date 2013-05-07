@@ -40,7 +40,7 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 			memset(m_Devices, 0, sizeof(m_Devices));
 			memcpy(m_Devices, devices, nCount * DLNA_MAX_DEVICE_NAME_LEN);
 			m_nDeviceCount = nCount;
-			for (int i=m_nDeviceCount-1; i>=0; --i)
+			for (int i=0; i<m_nDeviceCount; ++i)
 			{
 				combox.AddString(ATL::CString(m_Devices[i]));
 			}
@@ -152,6 +152,30 @@ LRESULT CMainDlg::OnBnClickedBtnSeek(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 // 	ATL::CString time_pos;
 // 	GetDlgItemText(IDC_EDT_SEEKTIME, time_pos);
 	//DLNA_Seek();
+
+	return 0;
+}
+
+LRESULT CMainDlg::OnBnClickedBtnOpen2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	// TODO: Add your control notification handler code here
+
+	CFileDialog dlg(TRUE);
+	 
+ 	dlg.DoModal();
+ 
+ 	m_strFilePath = dlg.m_ofn.lpstrFile;
+
+	ATL::CStringA path(m_strFilePath);
+
+	CComboBox combox(GetDlgItem(IDC_COMBO_MEDIARENDERERS));
+
+	if (0 == DLNA_ChooseDevice(combox.GetCurSel()))
+	{
+		//DLNA_Open(path, DLNA_FILE_LOCAL);
+		DLNA_Open(path, DLNA_FILE_LOCAL);
+	}
+
 
 	return 0;
 }

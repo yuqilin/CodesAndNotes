@@ -578,10 +578,6 @@
 			UniqueIdentifier="{D679E99D-9E2C-4288-A353-B64B3A54D93F}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ClassDiagram1.cd"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
