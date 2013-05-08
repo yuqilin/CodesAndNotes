@@ -1778,7 +1778,8 @@ PLT_CtrlPoint::ProcessActionResponse(NPT_Result                    res,
     NPT_LOG_FINER("Analyzing Action Response Body...");
 
 	NPT_Result tmp_res = PLT_XmlHelper::Serialize(*xml, strXml);
-	//NPT_LOG_FINER(strXml.GetChars());
+	if (strXml.GetLength() <= 65536)
+		NPT_LOG_FINER(strXml.GetChars());
 
     // read envelope
     if (xml->GetTag().Compare("Envelope", true))

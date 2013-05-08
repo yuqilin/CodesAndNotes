@@ -125,7 +125,8 @@ CFlyfoxMediaServerDelegate::ProcessFileRequest(NPT_HttpRequest&              req
 		goto failure;
 	NPT_ParseInteger(query.GetField("type"), file_type);
 
-	//file_path = "π¶∑Ú–‹√®2[≥¨«Â∞Ê]";
+	if (file_type == DLNA_FILE_ONLINE)
+		file_path = "π¶∑Ú–‹√®2[≥¨«Â∞Ê]";
 	//file_path = "Z:\\Shared\\Media\\2013Oscar.mp4";
 
 	stream = new CFlyfoxFileInputStream(file_path, file_type/*, CLibDLNA::GetStreamCtrl()*//*CLibDLNA::GetIOCallbacks()*/);

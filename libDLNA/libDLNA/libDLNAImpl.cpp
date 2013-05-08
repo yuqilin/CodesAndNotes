@@ -109,6 +109,7 @@ NPT_Result CLibDLNA::ChooseDevice(int device_index)
 	return NPT_SUCCESS;
 }
 
+#define DIDL_LITE "<DIDL-Lite xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" xmlns:dlna=\"urn:schemas-dlna-org:metadata-1-0/\"><item id=\"0\%s\" parentID=\"0\" restricted=\"1\"><dc:title>123</dc:title><dc:creator>Unknown</dc:creator><upnp:genre>Unknown</upnp:genre><res size=\"1948552\" protocolInfo=\"http-get:*:video/mp4:DLNA.ORG_PN=MPEG4_P2_SP_AAC;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000\">%s</res><upnp:class>object.item.videoItem</upnp:class></item></DIDL-Lite>"
 /*----------------------------------------------------------------------
 |   
 +---------------------------------------------------------------------*/
@@ -131,7 +132,8 @@ NPT_Result CLibDLNA::Open(const char* url, int file_type)
 			http_url = CFlyfoxMediaServerDelegate::BuildSafeResourceUri(base_uri, ip, /*url*/url, file_type);
 
 			//NPT_LOG_INFO("SetAVTransportURI http_url=%s");//, http_url.GetChars());
-			result = m_MediaController->SetAVTransportURI(device, 0, http_url/*url*/, "", NULL);
+			NPT_String didl = NPT_String::Format(DIDL_LITE, file_name, http_url);
+			result = m_MediaController->SetAVTransportURI(device, 0, http_url/*url*/, didl, NULL);
 		}
 	}
 	return result;

@@ -14,6 +14,7 @@ typedef NPT_Map<NPT_String, NPT_String>::Entry PLT_StringMapEntry;
 +---------------------------------------------------------------------*/
 class CFlyfoxMediaController : public PLT_MediaController
 							 , public PLT_MediaControllerDelegate
+							 /*, public PLT_SyncMediaBrowser*/
 {
 public:
 	CFlyfoxMediaController(PLT_CtrlPointReference& ctrlPoint);
