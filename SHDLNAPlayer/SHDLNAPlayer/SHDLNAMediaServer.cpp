@@ -56,7 +56,7 @@ CSHDLNAMediaServerDelegate::ProcessFileRequest(NPT_HttpRequest&              req
 // 	}
 	if (m_Mediainfo != NULL)
 	{
-		file_path = m_Mediainfo->url_from_ui;
+		file_path = m_Mediainfo->url;
 	}
 	else
 	{

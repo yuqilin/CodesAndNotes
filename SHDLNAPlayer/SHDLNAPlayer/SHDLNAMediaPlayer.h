@@ -1,7 +1,11 @@
 #ifndef _SH_DLNA_MEDIA_PLAYER_H_
 #define _SH_DLNA_MEDIA_PLAYER_H_
 
-#include "SHDLNAMediaController.h"
+#include "SHDLNAPlayer.h"
+#include "QtSequenceMerge.h"
+#include "Mp4DownloadClient.h"
+
+class CSHDLNAMediaController;
 
 /*
  *	PLT_UPnPReference
@@ -60,8 +64,9 @@ typedef struct tagSHDLNAMediaInfo {
 +---------------------------------------------------------------------*/
 class CSHDLNAMediaPlayer
 {
-	friend class SHDLNAMediaDownloader;
 public:
+	friend class CSHDLNAMediaDownloader;
+
 	CSHDLNAMediaPlayer();
 	~CSHDLNAMediaPlayer();
 
@@ -83,7 +88,7 @@ public:
 	//static NPT_Result GetInputStream(NPT_InputStreamReference& stream);
 
 	SH_DLNA_PLAYER_PLAY_STATE	GetPlayState() {
-		NPT_AutoLock lock(m_PlayStateLock);
+		//NPT_AutoLock lock(m_PlayStateLock);
 		return m_PlayState;
 	}
 
@@ -92,24 +97,24 @@ protected:
 	NPT_Result		BuildMediaInfo(const char* url_from_ui_utf8);
 	NPT_Result		ParseMediaTitle(const char* url_from_ui_utf8, NPT_String& title);
 
-	MEDIA_LOAD_STATE	GetMediaLoadState() {
-		NPT_AutoLock lock(m_MediaLoadStateLock);
-		return m_MediaLoadState;
-	}
+// 	MEDIA_LOAD_STATE	GetMediaLoadState() {
+// 		NPT_AutoLock lock(m_MediaLoadStateLock);
+// 		return m_MediaLoadState;
+// 	}
 
-	NPT_Result		SetMediaLoadState(MEDIA_LOAD_STATE state) {
-		NPT_AutoLock lock(m_MediaLoadStateLock);
-		m_MediaLoadState = state;
-		return NPT_SUCCESS;
-	}
+// 	NPT_Result		SetMediaLoadState(MEDIA_LOAD_STATE state) {
+// 		NPT_AutoLock lock(m_MediaLoadStateLock);
+// 		m_MediaLoadState = state;
+// 		return NPT_SUCCESS;
+// 	}
 
-	NPT_Result		SetPlayState(SH_DLNA_PLAYER_PLAY_STATE state) {
-		NPT_AutoLock lock(m_PlayStateLock);
-		m_PlayState = state;
-		return NPT_SUCCESS;
-	}
+// 	NPT_Result		SetPlayState(SH_DLNA_PLAYER_PLAY_STATE state) {
+// 		NPT_AutoLock lock(m_PlayStateLock);
+// 		m_PlayState = state;
+// 		return NPT_SUCCESS;
+// 	}
 
-	NPT_Result		OnMediaHeaderDownloadCompleted();
+	NPT_Result		OpenMedia();
 
 protected:
 	/*
@@ -140,19 +145,19 @@ protected:
 	/*
 	 *	media info
 	 */
-	SHDLNAMediaInfo_t*					m_MediaInfo;
+	SHDLNAMediaInfo_t					m_MediaInfo;
 
 	/*
 	 *	media load state
 	 */
 	MEDIA_LOAD_STATE					m_MediaLoadState;
-	NPT_Mutex							m_MediaLoadStateLock;
+	//NPT_Mutex							m_MediaLoadStateLock;
 
 	/*
 	 *	play state
 	 */
 	SH_DLNA_PLAYER_PLAY_STATE			m_PlayState;
-	NPT_Mutex							m_PlayStateLock;
+	//NPT_Mutex							m_PlayStateLock;
 
 	PLT_TaskManager						m_TaskManager;
 };

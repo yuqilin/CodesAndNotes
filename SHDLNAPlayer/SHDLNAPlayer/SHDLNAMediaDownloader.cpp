@@ -1,5 +1,6 @@
 #include "stdafx.h"
-#include "SHDLNAMediaDownloder.h"
+#include "SHDLNAMediaDownloader.h"
+#include "SHDLNAMediaPlayer.h"
 
 /*----------------------------------------------------------------------
 |   CSHDLNAMediaDownloader::CSHDLNAMediaDownloader
@@ -22,10 +23,12 @@ void CSHDLNAMediaDownloader::DoRun()
 		m_HeaderDownloadCompleted = true;
 	}
 
-	SHDLNAMediaInfo_t mediainfo;
 	CSHDLNAMediaPlayer* player = (CSHDLNAMediaPlayer*)m_User;
 	if (player)
 	{
-		player->OnMediaHeaderDownloadCompleted(&mediainfo);
+		player->m_MediaInfo.title = "";
+		player->m_MediaInfo.header_info = new SHMP4HeaderInfo_t;
+		//player->OnMediaHeaderDownloadCompleted();
+		player->OpenMedia();
 	}
 }

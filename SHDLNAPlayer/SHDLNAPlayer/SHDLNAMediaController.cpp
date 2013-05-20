@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SHDLNAMediaController.h"
+#include "SHDLNAMediaServer.h"
 
 NPT_SET_LOCAL_LOGGER("shdlnaplayer.shdlnamediacontroller")
 
@@ -53,36 +54,27 @@ NPT_Result CSHDLNAMediaController::OpenMedia(SHDLNAMediaInfo_t& media_info)
 {
 	NPT_Result result = NPT_FAILURE;
 
-	NPT_String didl;
-	PLT_DeviceDataReference device;
 	NPT_String ip("127.0.0.1");
-	int port = 0;
-
-	if (m_MediaController.IsNull() || m_MediaServer.IsNull())
-	{
-		return NPT_FAILURE;
-	}
-
-	m_MediaController->GetCurMediaRenderer(device);
+	NPT_UInt16 port = 0;
+	PLT_DeviceDataReference device;
+	GetCurMediaRenderer(device);
 	if (!device.IsNull())
 	{
 		ip = device->GetLocalIP().ToString();
 	}
-	port = m_MediaServer->GetPort();
 
-	NPT_String title;
-	if (NPT_SUCCEEDED(result = ParseMediaTitle(url_from_ui_utf8, title)))
+	if (!m_CurMediaServer.IsNull())
 	{
-		m_MediaInfo.url_from_ui = url_from_ui_utf8;
-		m_MediaInfo.title = title;
-
-		NPT_HttpUrl base_uri(ip, port, NPT_HttpUrl::PercentEncode("/", NPT_Uri::PathCharsToEncode));
-		m_MediaInfo.url_to_device = CSHDLNAMediaServerDelegate::BuildSafeResourceUri(base_uri, ip, title);
+		port = m_CurMediaServer->GetPort();
 	}
 
-	ToDidl(media_info.url_to_device, media_info.title, didl);
+	NPT_HttpUrl base_uri(ip, port, NPT_HttpUrl::PercentEncode("/", NPT_Uri::PathCharsToEncode));
+	NPT_String url_to_device = CSHDLNAMediaServerDelegate::BuildSafeResourceUri(base_uri, ip, media_info.title);
 
-	result = SetAVTransportURI(m_CurMediaRenderer, 0, media_info.url_to_device, didl, NULL);
+	NPT_String didl;
+	ToDidl(url_to_device, media_info.title, didl);
+
+	result = SetAVTransportURI(m_CurMediaRenderer, 0, url_to_device, didl, NULL);
 
 	return result;
 }
@@ -320,12 +312,12 @@ void CSHDLNAMediaController::OnSetAVTransportURIResult(
 	void*                    userdata)
 {
 	NPT_CHECK_ONRESULT_SEVERE(res);
-	SH_DLNAPlayer_UI_Message msg = (NPT_SUCCEEDED(res) ? SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_SUCCEEDED
-		: SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_FAILED);
-	if (m_MessageNotifyUI != NULL)
-	{
-		m_MessageNotifyUI(msg, NULL, NULL);
-	}
+// 	SH_DLNAPlayer_UI_Message msg = (NPT_SUCCEEDED(res) ? SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_SUCCEEDED
+// 		: SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_FAILED);
+// 	if (m_MessageNotifyUI != NULL)
+// 	{
+// 		m_MessageNotifyUI(msg, NULL, NULL);
+// 	}
 }
 
 /*----------------------------------------------------------------------
@@ -477,6 +469,18 @@ void CSHDLNAMediaController::ToDidl(const NPT_String& uri, const NPT_String& nam
 	didl += "</item>";
 
 	didl+=didl_footer;
+}
+
+/*----------------------------------------------------------------------
+|   
++---------------------------------------------------------------------*/
+NPT_Result CSHDLNAMediaController::SetCurMeidaServer(PLT_DeviceHostReference& server)
+{
+	NPT_Result result = NPT_SUCCESS;
+
+	m_CurMediaServer = server;
+
+	return result;
 }
 
 /*----------------------------------------------------------------------

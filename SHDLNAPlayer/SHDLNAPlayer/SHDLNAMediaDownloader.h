@@ -1,6 +1,9 @@
 #ifndef _SH_DLNA_MEDIA_DOWNLOADER_H_
 #define _SH_DLNA_MEDIA_DOWNLOADER_H_
 
+/*----------------------------------------------------------------------
+|   class CSHDLNAMediaDownloader
++---------------------------------------------------------------------*/
 class CSHDLNAMediaDownloader : public PLT_ThreadTask
 {
 public:

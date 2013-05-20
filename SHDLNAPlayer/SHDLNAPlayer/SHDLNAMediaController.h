@@ -2,8 +2,7 @@
 #define _SH_DLNA_MEDIA_CONTROLLER_H_
 
 #include "SHDLNAPlayer.h"
-
-
+#include "SHDLNAMediaPlayer.h"
 
 /*----------------------------------------------------------------------
 |   class CSHDLNAMediaController
@@ -20,7 +19,9 @@ public:
 	NPT_Result		ChooseDevice(const char* device_uuid);
 	NPT_Result		OpenMedia(SHDLNAMediaInfo_t& media_info);
 
-	void		GetCurMediaRenderer(PLT_DeviceDataReference& renderer);
+	NPT_Result		SetCurMeidaServer(PLT_DeviceHostReference& server);
+
+	void			GetCurMediaRenderer(PLT_DeviceDataReference& renderer);
 
 protected:
 	//NPT_Result		ParseFileNameFromUrl(const char* url, NPT_String& title);
@@ -171,8 +172,8 @@ protected:
      * a lock.  If you ever want to hold both the m_CurMediaRendererLock lock and the 
      * m_CurMediaServerLock lock, make sure you grab the server lock first.
      */
-    PLT_DeviceDataReference				m_CurMediaServer;
-    NPT_Mutex							m_CurMediaServerLock;
+    PLT_DeviceHostReference				m_CurMediaServer;
+    //NPT_Mutex							m_CurMediaServerLock;
 
 	/* The currently selected media renderer as well as 
      * a lock.  If you ever want to hold both the m_CurMediaRendererLock lock and the 
