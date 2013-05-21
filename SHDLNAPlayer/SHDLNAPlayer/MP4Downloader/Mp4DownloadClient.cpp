@@ -83,6 +83,8 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 		mainfilename = m_info_ptr->name;
 	}
 
+	mainfilename += ".mp4";
+
 	size_t section_count = m_info_ptr->sections.size();
 
 	printf("%d section cdn request...\n", section_count);

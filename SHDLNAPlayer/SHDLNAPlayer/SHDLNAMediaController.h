@@ -12,12 +12,13 @@ class CSHDLNAMediaController : public PLT_MediaController
 {
 public:
 	CSHDLNAMediaController(PLT_CtrlPointReference& ctrlPoint,
-		SH_DLNAPlayer_MessageNotifyUI message_to_notify);
+		/*SH_DLNAPlayer_MessageNotifyUI message_to_notify,*/
+		CSHDLNAMediaPlayer* pPlayer);
 	virtual ~CSHDLNAMediaController();
 
 public:
 	NPT_Result		ChooseDevice(const char* device_uuid);
-	NPT_Result		OpenMedia(SHDLNAMediaInfo_t& media_info);
+	NPT_Result		OpenMedia(SHDLNAMediaInfo_t* media_info);
 
 	NPT_Result		SetCurMeidaServer(PLT_DeviceHostReference& server);
 
@@ -190,7 +191,12 @@ protected:
 	/*
 	 *	message to notify UI
 	 */
-	SH_DLNAPlayer_MessageNotifyUI		m_MessageNotifyUI;
+	//SH_DLNAPlayer_MessageNotifyUI		m_MessageNotifyUI;
+
+	/*
+	 *	pointer to Player
+	 */
+	CSHDLNAMediaPlayer*					m_Player;
 };
 
 

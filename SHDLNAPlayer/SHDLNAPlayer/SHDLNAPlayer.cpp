@@ -54,6 +54,18 @@ SH_DLNAPLAYER_API int SH_DLNAPlayer_ChooseDevice(const char* device_uuid)
 }
 
 /*----------------------------------------------------------------------
+|   SH_DLNAPlayer_GetCurrentDevice
++---------------------------------------------------------------------*/
+SH_DLNAPLAYER_API const char* SH_DLNAPlayer_GetCurrentDevice()
+{
+	if (!g_MediaPlayer.IsNull())
+	{
+		return g_MediaPlayer->GetCurrentDevice();
+	}
+	return NULL;
+}
+
+/*----------------------------------------------------------------------
 |   SH_DLNAPlayer_Open
 +---------------------------------------------------------------------*/
 SH_DLNAPLAYER_API int SH_DLNAPlayer_Open(const char* url_utf8)

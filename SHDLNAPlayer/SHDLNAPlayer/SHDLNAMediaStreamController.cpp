@@ -45,7 +45,7 @@ CSHDLNAMediaStreamController::~CSHDLNAMediaStreamController()
 /*----------------------------------------------------------------------
 |   
 +---------------------------------------------------------------------*/
-int CSHDLNAMediaStreamController::Open(const char* name)
+int CSHDLNAMediaStreamController::Open(const char* name, void* header_data)
 {
 	int ret=0;
 

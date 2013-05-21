@@ -93,6 +93,14 @@ extern "C"
 	*/
 	SH_DLNAPLAYER_API int		SH_DLNAPlayer_ChooseDevice(const char* device_uuid);
 
+		/*
+	*	SH_DLNAPlayer_GetCurrentDevice
+	*	描述：			获得当前选中DLNA播放设备的uuid
+	*	参数：			无
+	*	返回值：		当前选中设备的UUID字符串
+	*/
+	SH_DLNAPLAYER_API const char*	SH_DLNAPlayer_GetCurrentDevice();
+
 	/*
 	*	SH_DLNAPlayer_Open
 	*	描述：			打开文件

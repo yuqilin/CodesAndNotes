@@ -18,8 +18,11 @@ public:
 	CSHDLNAMediaServerDelegate(const char* url_root);
 	virtual ~CSHDLNAMediaServerDelegate();
 
-	virtual void SetMediaInfo(SHDLNAMediaInfo_t* mediainfo) {
+	void OpenMedia(SHDLNAMediaInfo_t* mediainfo) {
 		m_Mediainfo = mediainfo;
+	}
+	void CloseMedia() {
+		m_Mediainfo = NULL;
 	}
 
 protected:

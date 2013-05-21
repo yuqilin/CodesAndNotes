@@ -319,6 +319,8 @@ void CSHDLNAPlayerTestDlg::SHDLNAPlayerMessageNotifyUI(int msg, void* wParam, vo
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaSucceeded()
 {
+	GetDlgItem(IDC_STATIC_STATUS)->SetWindowText(_T("DLNAPlayer Open Media Succeeded!"));
+
 	if (0 == SH_DLNAPlayer_Play())
 	{
 		m_PlayState = PLAY_STATE_PLAYING;
@@ -330,7 +332,7 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaSucceeded()
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaFailed()
 {
-	MessageBox(_T("DLNAPlayer Open media failed"));
+	GetDlgItem(IDC_STATIC_STATUS)->SetWindowText(_T("DLNAPlayer Open Media Failed!"));
 }
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerSeekSucceeded()
@@ -380,6 +382,11 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerDeviceListUpdated(void* wParam)
 {
 	m_ctrlDeviceList.ResetContent();
 
+	CStringA strDeviceUUID;
+	const char* pszUUID = SH_DLNAPlayer_GetCurrentDevice();
+	if (pszUUID)
+		strDeviceUUID = pszUUID;
+
 	SH_DLNAPlayer_DeviceList* pList = (SH_DLNAPlayer_DeviceList*)wParam;
 	if (pList)
 	{
@@ -389,6 +396,11 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerDeviceListUpdated(void* wParam)
 			CString device_name(m_DLNADeviceList.device[i].device_name);
 			m_ctrlDeviceList.AddString(device_name);
 			m_ctrlDeviceList.SetItemDataPtr(i, &m_DLNADeviceList.device[i]);
+
+			if (strDeviceUUID.CompareNoCase(m_DLNADeviceList.device[i].device_uuid) == 0)
+			{
+				m_ctrlDeviceList.SetCurSel(i);
+			}
 		}
 	}	
 }

@@ -8,7 +8,7 @@ class IMediaStream
 {
 public:
 	virtual ~IMediaStream() {}
-	virtual int Open(const char* url) = 0;
+	virtual int Open(const char* url, void* header_data) = 0;
 	virtual int Close() = 0;
 	virtual int Read(void* buffer, unsigned int bytes_to_read, unsigned int* bytes_read) = 0;
 	virtual int Seek(unsigned __int64 offset) = 0;
@@ -26,7 +26,7 @@ public:
 	CSHDLNAMediaStream();
 	virtual ~CSHDLNAMediaStream();
 
-	virtual NPT_Result Open(const char* url);
+	virtual NPT_Result Open(const char* url, void* header_data);
 	virtual NPT_Result Close();
 
 	// NPT_InputStream methods

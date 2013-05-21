@@ -8,9 +8,11 @@ NPT_SET_LOCAL_LOGGER("shdlnaplayer.shdlnamediacontroller")
 |   CSHDLNAMediaController::CSHDLNAMediaController
 +---------------------------------------------------------------------*/
 CSHDLNAMediaController::CSHDLNAMediaController(PLT_CtrlPointReference& ctrlPoint,
-											   SH_DLNAPlayer_MessageNotifyUI message_to_notify)
+											   /*SH_DLNAPlayer_MessageNotifyUI message_to_notify,*/
+											   CSHDLNAMediaPlayer* pPlayer)
 											   : PLT_MediaController(ctrlPoint, this)
-											   , m_MessageNotifyUI(message_to_notify)
+											   /*, m_MessageNotifyUI(message_to_notify)*/
+											   , m_Player(pPlayer)
 {
 	memset(&m_DeviceList, 0, sizeof(m_DeviceList));
 }
@@ -20,6 +22,8 @@ CSHDLNAMediaController::CSHDLNAMediaController(PLT_CtrlPointReference& ctrlPoint
 +---------------------------------------------------------------------*/
 CSHDLNAMediaController::~CSHDLNAMediaController()
 {
+	/*m_MessageNotifyUI = NULL;*/
+	m_Player = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -50,7 +54,7 @@ NPT_Result CSHDLNAMediaController::ChooseDevice(const char* device_uuid)
 /*----------------------------------------------------------------------
 |   CSHDLNAMediaController::OpenMedia
 +---------------------------------------------------------------------*/
-NPT_Result CSHDLNAMediaController::OpenMedia(SHDLNAMediaInfo_t& media_info)
+NPT_Result CSHDLNAMediaController::OpenMedia(SHDLNAMediaInfo_t* media_info)
 {
 	NPT_Result result = NPT_FAILURE;
 
@@ -68,13 +72,29 @@ NPT_Result CSHDLNAMediaController::OpenMedia(SHDLNAMediaInfo_t& media_info)
 		port = m_CurMediaServer->GetPort();
 	}
 
+	NPT_String title;
+	if (media_info != NULL)
+		title = media_info->title;
+	else
+		title = "หับüสำฦต";
+
 	NPT_HttpUrl base_uri(ip, port, NPT_HttpUrl::PercentEncode("/", NPT_Uri::PathCharsToEncode));
-	NPT_String url_to_device = CSHDLNAMediaServerDelegate::BuildSafeResourceUri(base_uri, ip, media_info.title);
+	NPT_String url_to_device = CSHDLNAMediaServerDelegate::BuildSafeResourceUri(base_uri, ip, title);
+
+	NPT_LOG_INFO_1("Push Url to device: %s", url_to_device);
 
 	NPT_String didl;
-	ToDidl(url_to_device, media_info.title, didl);
+	ToDidl(url_to_device, title, didl);
 
 	result = SetAVTransportURI(m_CurMediaRenderer, 0, url_to_device, didl, NULL);
+
+	if (NPT_FAILED(result))
+	{
+		if (m_Player != NULL)
+		{
+			m_Player->OnOpenResult(result);
+		}
+	}
 
 	return result;
 }
@@ -147,10 +167,15 @@ void CSHDLNAMediaController::OnDeviceListUpdated()
 		++entry;
 	}
 
-	if (m_MessageNotifyUI != NULL)
+// 	if (m_MessageNotifyUI != NULL)
+// 	{
+// 		m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_DEVICE_LIST_UPDATED, (void*)&m_DeviceList, NULL);
+// 	}
+	if (m_Player != NULL)
 	{
-		m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_DEVICE_LIST_UPDATED, (void*)&m_DeviceList, NULL);
+		m_Player->OnDeviceListUpdated((void*)&m_DeviceList);
 	}
+	
 }
 
 
@@ -191,11 +216,10 @@ void CSHDLNAMediaController::OnGetMediaInfoResult(
 	{
 		if (info != NULL)
 		{
-			//m_MediaInfo = *info;
-			if (m_MessageNotifyUI != NULL)
+			long millis = info->media_duration.ToMillis();
+			if (m_Player != NULL)
 			{
-				long millis = info->media_duration.ToMillis();
-				m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_MEDIA_TOTAL_DURATION, (void*)millis, 0);
+				m_Player->OnGetMediaDurationResult(res, (void*)millis);
 			}
 		}
 	}
@@ -214,11 +238,10 @@ void CSHDLNAMediaController::OnGetPositionInfoResult(
 	{
 		if (info != NULL)
 		{
-			//m_PositionInfo = *info;
-			if (m_MessageNotifyUI != NULL)
+			long pos = info->rel_time.ToMillis();
+			if (m_Player != NULL)
 			{
-				long pos = info->rel_time.ToMillis();
-				m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_MEDIA_CURRENT_POS, (void*)pos, 0);
+				m_Player->OnGetCurPlayPosResult(res, (void*)pos);
 			}
 		}
 	}
@@ -312,12 +335,11 @@ void CSHDLNAMediaController::OnSetAVTransportURIResult(
 	void*                    userdata)
 {
 	NPT_CHECK_ONRESULT_SEVERE(res);
-// 	SH_DLNAPlayer_UI_Message msg = (NPT_SUCCEEDED(res) ? SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_SUCCEEDED
-// 		: SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_FAILED);
-// 	if (m_MessageNotifyUI != NULL)
-// 	{
-// 		m_MessageNotifyUI(msg, NULL, NULL);
-// 	}
+	
+	if (m_Player != NULL)
+	{
+		m_Player->OnOpenResult(res);
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -426,10 +448,10 @@ void CSHDLNAMediaController::OnGetVolumeResult(
 {
 	if (NPT_SUCCESS == res)
 	{
-		if (m_MessageNotifyUI != NULL)
+		int vol = volume;
+		if (m_Player != NULL)
 		{
-			m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME, 
-				(void*)volume, NULL);
+			m_Player->OnGetVolumeResult(res, (void*)vol);
 		}
 	}
 }
@@ -452,7 +474,7 @@ void CSHDLNAMediaController::ToDidl(const NPT_String& uri, const NPT_String& nam
 	PLT_Didl::AppendXmlEscape(didl, title);
 	didl += "</dc:title>";
 
-	didl +="<dc:creator>SohuTV</dc:creator><upnp:genre>SohuTV</upnp:genre>";
+	didl +="<dc:creator>หับüสำฦต</dc:creator><upnp:genre>หับüสำฦต</upnp:genre>";
 
 	didl += "<res size=\"\"";
 

@@ -44,41 +44,19 @@ CSHDLNAMediaServerDelegate::ProcessFileRequest(NPT_HttpRequest&              req
 		NPT_LOG_SEVERE("request parse got: Internal Server Error");
 		return NPT_SUCCESS;
 	}
-
-	/* Extract file path and file type from url */
+	
 	NPT_String file_path;
-// 	if (NPT_FAILED(ExtractResourcePath(request.GetUrl(), file_path)))
-// 		goto failure;
-// 
-// 	if (file_path.StartsWith("http:") && file_path[6]!='/')
-// 	{
-// 		file_path.Insert("/", 6);
-// 	}
-	if (m_Mediainfo != NULL)
-	{
-		file_path = m_Mediainfo->url;
-	}
-	else
-	{
-		if (NPT_FAILED(ExtractResourcePath(request.GetUrl(), file_path)))
-			goto failure;
-		if (file_path.StartsWith("http:") && file_path[6]!='/')
-		{
-			file_path.Insert("/", 6);
-		}
-	}
+	if (m_Mediainfo == NULL)
+		goto failure;
 
 	stream = new CSHDLNAMediaStream;
 	if (stream.IsNull() || 
-		NPT_FAILED(((CSHDLNAMediaStream*)stream.AsPointer())->Open(file_path)))
+		NPT_FAILED(((CSHDLNAMediaStream*)stream.AsPointer())->Open(m_Mediainfo->url, m_Mediainfo->header_info)))
 	{
 		return NPT_ERROR_NO_SUCH_ITEM;
 	}
 
-	if (!file_path.StartsWith("http://"))
-	{
-		mime_type = PLT_MimeType::GetMimeType(file_path, &tmp_context);
-	}
+	mime_type = PLT_MimeType::GetMimeType(m_Mediainfo->url, &tmp_context);
 
 	return ServeStream(request, context, response, stream, mime_type/*PLT_MimeType::GetMimeType(file_path, &tmp_context)*/);
 

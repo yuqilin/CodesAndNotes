@@ -2,7 +2,7 @@
 #include "SHDLNAMediaStream.h"
 #include "SHDLNAMediaStreamController.h"
 
-NPT_SET_LOCAL_LOGGER("shdlnaplayer.shdlnamediastream")
+//NPT_SET_LOCAL_LOGGER("shdlnaplayer.shdlnamediastream")
 
 /*----------------------------------------------------------------------
 |   CSHDLNAMediaStream::CSHDLNAMediaStream
@@ -24,11 +24,11 @@ CSHDLNAMediaStream::~CSHDLNAMediaStream()
 /*----------------------------------------------------------------------
 |   CSHDLNAMediaStream::Open
 +---------------------------------------------------------------------*/
-NPT_Result CSHDLNAMediaStream::Open(const char* url)
+NPT_Result CSHDLNAMediaStream::Open(const char* url, void* header_data)
 {
 	if (m_Delegate != NULL)
 	{
-		return m_Delegate->Open(url);
+		return m_Delegate->Open(url, header_data);
 	}
 	return NPT_FAILURE;
 }

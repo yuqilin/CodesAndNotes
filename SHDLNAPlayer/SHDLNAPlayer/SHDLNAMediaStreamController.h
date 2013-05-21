@@ -43,7 +43,7 @@ public:
 	CSHDLNAMediaStreamController();
 	virtual ~CSHDLNAMediaStreamController();
 
-	int Open(const char* name);
+	int Open(const char* name, void* header_data);
 	int Close();
 	int Read(void* buffer, unsigned int bytes_to_read, unsigned int* bytes_read);
 	int Seek(unsigned __int64 offset);

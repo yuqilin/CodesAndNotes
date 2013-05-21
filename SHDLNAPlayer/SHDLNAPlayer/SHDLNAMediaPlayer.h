@@ -41,8 +41,7 @@ typedef struct tagSHMP4HeaderInfo {
 	SHVideoInfo info;
 	std::vector<SHCDNInfo> cdninfo;
 
-	~tagSHMP4HeaderInfo()
-	{
+	~tagSHMP4HeaderInfo() {
 		std::vector<SHCDNInfo>().swap(cdninfo);
 	}
 } SHMP4HeaderInfo_t;
@@ -57,6 +56,12 @@ typedef struct tagSHDLNAMediaInfo {
 	long							duration;
 	//long							play_pos;
 	SHMP4HeaderInfo_t*				header_info;
+	
+	tagSHDLNAMediaInfo() {
+		duration = 0;
+		header_info = NULL;
+	}
+
 } SHDLNAMediaInfo_t;
 
 /*----------------------------------------------------------------------
@@ -73,6 +78,8 @@ public:
 	NPT_Result		Init(SH_DLNAPlayer_MessageNotifyUI message_to_notify);
 	NPT_Result		Uninit(void);
 	NPT_Result		ChooseDevice(const char* device_uuid);
+	const char*		GetCurrentDevice();
+
 	NPT_Result		Open(const char* url_utf8);
 	NPT_Result		Close(void);
 	NPT_Result		Play(void);
@@ -92,29 +99,34 @@ public:
 		return m_PlayState;
 	}
 
+	void			OnDeviceListUpdated(void* param);
+	void			OnOpenResult(NPT_Result result);
+	void			OnGetMediaDurationResult(NPT_Result result, void* param);
+	void			OnGetCurPlayPosResult(NPT_Result result, void* param);
+	void			OnGetVolumeResult(NPT_Result result, void* param);
 
 protected:
 	NPT_Result		BuildMediaInfo(const char* url_from_ui_utf8);
 	NPT_Result		ParseMediaTitle(const char* url_from_ui_utf8, NPT_String& title);
+	NPT_Result		OpenMedia(bool media_info_got);
 
-// 	MEDIA_LOAD_STATE	GetMediaLoadState() {
-// 		NPT_AutoLock lock(m_MediaLoadStateLock);
-// 		return m_MediaLoadState;
-// 	}
 
-// 	NPT_Result		SetMediaLoadState(MEDIA_LOAD_STATE state) {
-// 		NPT_AutoLock lock(m_MediaLoadStateLock);
-// 		m_MediaLoadState = state;
-// 		return NPT_SUCCESS;
-// 	}
+	// 	MEDIA_LOAD_STATE	GetMediaLoadState() {
+	// 		NPT_AutoLock lock(m_MediaLoadStateLock);
+	// 		return m_MediaLoadState;
+	// 	}
 
-// 	NPT_Result		SetPlayState(SH_DLNA_PLAYER_PLAY_STATE state) {
-// 		NPT_AutoLock lock(m_PlayStateLock);
-// 		m_PlayState = state;
-// 		return NPT_SUCCESS;
-// 	}
+	// 	NPT_Result		SetMediaLoadState(MEDIA_LOAD_STATE state) {
+	// 		NPT_AutoLock lock(m_MediaLoadStateLock);
+	// 		m_MediaLoadState = state;
+	// 		return NPT_SUCCESS;
+	// 	}
 
-	NPT_Result		OpenMedia();
+	// 	NPT_Result		SetPlayState(SH_DLNA_PLAYER_PLAY_STATE state) {
+	// 		NPT_AutoLock lock(m_PlayStateLock);
+	// 		m_PlayState = state;
+	// 		return NPT_SUCCESS;
+	// 	}
 
 protected:
 	/*
@@ -145,7 +157,7 @@ protected:
 	/*
 	 *	media info
 	 */
-	SHDLNAMediaInfo_t					m_MediaInfo;
+	SHDLNAMediaInfo_t*					m_MediaInfo;
 
 	/*
 	 *	media load state
