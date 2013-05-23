@@ -38,7 +38,23 @@ typedef enum {
 
 	SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME,						// 设备当前播放音量，wParam返回当前音量（int)
 
+	SH_DLNAPLAYER_UI_MESSAGE_CURRENT_DEVICE_DISCONNECT,					// 当前设备失去连接
+
+	SH_DLNAPLAYER_UI_MESSAGE_NO_DEVICE_CHOOSEN,							// 没有选择要连接的设备
+
+	SH_DLNAPLAYER_UI_MESSAGE_TRANSPORT_INFO,							// 数据传输状态
+
 } SH_DLNAPlayer_UI_Message;
+
+/*
+ *	播放状态
+ */
+typedef enum {
+	SH_DLNAPLAYER_PLAY_STATE_INVALID,									// 无效状态	
+	SH_DLNAPLAYER_PLAY_STATE_PLAYING,									// 正在播放
+	SH_DLNAPLAYER_PLAY_STATE_PAUSE,										// 暂停状态
+	SH_DLNAPLAYER_PLAY_STATE_STOP,										// 停止状态
+} SH_DLNAPlayer_PlayState;
 
 /*----------------------------------------------------------------------
 |   DLNA设备信息相关
@@ -159,6 +175,14 @@ extern "C"
 
 
 	/*
+	 *	SH_DLNAPlayer_GetPlayState
+	 *	描述：			获取当前播放状态
+	 *	参数：			无
+	 *	返回值：		播放状态值
+	 */
+	SH_DLNAPLAYER_API SH_DLNAPlayer_PlayState SH_DLNAPlayer_GetPlayState(void);
+
+	/*
 	*	SH_DLNAPlayer_GetMediaDuration
 	*	描述：			获取当前媒体播放时长，以消息通知方式返回结果
 	*	参数：			无
@@ -181,6 +205,10 @@ extern "C"
 	*	返回值：		0 - 成功；非0 - 失败
 	*/
 	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetVolume(void);
+
+
+	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetTransportInfo(void);
+
 
 
 #ifdef __cplusplus

@@ -8,7 +8,7 @@ class IMediaStream
 {
 public:
 	virtual ~IMediaStream() {}
-	virtual int Open(const char* url, void* header_data) = 0;
+	virtual int Open(const char* url, void* header = NULL) = 0;
 	virtual int Close() = 0;
 	virtual int Read(void* buffer, unsigned int bytes_to_read, unsigned int* bytes_read) = 0;
 	virtual int Seek(unsigned __int64 offset) = 0;

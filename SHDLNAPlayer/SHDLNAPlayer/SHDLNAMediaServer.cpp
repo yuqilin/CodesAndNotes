@@ -56,9 +56,12 @@ CSHDLNAMediaServerDelegate::ProcessFileRequest(NPT_HttpRequest&              req
 		return NPT_ERROR_NO_SUCH_ITEM;
 	}
 
-	mime_type = PLT_MimeType::GetMimeType(m_Mediainfo->url, &tmp_context);
+	if (!m_Mediainfo->url.StartsWith("http://"))
+	{
+		mime_type = PLT_MimeType::GetMimeType(m_Mediainfo->url, &tmp_context);
+	}
 
-	return ServeStream(request, context, response, stream, mime_type/*PLT_MimeType::GetMimeType(file_path, &tmp_context)*/);
+	return ServeStream(request, context, response, stream, mime_type);
 
 failure:
 	response.SetStatus(404, "File Not Found");

@@ -1,11 +1,8 @@
-#pragma once
-#include <vector>
+#ifndef _MP4_DOWNLOAD_TASK_H_
+#define _MP4_DOWNLOAD_TASK_H_
+
 #include <atlstr.h>
-#include <string>
-
-#include "EasyRequest.h"
-#include "QtSequenceMerge.h"
-
+#include <vector>
 
 typedef enum tagEMediaDataRequestSource
 {
@@ -154,118 +151,21 @@ typedef struct tagSHVideoInfo
 	}
 }SHVideoInfo;
 
-//CDN信息
-typedef struct tagSHCDNInfo
-{
-	wstring	ip;
-	wstring	key;
-	wstring	url;
-	int		idc;
-	tagSHCDNInfo(const std::wstring& strIp,const wstring& strKey,const wstring& strUrl,int idc = 0)
-	{
-		ip	= strIp;
-		key	= strKey;
-		url = strUrl;
-		idc = idc;
-	}
-	tagSHCDNInfo()
-	{}
-	bool operator==(const tagSHCDNInfo &sp) const
-	{
-		return ip == sp.ip && key == sp.key && url == sp.url && idc == sp.idc;
-	}
-}SHCDNInfo;
-
-enum SHDType
-{
-	SHDType_Normal = 0,
-	SHDType_Preload,
-	SHDType_PreloadNext,
-	SHDType_Download,
-	SHDType_ClientPlay,
-	SHDType_LivePlay,
-	SHDType_TestSpeed,
-	SHDType_UserTestSpeed
-};
-
-//视频请求参数
-typedef struct tagSHVideoRequestParam
-{
-	int		index;
-	bool	download;
-	int		pnum;			//当前播放段
-	int		dnum;			//当前下载段
-	int		ptime;			//当前播放时间
-	int		dtime;			//当前下载时间
-	int		start;			//开始时间
-	int		startpos;		//开始位置
-	int		cdnNum;
-	int		shdtype;		//下载类型
-	int     duration;		//时长，单位s
-	int		p2pflag;
-	bool	reportLocalData;
-	tagSHVideoRequestParam()
-	{
-		memset(this,0,sizeof(tagSHVideoRequestParam));
-		p2pflag = 3*60;
-		reportLocalData = true;
-	}
-}SHVideoRequestParam;
-
-class CMp4DownloadClient
+class CMP4DownloadTask : public PLT_ThreadTask
 {
 public:
-	CMp4DownloadClient(void);
-	~CMp4DownloadClient(void);
-
-	void InitialRequest(QtSequence* sequence_ptr, SHVideoInfo* info_ptr, vector<SHCDNInfo>* cdnInfolist_ptr, 
-		EMediaDataRequestSource eTryResoure = P2P_Local_RequestSource);
-
-	int HeaderRequest(const char* url, 
-		CString& mainfilename,
-		ProgressCallBack hotvr_processcb, 
-		ProgressCallBack cdn_processcb, 
-		ProgressCallBack header_processcb,
-		void* customparam = NULL);
-
-	void GetRequestFileInfo(unsigned int* pfilesize);
 	
-	void GetRequestFileHeader(unsigned char** ppbuffer, unsigned int* pbuffersize);
-
-	int DataRequest(unsigned int startpos, unsigned int endpos, unsigned int* pactualfinishpos, 
-		ResponseCallBack cb, ProgressCallBack data_progresscb, void* customparam = NULL,
-		EMediaDataRequestSource eTryResoure = P2P_Local_RequestSource);
-	
-	void FlushRequest(void);
-
-	int GetFileName(const char* url,CString& mainfilename);
-	static int ProgressCB(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
-
-private:
-	wstring Utf82W(LPCSTR szContent);
-	bool JsonParse(const void* xml, const unsigned int xmlsize, SHVideoInfo& videoinfo);
-	bool XmlParse(const void* buffer, const unsigned int buffersize, SHCDNInfo& cdnInfo);
-	wstring GetUuid();
+	CMP4DownloadTask(const char* url);
+	virtual ~CMP4DownloadTask();
 
 protected:
-	static size_t HotVrsResponseForNameCallBackFunc(void* buffer, size_t size, size_t nmemb, void* lpVoid);
-	static size_t HotVrsResponseCallBackFunc(void* buffer, size_t size, size_t nmemb, void* lpVoid);
-	static size_t CdnResponseCallBackFunc(void* buffer, size_t size, size_t nmemb, void* lpVoid);
-	static size_t HeaderResponseCallBackFunc(void* buffer, size_t size, size_t nmemb, void* lpVoid);
-	static size_t DataResponseCallBackFunc(void* buffer, size_t size, size_t nmemb, void* lpVoid);
-	static int DataDebugCallBackFunc(CURL *, curl_infotype itype, char * pData, size_t size, void *);
 
-public:
-	string* hotvrs_string_ptr_for_name;
-	string* hotvrs_string_ptr;
-	string* cdn_string_ptr;
-	string* header_string_ptr;
-	void*	m_customparam;
+	virtual void DoRun();
 
-private:
-	QtSequence* m_sequence_ptr;
-	SHVideoInfo* m_info_ptr;
-	vector<SHCDNInfo>* m_cdnInfolist_ptr;
 
-	EMediaDataRequestSource m_eResoureType;
+protected:
+	NPT_String m_Url;
+	PLT_Downloader* m_Downloader;
 };
+
+#endif

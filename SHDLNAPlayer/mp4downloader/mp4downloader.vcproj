@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="mp4downloader"
-	ProjectGUID="{D667AEE9-583F-49B9-B0B3-12BC82E9F040}"
+	ProjectGUID="{CD225CF3-B1FD-4FE0-9D25-3DEEAA6169E8}"
 	RootNamespace="mp4downloader"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Neptune/Source/Core;../Platinum/Source/Core;../Platinum/Source/Platinum;../Platinum/Source/Extras;../Platinum/Source/Devices/MediaServer;../Platinum/Source/Devices/MediaRenderer;../Platinum/Source/Devices/MediaConnect;./;./MP4Downloader;.\curl\include;.\json\include"
+				AdditionalIncludeDirectories="../SHDLNAPlayer/json/include;../Neptune/Source/Core;../Platinum/Source/Core;../Platinum/Source/Platinum;../Platinum/Source/Extras;../Platinum/Source/Devices/MediaServer;../Platinum/Source/Devices/MediaRenderer;../Platinum/Source/Devices/MediaConnect"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Neptune.lib Platinum.lib"
+				AdditionalDependencies="neptune.lib platinum.lib json_libmtd.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;..\SHDLNAPlayer\json\lib\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -117,9 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../Neptune/Source/Core;../Platinum/Source/Core;../Platinum/Source/Platinum;../Platinum/Source/Extras;../Platinum/Source/Devices/MediaServer;../Platinum/Source/Devices/MediaRenderer;../Platinum/Source/Devices/MediaConnect;./;./MP4Downloader;.\curl\include;.\json\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -136,9 +135,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Neptune.lib Platinum.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -181,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MP4DownloadTask.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -206,6 +207,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\MP4DownloadTask.h"
+				>
+			</File>
 			<File
 				RelativePath=".\stdafx.h"
 				>

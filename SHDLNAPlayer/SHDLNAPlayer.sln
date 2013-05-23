@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHDLNAPlayerTest", "SHDLNAP
 		{28469C40-E5BE-4E84-9A23-093F4BB1D4E3} = {28469C40-E5BE-4E84-9A23-093F4BB1D4E3}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mp4downloader", "mp4downloader\mp4downloader.vcproj", "{CD225CF3-B1FD-4FE0-9D25-3DEEAA6169E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -38,6 +40,10 @@ Global
 		{A1FA00A4-44E3-4ACB-8A62-4DF6ED6A402A}.Debug|Win32.Build.0 = Debug|Win32
 		{A1FA00A4-44E3-4ACB-8A62-4DF6ED6A402A}.Release|Win32.ActiveCfg = Release|Win32
 		{A1FA00A4-44E3-4ACB-8A62-4DF6ED6A402A}.Release|Win32.Build.0 = Release|Win32
+		{CD225CF3-B1FD-4FE0-9D25-3DEEAA6169E8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CD225CF3-B1FD-4FE0-9D25-3DEEAA6169E8}.Debug|Win32.Build.0 = Debug|Win32
+		{CD225CF3-B1FD-4FE0-9D25-3DEEAA6169E8}.Release|Win32.ActiveCfg = Release|Win32
+		{CD225CF3-B1FD-4FE0-9D25-3DEEAA6169E8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

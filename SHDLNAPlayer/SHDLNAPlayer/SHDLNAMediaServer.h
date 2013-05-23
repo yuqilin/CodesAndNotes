@@ -95,8 +95,9 @@ public:    // constructor
 		SH_DLNA_MEDIA_SERVER_UUID/*uuid*/,
 		port,
 		port_rebind),
-		CSHDLNAMediaServerDelegate("/")
-	{SetDelegate(this);}
+	CSHDLNAMediaServerDelegate("/") {
+		SetDelegate(this);
+	}
 
 protected:
 	virtual ~CSHDLNAMediaServer() {}

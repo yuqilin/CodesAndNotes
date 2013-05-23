@@ -134,6 +134,8 @@ PLT_Downloader::ProcessResponse(NPT_Result                    res,
         return res;
     }
 
+	m_Output->Flush();
+
     m_State = PLT_DOWNLOADER_SUCCESS;
     return NPT_SUCCESS;
 }

@@ -66,6 +66,14 @@ NPT_Result CSHDLNAMediaController::OpenMedia(SHDLNAMediaInfo_t* media_info)
 	{
 		ip = device->GetLocalIP().ToString();
 	}
+	else
+	{
+		if (m_Player != NULL)
+		{
+			m_Player->OnNoDeviceChoosen();
+		}
+		return NPT_FAILURE;
+	}
 
 	if (!m_CurMediaServer.IsNull())
 	{
@@ -76,7 +84,7 @@ NPT_Result CSHDLNAMediaController::OpenMedia(SHDLNAMediaInfo_t* media_info)
 	if (media_info != NULL)
 		title = media_info->title;
 	else
-		title = "หับüสำฦต";
+		title = wcs2mbs(CP_UTF8, mbs2wcs(CP_ACP, "หับüสำฦต").c_str()).c_str();
 
 	NPT_HttpUrl base_uri(ip, port, NPT_HttpUrl::PercentEncode("/", NPT_Uri::PathCharsToEncode));
 	NPT_String url_to_device = CSHDLNAMediaServerDelegate::BuildSafeResourceUri(base_uri, ip, title);
@@ -136,6 +144,10 @@ void CSHDLNAMediaController::OnMRRemoved(PLT_DeviceDataReference& device)
 		// if it's the currently selected one, we have to get rid of it
 		if (!m_CurMediaRenderer.IsNull() && m_CurMediaRenderer == device) {
 			m_CurMediaRenderer = NULL;
+			if (m_Player != NULL)
+			{
+				m_Player->OnCurrentDeviceDisconnect();
+			}
 		}
 	}
 }
@@ -256,7 +268,10 @@ void CSHDLNAMediaController::OnGetTransportInfoResult(
 	PLT_TransportInfo*       info,
 	void*                    userdata)
 {
-
+	if (m_Player != NULL)
+	{
+		m_Player->OnGetTransportInfoResult(res, (void*)info);
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -291,6 +306,10 @@ void CSHDLNAMediaController::OnPauseResult(
 									  void*                    userdata)
 {
 	NPT_CHECK_ONRESULT_SEVERE(res);
+	if (m_Player != NULL)
+	{
+		m_Player->OnPauseResult(res);
+	}
 }  
 
 /*----------------------------------------------------------------------
@@ -302,6 +321,10 @@ void CSHDLNAMediaController::OnPlayResult(
 									 void*                    userdata)
 {
 	NPT_CHECK_ONRESULT_SEVERE(res);
+	if (m_Player != NULL)
+	{
+		m_Player->OnPlayResult(res);
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -362,6 +385,10 @@ void CSHDLNAMediaController::OnStopResult(
 									 void*                    userdata)
 {
 	NPT_CHECK_ONRESULT_SEVERE(res);
+	if (m_Player)
+	{
+		m_Player->OnStopResult(res);
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -434,6 +461,10 @@ void CSHDLNAMediaController::OnSetVolumeResult(
 	void*                    userdata)
 {
 	NPT_CHECK_ONRESULT_SEVERE(res);
+	if (m_Player != NULL)
+	{
+		m_Player->OnSetVolumeResult(res);
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -466,7 +497,7 @@ void CSHDLNAMediaController::ToDidl(const NPT_String& uri, const NPT_String& nam
 	PLT_Didl::AppendXmlEscape(didl, name);
 	didl += "\" parentID=\"0\" restricted=\"1\">";
 
-	int start=name.Find(".");
+	int start=name.ReverseFind(".");
 	NPT_String title=name.Left(start);
 
 
@@ -474,7 +505,7 @@ void CSHDLNAMediaController::ToDidl(const NPT_String& uri, const NPT_String& nam
 	PLT_Didl::AppendXmlEscape(didl, title);
 	didl += "</dc:title>";
 
-	didl +="<dc:creator>หับüสำฦต</dc:creator><upnp:genre>หับüสำฦต</upnp:genre>";
+	didl +="<dc:creator>tv.sohu.com</dc:creator><upnp:genre>tv.sohu.com</upnp:genre>";
 
 	didl += "<res size=\"\"";
 

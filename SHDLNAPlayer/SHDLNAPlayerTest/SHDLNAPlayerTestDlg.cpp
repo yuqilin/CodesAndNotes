@@ -85,6 +85,27 @@ CString MsToString(int time_ms)
 	return strTime;
 }
 
+CString PlayStateToString(SH_DLNAPlayer_PlayState state)
+{
+	switch (state)
+	{
+	case SH_DLNAPLAYER_PLAY_STATE_INVALID:
+		return _T("Invalid");
+		break;
+	case SH_DLNAPLAYER_PLAY_STATE_PLAYING:
+		return _T("Playing");
+		break;
+	case SH_DLNAPLAYER_PLAY_STATE_PAUSE:
+		return _T("Pause");
+		break;
+	case SH_DLNAPLAYER_PLAY_STATE_STOP:
+		return _T("Stop");
+		break;
+	}
+
+	return _T("UnKnown");
+}
+
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialog
@@ -157,6 +178,7 @@ BEGIN_MESSAGE_MAP(CSHDLNAPlayerTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_CHECK_ENABLE_DLNA, &CSHDLNAPlayerTestDlg::OnBnClickedCheckEnableDlna)
 	ON_WM_DESTROY()
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_BTN_CHOOSEDEVICE, &CSHDLNAPlayerTestDlg::OnBnClickedBtnChoosedevice)
 END_MESSAGE_MAP()
 
 
@@ -203,6 +225,7 @@ BOOL CSHDLNAPlayerTestDlg::OnInitDialog()
 	m_mapOnlineVideos["枪花第1集[超清版]"] = "http://hot.vrs.sohu.com/vrs_flash.action?vid=1095711&ver=31&ref=0001";
 	m_mapOnlineVideos["枪花第1集[高清版]"] = "http://hot.vrs.sohu.com/vrs_flash.action?vid=1095709&ver=1&ref=0001";
 	m_mapOnlineVideos["新马永贞"] = "http://hot.vrs.sohu.com/vrs_flash.action?vid=1115814&ver=1&ref=0001";
+	m_mapOnlineVideos["桐柏英雄15集"] = "http://hot.vrs.sohu.com/vrs_flash.action?vid=1109371&ver=1&ref=0001";
 
 	StringMapIterator it = m_mapOnlineVideos.begin();
 	for (; it != m_mapOnlineVideos.end(); ++it)
@@ -277,7 +300,35 @@ HCURSOR CSHDLNAPlayerTestDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-//
+
+
+void CSHDLNAPlayerTestDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	if (TIMERID_GET_CUR_PLAY_POS == nIDEvent)
+	{
+		SH_DLNAPlayer_GetCurPlayPos();
+
+		SH_DLNAPlayer_GetVolume();
+
+		// 		SH_DLNAPlayer_PlayState PlayState = SH_DLNAPlayer_GetPlayState();
+		// 		CString strPlayState(_T("DLNAPlayer Play State: "));
+		// 		strPlayState += PlayStateToString(PlayState);
+		// 
+		// 		GetDlgItem(IDC_STATIC_PLAY_STATUS)->SetWindowText(strPlayState);
+
+		SH_DLNAPlayer_GetTransportInfo();
+
+	}
+	else if (TIMERID_GET_MEDIA_DURATION == nIDEvent)
+	{
+		SH_DLNAPlayer_GetMediaDuration();
+	}
+
+	CDialog::OnTimer(nIDEvent);
+}
+
 void CSHDLNAPlayerTestDlg::SHDLNAPlayerMessageNotifyUI(int msg, void* wParam, void* lParam)
 {
 	if (m_spThis == NULL)
@@ -297,10 +348,8 @@ void CSHDLNAPlayerTestDlg::SHDLNAPlayerMessageNotifyUI(int msg, void* wParam, vo
 		m_spThis->OnDLNAPlayerSeekFailed();
 		break;
 	case SH_DLNAPLAYER_UI_MESSAGE_GET_MEDIA_INFO_SUCCEEDED:
-
 		break;
-	case SH_DLNAPLAYER_UI_MESSAGE_GET_MEDIA_INFO_FAILED:
-		
+	case SH_DLNAPLAYER_UI_MESSAGE_GET_MEDIA_INFO_FAILED:		
 		break;
 	case SH_DLNAPLAYER_UI_MESSAGE_MEDIA_TOTAL_DURATION:
 		m_spThis->OnDLNAPlayerGetMediaDuration(wParam);
@@ -314,13 +363,19 @@ void CSHDLNAPlayerTestDlg::SHDLNAPlayerMessageNotifyUI(int msg, void* wParam, vo
 	case SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME:
 		m_spThis->OnDLNAPlayerGetVolume(wParam);
 		break;
+
+	case SH_DLNAPLAYER_UI_MESSAGE_CURRENT_DEVICE_DISCONNECT:
+		m_spThis->OnDLNAPlayerCurrentDeviceDisconnect();
+		break;
+
+	case SH_DLNAPLAYER_UI_MESSAGE_TRANSPORT_INFO:
+		m_spThis->OnDLNAPlayerGetTransportInfo(wParam);
+		break;
 	}
 }
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaSucceeded()
 {
-	GetDlgItem(IDC_STATIC_STATUS)->SetWindowText(_T("DLNAPlayer Open Media Succeeded!"));
-
 	if (0 == SH_DLNAPlayer_Play())
 	{
 		m_PlayState = PLAY_STATE_PLAYING;
@@ -332,7 +387,7 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaSucceeded()
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaFailed()
 {
-	GetDlgItem(IDC_STATIC_STATUS)->SetWindowText(_T("DLNAPlayer Open Media Failed!"));
+	::MessageBox(NULL, _T("DLNAPlayer Open media failed"), NULL, MB_OK);
 }
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerSeekSucceeded()
@@ -382,11 +437,6 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerDeviceListUpdated(void* wParam)
 {
 	m_ctrlDeviceList.ResetContent();
 
-	CStringA strDeviceUUID;
-	const char* pszUUID = SH_DLNAPlayer_GetCurrentDevice();
-	if (pszUUID)
-		strDeviceUUID = pszUUID;
-
 	SH_DLNAPlayer_DeviceList* pList = (SH_DLNAPlayer_DeviceList*)wParam;
 	if (pList)
 	{
@@ -396,11 +446,6 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerDeviceListUpdated(void* wParam)
 			CString device_name(m_DLNADeviceList.device[i].device_name);
 			m_ctrlDeviceList.AddString(device_name);
 			m_ctrlDeviceList.SetItemDataPtr(i, &m_DLNADeviceList.device[i]);
-
-			if (strDeviceUUID.CompareNoCase(m_DLNADeviceList.device[i].device_uuid) == 0)
-			{
-				m_ctrlDeviceList.SetCurSel(i);
-			}
 		}
 	}	
 }
@@ -412,6 +457,18 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerGetVolume(void* wParam)
 	m_ctrlVolume.SetPos(VOLUME_MAX - volume);
 }
 
+void CSHDLNAPlayerTestDlg::OnDLNAPlayerCurrentDeviceDisconnect()
+{
+	::MessageBox(NULL, _T("OnDLNAPlayerCurrentDeviceDisconnect"), NULL, MB_OK);
+}
+
+void CSHDLNAPlayerTestDlg::OnDLNAPlayerGetTransportInfo(void* wParam)
+{
+	SH_DLNAPlayer_PlayState state = (SH_DLNAPlayer_PlayState)(int)wParam;
+
+	CString strState = PlayStateToString(state);
+	GetDlgItem(IDC_STATIC_PLAY_STATUS)->SetWindowText(strState);
+}
 
 void CSHDLNAPlayerTestDlg::OnBnClickedBtnOpenLocalMedia()
 {
@@ -428,6 +485,12 @@ void CSHDLNAPlayerTestDlg::OnBnClickedBtnOpenLocalMedia()
 	else
 	{
 		GetDlgItem(IDC_EDT_LOCAL_MEDIA_PATH)->SetWindowText(_T(""));
+	}
+
+	std::string file_path_utf8 = wcs2mbs(CP_UTF8, m_FilePath);
+	if (0 == SH_DLNAPlayer_Open(file_path_utf8.c_str()))
+	{
+
 	}
 }
 
@@ -448,6 +511,12 @@ void CSHDLNAPlayerTestDlg::OnBnClickedBtnOpenOnlineMedia()
 		{
 			m_FilePath = it->second.c_str();
 		}
+
+		std::string file_path_utf8 = wcs2mbs(CP_UTF8, m_FilePath);
+		if (0 == SH_DLNAPlayer_Open(file_path_utf8.c_str()))
+		{
+
+		}
 	}
 }
 
@@ -455,36 +524,8 @@ void CSHDLNAPlayerTestDlg::OnBnClickedBtnPlay()
 {
 	// TODO: Add your control notification handler code here
 
-	if (m_FilePath.IsEmpty() || m_FilePath.GetLength() <= 0)
-	{
-		return;
-	}
+	SH_DLNAPlayer_Play();
 
-	if (m_PlayState == PLAY_STATE_PAUSE || 
-		m_PlayState == PLAY_STATE_STOP)
-	{
-		SH_DLNAPlayer_Play();
-	}
-	else
-	{
-		int index = m_ctrlDeviceList.GetCurSel();
-		if (index >= 0)
-		{
-			SH_DLNAPlayer_DeviceInfo* pDeviceInfo = 
-				(SH_DLNAPlayer_DeviceInfo*)m_ctrlDeviceList.GetItemDataPtr(index);
-			if (pDeviceInfo)
-			{
-				if (0 == SH_DLNAPlayer_ChooseDevice(pDeviceInfo->device_uuid))
-				{
-					std::string file_path_utf8 = wcs2mbs(CP_UTF8, m_FilePath);
-					if (0 == SH_DLNAPlayer_Open(file_path_utf8.c_str()))
-					{
-
-					}
-				}
-			}
-		}
-	}
 }
 
 void CSHDLNAPlayerTestDlg::OnBnClickedBtnPause()
@@ -543,18 +584,20 @@ void CSHDLNAPlayerTestDlg::OnDestroy()
 	SH_DLNAPlayer_Uninit();
 }
 
-void CSHDLNAPlayerTestDlg::OnTimer(UINT_PTR nIDEvent)
+void CSHDLNAPlayerTestDlg::OnBnClickedBtnChoosedevice()
 {
-	// TODO: Add your message handler code here and/or call default
-
-	if (TIMERID_GET_CUR_PLAY_POS == nIDEvent)
+	// TODO: Add your control notification handler code here
+	int index = m_ctrlDeviceList.GetCurSel();
+	if (index >= 0)
 	{
-		SH_DLNAPlayer_GetCurPlayPos();
-	}
-	else if (TIMERID_GET_MEDIA_DURATION == nIDEvent)
-	{
-		SH_DLNAPlayer_GetMediaDuration();
-	}
+		SH_DLNAPlayer_DeviceInfo* pDeviceInfo = 
+			(SH_DLNAPlayer_DeviceInfo*)m_ctrlDeviceList.GetItemDataPtr(index);
+		if (pDeviceInfo)
+		{
+			if (0 == SH_DLNAPlayer_ChooseDevice(pDeviceInfo->device_uuid))
+			{
 
-	CDialog::OnTimer(nIDEvent);
+			}
+		}
+	}
 }

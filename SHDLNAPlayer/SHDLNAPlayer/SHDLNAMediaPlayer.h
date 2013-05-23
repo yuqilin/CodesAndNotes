@@ -22,16 +22,6 @@ typedef enum MEDIA_LOAD_STATE {
 	MLS_CLOSING
 };
 
-/*
- *	
- */
-typedef enum SH_DLNA_PLAYER_PLAY_STATE {
-	PS_INVALID = -1,
-	PS_PLAY   = 0,
-	PS_PAUSE  = 1,
-	PS_STOP   = 2,
-};
-
 
 /*
  *	SHMP4HeaderInfo_t
@@ -59,6 +49,11 @@ typedef struct tagSHDLNAMediaInfo {
 	
 	tagSHDLNAMediaInfo() {
 		duration = 0;
+		header_info = NULL;
+	}
+
+	~tagSHDLNAMediaInfo() {
+		delete header_info;
 		header_info = NULL;
 	}
 
@@ -91,23 +86,26 @@ public:
 	NPT_Result		GetMediaDuration(void); // ms
 	NPT_Result		GetCurPlayPos(void);	// ms
 	NPT_Result		GetVolume(void);		// 0-100
+	SH_DLNAPlayer_PlayState		GetPlayState(void);
 
-	//static NPT_Result GetInputStream(NPT_InputStreamReference& stream);
+	NPT_Result		GetTransportInfo();
 
-	SH_DLNA_PLAYER_PLAY_STATE	GetPlayState() {
-		//NPT_AutoLock lock(m_PlayStateLock);
-		return m_PlayState;
-	}
-
+	void			OnCurrentDeviceDisconnect();
+	void			OnNoDeviceChoosen();
 	void			OnDeviceListUpdated(void* param);
 	void			OnOpenResult(NPT_Result result);
+	void			OnPlayResult(NPT_Result result);
+	void			OnPauseResult(NPT_Result result);
+	void			OnStopResult(NPT_Result result);
+	void			OnSeekResult(NPT_Result result);
+	void			OnSetVolumeResult(NPT_Result result);
+
 	void			OnGetMediaDurationResult(NPT_Result result, void* param);
 	void			OnGetCurPlayPosResult(NPT_Result result, void* param);
 	void			OnGetVolumeResult(NPT_Result result, void* param);
+	void			OnGetTransportInfoResult(NPT_Result result, void* param);
 
 protected:
-	NPT_Result		BuildMediaInfo(const char* url_from_ui_utf8);
-	NPT_Result		ParseMediaTitle(const char* url_from_ui_utf8, NPT_String& title);
 	NPT_Result		OpenMedia(bool media_info_got);
 
 
@@ -168,10 +166,11 @@ protected:
 	/*
 	 *	play state
 	 */
-	SH_DLNA_PLAYER_PLAY_STATE			m_PlayState;
-	//NPT_Mutex							m_PlayStateLock;
+	SH_DLNAPlayer_PlayState				m_PlayState;
+	NPT_Mutex							m_PlayStateLock;
 
-	PLT_TaskManager						m_TaskManager;
+	//PLT_TaskManager						m_TaskManager;
+	CSHDLNAMediaDownloader*				m_MediaDownloader;
 };
 
 

@@ -4,7 +4,7 @@
 /*----------------------------------------------------------------------
 |   class CSHDLNAMediaDownloader
 +---------------------------------------------------------------------*/
-class CSHDLNAMediaDownloader : public PLT_ThreadTask
+class CSHDLNAMediaDownloader : public NPT_Thread
 {
 public:
 	CSHDLNAMediaDownloader(const char* url, void* user);
@@ -12,9 +12,12 @@ public:
 
 	static int ProgressCallBack(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
 
+	// NPT_Interruptible methods
+	virtual NPT_Result Interrupt();
+
 protected:
-	// PLT_ThreadTask methods
-	virtual void DoRun();
+	// NPT_Runnable methods
+	virtual void Run();
 
 	NPT_String m_Url;
 	bool	m_HeaderDownloadCompleted;

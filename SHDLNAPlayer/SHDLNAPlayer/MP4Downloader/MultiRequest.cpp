@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MultiRequest.h"
 
+NPT_SET_LOCAL_LOGGER("shdlnaplayer.shdlnamulti")
+
 CMultiRequest::CMultiRequest(EResponseDataType eDataType)
 {
 	multi_handle = NULL;
@@ -88,14 +90,17 @@ CURLcode CMultiRequest::Perform(void)
 			/* select error */
 			still_running = 0;
 			printf("select() returns error, this is badness\n");
+			NPT_LOG_FATAL("select() returns error, this is badness\n");
 			break;
 		default:
 			/* timeout or readable/writable sockets */
-			Sleep(10);
+			Sleep(100);
 			while(CURLM_CALL_MULTI_PERFORM ==
 				curl_multi_perform(multi_handle, &still_running));
 			break;
 		}
+
+		//NPT_LOG_FATAL_1("still running is:%d\n",still_running);
 	}
 
 	CURLMsg *msg; /* for picking up messages with the transfer status */
@@ -118,22 +123,35 @@ CURLcode CMultiRequest::Perform(void)
 				if (msg->data.result == CURLE_OK)
 				{
 					if (vRequestPtrList.size() > 1)
+					{
 						printf("Response %d Done! Receive size = %d\n", idx-1, vRequestPtrList[idx-1]->m_response_size);	
+						NPT_LOG_FATAL_2("Response %d Done! Receive size = %d\n", idx-1, vRequestPtrList[idx-1]->m_response_size);	
+					}
 					else
+					{
 						printf("Single Response Done! Receive size = %d\n", vRequestPtrList[idx-1]->m_response_size);
+						NPT_LOG_FATAL_1("Single Response Done! Receive size = %d\n", vRequestPtrList[idx-1]->m_response_size);
+					}
 				}
 				else
 				{					
 					if (vRequestPtrList.size() > 1)
+					{
 						printf("Response %d Failed error code = %d\n", idx-1, msg->data.result);
+						NPT_LOG_FATAL_2("Response %d Failed error code = %d\n", idx-1, msg->data.result);
+					}
 					else
+					{
 						printf("Single Response Failed error code = %d\n", msg->data.result);
+						NPT_LOG_FATAL_1("Single Response Failed error code = %d\n", msg->data.result);
+					}
 
 					ReturnCode = msg->data.result;
 					break;
 				}
 			}
 		}
+		//NPT_LOG_FATAL("curl_multi_info_read is running\n");
 	}
 
 	return ReturnCode;

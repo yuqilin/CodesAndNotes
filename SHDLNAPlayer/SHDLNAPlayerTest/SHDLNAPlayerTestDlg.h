@@ -63,6 +63,8 @@ public:
 	void OnDLNAPlayerGetCurrentPlayPos(void* wParam);
 	void OnDLNAPlayerDeviceListUpdated(void* wParam);
 	void OnDLNAPlayerGetVolume(void* wParam);
+	void OnDLNAPlayerCurrentDeviceDisconnect();
+	void OnDLNAPlayerGetTransportInfo(void* wParam);
 
 	afx_msg void OnBnClickedCheckEnableDlna();
 	afx_msg void OnBnClickedBtnOpenLocalMedia();
@@ -91,4 +93,6 @@ protected:
 	int								m_PlayState;
 
 	StringMap						m_mapOnlineVideos;
+public:
+	afx_msg void OnBnClickedBtnChoosedevice();
 };

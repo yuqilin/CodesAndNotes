@@ -150,6 +150,18 @@ SH_DLNAPLAYER_API int SH_DLNAPlayer_SetVolume(int volume)
 }
 
 /*----------------------------------------------------------------------
+|   
++---------------------------------------------------------------------*/
+SH_DLNAPLAYER_API SH_DLNAPlayer_PlayState SH_DLNAPlayer_GetPlayState(void)
+{
+	if (!g_MediaPlayer.IsNull())
+	{
+		return g_MediaPlayer->GetPlayState();
+	}
+	return SH_DLNAPLAYER_PLAY_STATE_INVALID;
+}
+
+/*----------------------------------------------------------------------
 |   SH_DLNAPlayer_GetMediaDuration
 +---------------------------------------------------------------------*/
 SH_DLNAPLAYER_API int SH_DLNAPlayer_GetMediaDuration(void)
@@ -181,6 +193,15 @@ SH_DLNAPLAYER_API int SH_DLNAPlayer_GetVolume(void)
 	if (!g_MediaPlayer.IsNull())
 	{
 		return g_MediaPlayer->GetVolume();
+	}
+	return 0;
+}
+
+SH_DLNAPLAYER_API int SH_DLNAPlayer_GetTransportInfo(void)
+{
+	if (!g_MediaPlayer.IsNull())
+	{
+		return g_MediaPlayer->GetTransportInfo();
 	}
 	return 0;
 }

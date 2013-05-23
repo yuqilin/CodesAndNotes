@@ -160,7 +160,7 @@ private:
 |   constants
 +---------------------------------------------------------------------*/
 #define NPT_LOG_HEAP_BUFFER_INCREMENT 4096
-#define NPT_LOG_STACK_BUFFER_MAX_SIZE 1024
+#define NPT_LOG_STACK_BUFFER_MAX_SIZE 512
 #define NPT_LOG_HEAP_BUFFER_MAX_SIZE  65536
 
 #if !defined(NPT_CONFIG_LOG_CONFIG_ENV)

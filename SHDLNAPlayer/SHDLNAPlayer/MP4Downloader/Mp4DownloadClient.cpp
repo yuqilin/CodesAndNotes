@@ -12,14 +12,15 @@
 
 #pragma comment(lib, "Rpcrt4.lib")
 
-string* CMp4DownloadClient::hotvrs_string_ptr = NULL;
-string* CMp4DownloadClient::cdn_string_ptr = NULL;
-string* CMp4DownloadClient::header_string_ptr = NULL;
-string* CMp4DownloadClient::hotvrs_string_ptr_for_name = NULL;
+NPT_SET_LOCAL_LOGGER("shdlnaplayer.shdlnamp4download")
 
 CMp4DownloadClient::CMp4DownloadClient(void)
 {
-
+	hotvrs_string_ptr = NULL;
+	cdn_string_ptr = NULL;
+	header_string_ptr = NULL;
+	hotvrs_string_ptr_for_name = NULL;
+	m_customparam = NULL;
 }
 
 CMp4DownloadClient::~CMp4DownloadClient(void)
@@ -40,20 +41,26 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 									  CString& mainfilename,
 									  ProgressCallBack hotvr_processcb, 
 									  ProgressCallBack cdn_processcb, 
-									  ProgressCallBack header_processcb)
+									  ProgressCallBack header_processcb,
+									  void* customparam)
 {
 	if (url == NULL || m_sequence_ptr == NULL || m_info_ptr == NULL || m_cdnInfolist_ptr == NULL)
 		return -1;
 
+	m_customparam = customparam;
+
 	bool bresult = false;
 
-	hotvrs_string_ptr = new string[1];
+	if(!hotvrs_string_ptr)
+		hotvrs_string_ptr = new string[1];
 
 	printf("hotvrs request...\n");
 
+	NPT_LOG_FATAL("hotvrs request...\n");
+
 	CMultiRequest hotvrs_client(Response_Whole_DataType);
 	//使用手动重置为无信号状态，初始化时无信号状态
-	bresult = hotvrs_client.AddRequest(url, 0, HotVrsResponseCallBackFunc, hotvr_processcb);
+	bresult = hotvrs_client.AddRequest(url, 0, HotVrsResponseCallBackFunc, hotvr_processcb, NULL, this);
 	if (!bresult)
 		return -1;
 
@@ -68,7 +75,7 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 	switch (m_info_ptr->version)
 	{
 	case VER_ORIGINAL:
-		mainfilename = m_info_ptr->name + L"[原画版]";
+		mainfilename = m_info_ptr->name + L"[原话版]";
 		break;
 	case VER_SUPER:
 		mainfilename = m_info_ptr->name + L"[超清版]";
@@ -81,6 +88,7 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 		break;
 	default:
 		mainfilename = m_info_ptr->name;
+		break;
 	}
 
 	mainfilename += ".mp4";
@@ -89,7 +97,11 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 
 	printf("%d section cdn request...\n", section_count);
 
-	cdn_string_ptr = new string[section_count];
+	NPT_LOG_FATAL_1("%d section cdn request...\n", section_count);
+
+	if (!cdn_string_ptr)
+		cdn_string_ptr = new string[section_count];
+
 	CMultiRequest cdn_client(Response_Whole_DataType);
 	/* Allocate one CURL handle per transfer */
 	for (size_t i=0; i < section_count; i++)
@@ -107,7 +119,7 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 
 		USES_CONVERSION;
 
-		bresult = cdn_client.AddRequest(W2A(wstream.c_str()), 0, CdnResponseCallBackFunc, cdn_processcb);
+		bresult = cdn_client.AddRequest(W2A(wstream.c_str()), 0, CdnResponseCallBackFunc, cdn_processcb, NULL, this);
 		if (!bresult)
 			return -1;
 	}
@@ -118,7 +130,11 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 
 	printf("%d section header request...\n", section_count);
 
-	header_string_ptr = new string[section_count];
+	NPT_LOG_FATAL_1("%d section header request...\n", section_count);
+
+	if (!header_string_ptr)
+		header_string_ptr = new string[section_count];
+
 	CMultiRequest header_client(Response_Whole_DataType);
 	for (size_t idx = 0; idx < section_count; idx++)
 	{
@@ -138,7 +154,7 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 		}
 
 		USES_CONVERSION;
-		bresult = header_client.AddRequest(W2A(wstream.c_str()), 0, HeaderResponseCallBackFunc, header_processcb);
+		bresult = header_client.AddRequest(W2A(wstream.c_str()), 0, HeaderResponseCallBackFunc, header_processcb, NULL, this);
 		if (!bresult)
 			return -1;
 	}
@@ -179,6 +195,24 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 
 	sequenceinfo.nSectionCount = 0;
 
+	if (hotvrs_string_ptr)
+	{
+		delete [] hotvrs_string_ptr;
+		hotvrs_string_ptr = NULL;
+	}
+
+	if (cdn_string_ptr)
+	{
+		delete [] cdn_string_ptr;
+		cdn_string_ptr = NULL;
+	}
+
+	if (header_string_ptr)
+	{
+		delete [] header_string_ptr;
+		header_string_ptr = NULL;
+	}
+
 	return 0;
 }
 
@@ -189,7 +223,8 @@ void CMp4DownloadClient::GetRequestFileHeader(unsigned char** ppbuffer, unsigned
 
 	_pbyte_t pHeaderBuffer = NULL;
 	_uint32_t ui32HeaderBufferSize = 0;
-	m_sequence_ptr->getHeaderBuffer(&pHeaderBuffer, &ui32HeaderBufferSize);
+	if (m_sequence_ptr->CheckAnalyzeStatus())
+		m_sequence_ptr->getHeaderBuffer(&pHeaderBuffer, &ui32HeaderBufferSize);
 
 	if (pHeaderBuffer == NULL || ui32HeaderBufferSize == 0)
 	{
@@ -213,7 +248,8 @@ void CMp4DownloadClient::GetRequestFileInfo(unsigned int* pfilesize)
 }
 
 int CMp4DownloadClient::DataRequest(unsigned int startpos, unsigned int endpos, unsigned int* pactualfinishpos, 
-									ResponseCallBack cb, ProgressCallBack data_progresscb, void* customparam)
+									ResponseCallBack cb, ProgressCallBack data_progresscb, void* customparam,
+									EMediaDataRequestSource eTryResoure)
 {
 	if (cb == NULL || pactualfinishpos == NULL || m_sequence_ptr == NULL || m_info_ptr == NULL || m_cdnInfolist_ptr == NULL || startpos >= endpos)
 		return -1;
@@ -228,6 +264,8 @@ int CMp4DownloadClient::DataRequest(unsigned int startpos, unsigned int endpos, 
 
 	printf("section %d - %d data request...\n", startclipnum, endclipnum);
 
+	NPT_LOG_FATAL_2("section %d - %d data request...\n", startclipnum, endclipnum);
+
 	SectionDataInfo startsectioninfo;
 	m_sequence_ptr->getSectionDataInfoByIndex(startclipnum, &startsectioninfo);
 
@@ -236,6 +274,9 @@ int CMp4DownloadClient::DataRequest(unsigned int startpos, unsigned int endpos, 
 
 	ClipOfRangeInfo sClipInfo;
 	m_sequence_ptr->getSectionInfoByIndex(startclipnum, &sClipInfo);
+
+	//for switch
+	m_eResoureType = eTryResoure;
 
 	if (m_eResoureType == P2P_Local_RequestSource)
 	{
@@ -269,6 +310,8 @@ int CMp4DownloadClient::DataRequest(unsigned int startpos, unsigned int endpos, 
 
 		printf("Index %d: Range [%d-]\n", index, sClipInfo.StartOffset);
 
+		NPT_LOG_FATAL_2("Index %d: Range [%d-]\n", index, sClipInfo.StartOffset);
+
 		USES_CONVERSION;
 		const char* pRequest = W2A((LPCTSTR)strUrl);
 		CMultiRequest data_client(Response_Partial_DataType);
@@ -280,14 +323,31 @@ int CMp4DownloadClient::DataRequest(unsigned int startpos, unsigned int endpos, 
 		CURLcode resultcode = data_client.Perform();
 		if (resultcode > CURLE_OK)
 		{
-			if (resultcode != CURLE_COULDNT_CONNECT)
-				return -1;
-			else
-			{
-				data_client.Done();
-				printf("p2p request timeout, try to connect cdn directly!\n");
-				goto cdn_lable;
-			}
+// 			if (resultcode == CURLE_COULDNT_CONNECT)
+// 			{
+// 				data_client.Done();
+// 				printf("p2p request timeout, try to connect cdn directly!\n");
+// 
+// 				NPT_LOG_FATAL("p2p request timeout, try to connect cdn directly!\n");
+// 				goto cdn_lable;
+// 			}
+// 			else if (resultcode == CURLE_RECV_ERROR)
+// 			{
+// 				printf("p2p request forbidden, try to connect cdn directly!\n");
+// 				data_client.Done();
+// 
+// 				NPT_LOG_FATAL("p2p request forbidden, try to connect cdn directly!\n");
+// 				goto cdn_lable;
+// 			}
+// 			else
+// 			{
+// 				NPT_LOG_FATAL("not p2p not cdn request!!\n");
+// 				return -1;
+// 			}
+
+			NPT_LOG_FATAL("p2p request failed, try to connect cdn directly!\n");
+			data_client.Done();
+			goto cdn_lable;
 		}
 
 		unsigned int response_data_size = data_client.GetResponseDataSizeByIndex(0);
@@ -321,15 +381,50 @@ int CMp4DownloadClient::DataRequest(unsigned int startpos, unsigned int endpos, 
 
 			printf("Index %d: Range [%d-]\n", index, sectioninfo.ui32DataOffset);
 
+			NPT_LOG_FATAL_2("Index %d: Range [%d-]\n", index, sectioninfo.ui32DataOffset);
+
 			pRequest = W2A((LPCTSTR)strUrl);
 			CMultiRequest data_client_ex(Response_Partial_DataType);
-			bresult = data_client_ex.AddRequest(pRequest, sectioninfo.ui32DataOffset + sectioninfo.ui32DataSize - sectioninfo.ui32DataOffset, cb, data_progresscb, NULL, customparam);
+			bresult = data_client_ex.AddRequest(pRequest, sectioninfo.ui32DataOffset + sectioninfo.ui32DataSize - sectioninfo.ui32DataOffset,
+				cb, data_progresscb, NULL, customparam);
 			if (!bresult)
+			{
+				NPT_LOG_FATAL_2("Index %d: Range [%d-] failed\n", index, sectioninfo.ui32DataOffset);
 				return -1;
+			}
+
+			NPT_LOG_FATAL_2("Index %d: Range [%d-] success\n", index, sectioninfo.ui32DataOffset);
 
 			resultcode = data_client_ex.Perform();
 			if (resultcode > CURLE_OK)
-				return -1;
+			{
+// 				if (resultcode == CURLE_COULDNT_CONNECT)
+// 				{
+// 					data_client.Done();
+// 					printf("p2p request timeout, try to connect cdn directly!\n");
+// 
+// 					startclipnum = j;
+// 
+// 					NPT_LOG_FATAL("p2p request timeout, try to connect cdn directly!\n");
+// 					goto cdn_lable;
+// 				}
+// 				else if (resultcode == CURLE_RECV_ERROR)
+// 				{
+// 					printf("p2p request forbidden, try to connect cdn directly!\n");
+// 					data_client.Done();
+// 
+// 					startclipnum = j;
+// 
+// 					NPT_LOG_FATAL("p2p request forbidden, try to connect cdn directly!\n");
+// 					goto cdn_lable;
+// 				}
+// 				else
+// 					return -1;
+				NPT_LOG_FATAL("p2p request failed, try to connect cdn directly!\n");
+				data_client.Done();
+				startclipnum = j;
+				goto cdn_lable;
+			}
 
 			unsigned int response_data_size_ex = data_client_ex.GetResponseDataSizeByIndex(0);
 			assert(response_data_size_ex <= (sectioninfo.ui32DataOffset + sectioninfo.ui32DataSize - sectioninfo.ui32DataOffset));
@@ -352,6 +447,8 @@ cdn_lable:
 		char strRange[100];
 		sprintf(strRange, "Range:bytes=%d-%d", sClipInfo.StartOffset, startsectioninfo.ui32DataOffset + startsectioninfo.ui32DataSize - 1);
 		printf("Index %d: Range [%d-%d]\n", startclipnum, sClipInfo.StartOffset, startsectioninfo.ui32DataOffset + startsectioninfo.ui32DataSize - 1);
+		NPT_LOG_FATAL_3("Index %d: Range [%d-%d]\n", startclipnum, sClipInfo.StartOffset, startsectioninfo.ui32DataOffset + startsectioninfo.ui32DataSize - 1);
+		
 		vDataHeader.push_back(pair<CURLoption, const char*>(CURLOPT_HTTPHEADER, strRange));
 
 		USES_CONVERSION;
@@ -384,6 +481,8 @@ cdn_lable:
 			char strRange[100];
 			sprintf(strRange, "Range:bytes=%d-%d", sectioninfo.ui32DataOffset, sectioninfo.ui32DataOffset + sectioninfo.ui32DataSize - 1);
 			printf("Index %d: Range [%d-%d]\n", j, sectioninfo.ui32DataOffset, sectioninfo.ui32DataOffset + sectioninfo.ui32DataSize - 1);
+
+			NPT_LOG_FATAL_3("Index %d: Range [%d-%d]\n", j, sectioninfo.ui32DataOffset, sectioninfo.ui32DataOffset + sectioninfo.ui32DataSize - 1);
 			vDataHeader.push_back(pair<CURLoption, const char*>(CURLOPT_HTTPHEADER, strRange));
 
 			USES_CONVERSION;
@@ -413,17 +512,6 @@ cdn_lable:
 
 void CMp4DownloadClient::FlushRequest(void)
 {
-	if (hotvrs_string_ptr)
-	{
-		delete [] hotvrs_string_ptr;
-		hotvrs_string_ptr = NULL;
-	}
-
-	if (cdn_string_ptr)
-	{
-		delete [] cdn_string_ptr;
-		cdn_string_ptr = NULL;
-	}
 
 	m_sequence_ptr = NULL;
 	m_info_ptr = NULL;
@@ -453,9 +541,14 @@ size_t CMp4DownloadClient::HotVrsResponseForNameCallBackFunc(void* buffer, size_
 		return -1;
 
 	char* pData = (char*)buffer;
-	hotvrs_string_ptr_for_name[str->m_index].append(pData, size * nmemb);
 
-	str->m_response_size += size * nmemb;
+	CMp4DownloadClient* pThis = dynamic_cast<CMp4DownloadClient*>((CMp4DownloadClient *)str->m_customparam);
+	if (pThis)
+	{
+		pThis->hotvrs_string_ptr_for_name[str->m_index].append(pData, size * nmemb);
+
+		str->m_response_size += size * nmemb;
+	}
 
 	return nmemb;
 }
@@ -467,9 +560,14 @@ size_t CMp4DownloadClient::HotVrsResponseCallBackFunc(void* buffer, size_t size,
 		return -1;
 
 	char* pData = (char*)buffer;
-	hotvrs_string_ptr[str->m_index].append(pData, size * nmemb);
 
-	str->m_response_size += size * nmemb;
+	CMp4DownloadClient* pThis = dynamic_cast<CMp4DownloadClient*>((CMp4DownloadClient *)str->m_customparam);
+	if (pThis)
+	{
+		pThis->hotvrs_string_ptr[str->m_index].append(pData, size * nmemb);
+
+		str->m_response_size += size * nmemb;
+	}
 
 	return nmemb;
 }
@@ -481,9 +579,14 @@ size_t CMp4DownloadClient::CdnResponseCallBackFunc(void* buffer, size_t size, si
 		return -1;
 
 	char* pData = (char*)buffer;
-	cdn_string_ptr[str->m_index].append(pData, size * nmemb);
 
-	str->m_response_size += size * nmemb;
+	CMp4DownloadClient* pThis = dynamic_cast<CMp4DownloadClient*>((CMp4DownloadClient *)str->m_customparam);
+	if (pThis)
+	{
+		pThis->cdn_string_ptr[str->m_index].append(pData, size * nmemb);
+
+		str->m_response_size += size * nmemb;
+	}
 
 	return nmemb;
 }
@@ -495,9 +598,13 @@ size_t CMp4DownloadClient::HeaderResponseCallBackFunc(void* buffer, size_t size,
 		return -1;
 
 	char* pData = (char*)buffer;
-	header_string_ptr[str->m_index].append(pData, size * nmemb);
+	CMp4DownloadClient* pThis = dynamic_cast<CMp4DownloadClient*>((CMp4DownloadClient *)str->m_customparam);
+	if (pThis)
+	{
+		pThis->header_string_ptr[str->m_index].append(pData, size * nmemb);
 
-	str->m_response_size += size * nmemb;
+		str->m_response_size += size * nmemb;
+	}
 
 	return nmemb;
 }
@@ -888,7 +995,7 @@ int CMp4DownloadClient::GetFileName(const char* url, CString& mainfilename)
 
 	CMultiRequest hotvrs_client(Response_Whole_DataType);
 	//使用手动重置为无信号状态，初始化时无信号状态
-	bresult = hotvrs_client.AddRequest(url, 0, HotVrsResponseForNameCallBackFunc, ProgressCB);
+	bresult = hotvrs_client.AddRequest(url, 0, HotVrsResponseForNameCallBackFunc, ProgressCB,NULL,this);
 	if (!bresult)
 		return -1;
 
@@ -918,6 +1025,7 @@ int CMp4DownloadClient::GetFileName(const char* url, CString& mainfilename)
 		mainfilename = info_ptr.name;
 		break;
 	}
+
 	if (hotvrs_string_ptr_for_name)
 	{
 		delete []hotvrs_string_ptr_for_name;

@@ -244,6 +244,11 @@ public:
 		return true;
 	}
 
+	int GetSectionCount()
+	{
+		return ui32SectionCount;
+	}
+
 	bool CheckAnalyzeStatus()
 	{
 		return m_bAnalyzeDone;
