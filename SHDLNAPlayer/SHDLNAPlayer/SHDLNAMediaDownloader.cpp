@@ -19,8 +19,10 @@ CSHDLNAMediaDownloader::CSHDLNAMediaDownloader(const char* url, void* user)
 , m_HeaderDownloadCompleted(false)
 , m_Url(url)
 , m_DownloadStatus(DOWNLOAD_CONTINUE)
-, hotvrs_string_ptr(NULL)
 , m_header_info_ptr(NULL)
+, hotvrs_string_ptr(NULL)
+, cdn_string_ptr(NULL)
+, header_string_ptr(NULL)
 {
 	
 }
