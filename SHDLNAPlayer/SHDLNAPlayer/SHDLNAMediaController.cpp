@@ -153,6 +153,55 @@ void CSHDLNAMediaController::OnMRRemoved(PLT_DeviceDataReference& device)
 }
 
 /*----------------------------------------------------------------------
+|   CSHDLNAMediaController::OnMRStateVariablesChanged
++---------------------------------------------------------------------*/
+void CSHDLNAMediaController::OnMRStateVariablesChanged(PLT_Service* service,
+													   NPT_List<PLT_StateVariable*>* vars)
+{
+	NPT_String strVolume;
+	if (service)
+	{
+		PLT_StateVariable* var = service->FindStateVariable("Volume");
+		if (var)
+			strVolume = var->GetValue();
+	}
+
+	for (NPT_List<PLT_StateVariable*>::Iterator Iter = vars->GetFirstItem();
+		Iter;
+		++Iter)
+	{
+		PLT_StateVariable* var = *Iter;
+		NPT_String var_name = var->GetName();
+		NPT_String var_value = var->GetValue();
+		if (var_name == "Volume")
+		{
+			this->OnVolumeStateChanged(var_value);
+		}
+		else if (var_name == "TransportState")
+		{
+			this->OnTransportStateChanged(var_value);
+		}
+	}
+
+}
+
+void CSHDLNAMediaController::OnVolumeStateChanged(const NPT_String& volume_state)
+{
+	if (m_Player)
+	{
+		m_Player->OnVolumeStateChanged(volume_state);
+	}
+}
+
+void CSHDLNAMediaController::OnTransportStateChanged(const NPT_String& transport_state)
+{
+	if (m_Player)
+	{
+		m_Player->OnTransportStateChanged(transport_state);
+	}
+}
+
+/*----------------------------------------------------------------------
 |   CSHDLNAMediaController::OnDeviceListUpdated
 +---------------------------------------------------------------------*/
 void CSHDLNAMediaController::OnDeviceListUpdated()
@@ -361,7 +410,7 @@ void CSHDLNAMediaController::OnSetAVTransportURIResult(
 	
 	if (m_Player != NULL)
 	{
-		m_Player->OnOpenResult(res);
+		m_Player->OnSetAVTransportURIResult(res);
 	}
 }
 

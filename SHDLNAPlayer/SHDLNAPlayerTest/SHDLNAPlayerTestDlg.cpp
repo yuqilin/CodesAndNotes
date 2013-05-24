@@ -179,6 +179,7 @@ BEGIN_MESSAGE_MAP(CSHDLNAPlayerTestDlg, CDialog)
 	ON_WM_DESTROY()
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BTN_CHOOSEDEVICE, &CSHDLNAPlayerTestDlg::OnBnClickedBtnChoosedevice)
+	ON_MESSAGE(WM_SH_DLNAPLAYER_UI_MESSAGE_DEVICE_VOLUME_CHANGED, &CSHDLNAPlayerTestDlg::OnDlnaPlayerMsgDeviceVolumeChanged)
 END_MESSAGE_MAP()
 
 
@@ -234,6 +235,9 @@ BOOL CSHDLNAPlayerTestDlg::OnInitDialog()
 	}
 	
 	m_PlayState = PLAY_STATE_NONE;
+	m_nVolume = 0;
+
+	((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetPos(1);
 
 	UpdateData(FALSE);
 
@@ -308,22 +312,41 @@ void CSHDLNAPlayerTestDlg::OnTimer(UINT_PTR nIDEvent)
 
 	if (TIMERID_GET_CUR_PLAY_POS == nIDEvent)
 	{
-		SH_DLNAPlayer_GetCurPlayPos();
+		// Current Play Position
+		long cur_play_pos = 0;
+		SH_DLNAPlayer_GetCurPlayPos(&cur_play_pos);
+		((CSliderCtrl*)GetDlgItem(IDC_SLIDER_PLAY_PROGRESS))->SetPos(cur_play_pos);
 
-		SH_DLNAPlayer_GetVolume();
+		CString strCurPlayPos = MsToString(cur_play_pos);
+		GetDlgItem(IDC_STATIC_CUR_PLAY_POS)->SetWindowText(strCurPlayPos);
 
-		// 		SH_DLNAPlayer_PlayState PlayState = SH_DLNAPlayer_GetPlayState();
-		// 		CString strPlayState(_T("DLNAPlayer Play State: "));
-		// 		strPlayState += PlayStateToString(PlayState);
-		// 
-		// 		GetDlgItem(IDC_STATIC_PLAY_STATUS)->SetWindowText(strPlayState);
+		if (cur_play_pos >= m_MediaDuration)
+		{
+			KillTimer(TIMERID_GET_CUR_PLAY_POS);
+		}
 
-		SH_DLNAPlayer_GetTransportInfo();
+		// Volume
+// 		int volume = 0;
+// 		SH_DLNAPlayer_GetVolume(&volume);
+// 		((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetPos(volume);
 
+		// Play State
+		SH_DLNAPlayer_PlayState PlayState = SH_DLNAPlayer_GetPlayState();
+		CString strPlayState = PlayStateToString(PlayState);
+		GetDlgItem(IDC_STATIC_PLAY_STATUS)->SetWindowText(strPlayState);
 	}
 	else if (TIMERID_GET_MEDIA_DURATION == nIDEvent)
 	{
-		SH_DLNAPlayer_GetMediaDuration();
+		long media_duration = 0;
+		SH_DLNAPlayer_GetMediaDuration(&media_duration);
+
+		if (media_duration > 0)
+		{
+			CString strMediaDuration = MsToString(media_duration);
+			GetDlgItem(IDC_STATIC_MEDIA_DURATION)->SetWindowText(strMediaDuration);
+
+			KillTimer(TIMERID_GET_MEDIA_DURATION);
+		}
 	}
 
 	CDialog::OnTimer(nIDEvent);
@@ -333,6 +356,9 @@ void CSHDLNAPlayerTestDlg::SHDLNAPlayerMessageNotifyUI(int msg, void* wParam, vo
 {
 	if (m_spThis == NULL)
 		return;
+
+	//::PostMessage(m_spThis->m_hWnd, msg + WM_SHDLNAPLAYER_MSG_BASE, wParam, lParam);
+
 	switch (msg)
 	{
 	case SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_SUCCEEDED:
@@ -368,14 +394,24 @@ void CSHDLNAPlayerTestDlg::SHDLNAPlayerMessageNotifyUI(int msg, void* wParam, vo
 		m_spThis->OnDLNAPlayerCurrentDeviceDisconnect();
 		break;
 
-	case SH_DLNAPLAYER_UI_MESSAGE_TRANSPORT_INFO:
-		m_spThis->OnDLNAPlayerGetTransportInfo(wParam);
+	case SH_DLNAPLAYER_UI_MESSAGE_NO_DEVICE_CHOOSEN:
+		m_spThis->OnDLNAPlayerNoDeviceChoosen();
+		break;
+		
+	case SH_DLNAPLAYER_UI_MESSAGE_DEVICE_VOLUME_CHANGED:
+		m_spThis->OnDLNAPlayerDeviceVolumeChanged(wParam);
 		break;
 	}
 }
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaSucceeded()
 {
+	int volume = 0;
+	SH_DLNAPlayer_GetVolume(&volume);
+
+	if (volume > 10)
+		SH_DLNAPlayer_SetVolume(1);
+
 	if (0 == SH_DLNAPlayer_Play())
 	{
 		m_PlayState = PLAY_STATE_PLAYING;
@@ -462,13 +498,13 @@ void CSHDLNAPlayerTestDlg::OnDLNAPlayerCurrentDeviceDisconnect()
 	::MessageBox(NULL, _T("OnDLNAPlayerCurrentDeviceDisconnect"), NULL, MB_OK);
 }
 
-void CSHDLNAPlayerTestDlg::OnDLNAPlayerGetTransportInfo(void* wParam)
-{
-	SH_DLNAPlayer_PlayState state = (SH_DLNAPlayer_PlayState)(int)wParam;
-
-	CString strState = PlayStateToString(state);
-	GetDlgItem(IDC_STATIC_PLAY_STATUS)->SetWindowText(strState);
-}
+// void CSHDLNAPlayerTestDlg::OnDLNAPlayerGetTransportInfo(void* wParam)
+// {
+// 	SH_DLNAPlayer_PlayState state = (SH_DLNAPlayer_PlayState)(int)wParam;
+// 
+// 	CString strState = PlayStateToString(state);
+// 	GetDlgItem(IDC_STATIC_PLAY_STATUS)->SetWindowText(strState);
+// }
 
 void CSHDLNAPlayerTestDlg::OnBnClickedBtnOpenLocalMedia()
 {
@@ -600,4 +636,30 @@ void CSHDLNAPlayerTestDlg::OnBnClickedBtnChoosedevice()
 			}
 		}
 	}
+}
+
+void CSHDLNAPlayerTestDlg::OnDLNAPlayerNoDeviceChoosen()
+{
+	::MessageBox(NULL, _T("OnDLNAPlayerNoDeviceChoosen"), _T(""), MB_OK);
+}
+
+void CSHDLNAPlayerTestDlg::OnDLNAPlayerDeviceVolumeChanged(void* wParam)
+{
+	m_nVolume = (int)wParam;
+	::PostMessage(m_hWnd, WM_SH_DLNAPLAYER_UI_MESSAGE_DEVICE_VOLUME_CHANGED, NULL, NULL);
+	
+	//((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetPos(volume);
+}
+
+LRESULT CSHDLNAPlayerTestDlg::OnDlnaPlayerMsgDeviceVolumeChanged(WPARAM wParam, LPARAM lParam)
+{
+	//int volume = (int)wParam;
+	CString strMsg;
+	strMsg.Format(_T("OnDlnaPlayerMsgDeviceVolumeChanged volume = %d"), m_nVolume);
+	::MessageBox(NULL, strMsg, _T(""), MB_OK);
+
+
+	((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetPos(m_nVolume);
+
+	return 0;
 }

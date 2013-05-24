@@ -35,7 +35,10 @@ protected:
 	virtual void	OnMRRemoved(PLT_DeviceDataReference& device);
 	virtual void	OnMRStateVariablesChanged(
 		PLT_Service* /* service */,
-		NPT_List<PLT_StateVariable*>* /* vars */) {}
+		NPT_List<PLT_StateVariable*>* /* vars */);
+
+	void			OnVolumeStateChanged(const NPT_String& volume_state);
+	void			OnTransportStateChanged(const NPT_String& transport_state);
 
 	void			OnDeviceListUpdated();
 

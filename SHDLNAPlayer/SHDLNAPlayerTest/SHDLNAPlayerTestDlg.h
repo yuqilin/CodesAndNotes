@@ -21,6 +21,36 @@ enum {
 typedef std::map<std::string, std::string>					StringMap;
 typedef std::map<std::string, std::string>::iterator		StringMapIterator;
 
+#define WM_SHDLNAPLAYER_MSG_BASE				WM_USER + 0x100
+
+typedef enum {
+	WM_SH_DLNAPLAYER_UI_MESSAGE_NONE = WM_SHDLNAPLAYER_MSG_BASE,
+	WM_SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_SUCCEEDED,						// 打开媒体成功
+	WM_SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_FAILED,							// 打开媒体失败
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_SEEK_SUCCEEDED,							// seek成功
+	WM_SH_DLNAPLAYER_UI_MESSAGE_SEEK_FAILED,								// seek失败
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_GET_MEDIA_INFO_SUCCEEDED,					// 获取媒体信息成功
+	WM_SH_DLNAPLAYER_UI_MESSAGE_GET_MEDIA_INFO_FAILED,						// 获取媒体信息失败
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_MEDIA_TOTAL_DURATION,						// 整个视频时长 ms，wParam返回时长(long)
+	WM_SH_DLNAPLAYER_UI_MESSAGE_MEDIA_CURRENT_POS,							// 当前播放位置 ms，wParam返回当前位置(long)
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_DEVICE_LIST_UPDATED,						// 设备列表更新，wParam返回设备列表(SH_DLNAPlayer_DeviceList*)
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME,						// 设备当前播放音量，wParam返回当前音量（int)
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_CURRENT_DEVICE_DISCONNECT,					// 当前设备失去连接
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_NO_DEVICE_CHOOSEN,							// 没有选择要连接的设备
+
+	WM_SH_DLNAPLAYER_UI_MESSAGE_DEVICE_VOLUME_CHANGED,						// 设备音量改变, wParam返回当前音量(int)
+
+
+
+} WM_SHDLNAPlayerMessage;
+
 // CSHDLNAPlayerTestDlg dialog
 class CSHDLNAPlayerTestDlg : public CDialog
 {
@@ -64,7 +94,8 @@ public:
 	void OnDLNAPlayerDeviceListUpdated(void* wParam);
 	void OnDLNAPlayerGetVolume(void* wParam);
 	void OnDLNAPlayerCurrentDeviceDisconnect();
-	void OnDLNAPlayerGetTransportInfo(void* wParam);
+	void OnDLNAPlayerNoDeviceChoosen();
+	void OnDLNAPlayerDeviceVolumeChanged(void* wParam);
 
 	afx_msg void OnBnClickedCheckEnableDlna();
 	afx_msg void OnBnClickedBtnOpenLocalMedia();
@@ -93,6 +124,10 @@ protected:
 	int								m_PlayState;
 
 	StringMap						m_mapOnlineVideos;
+
+	int								m_nVolume;
 public:
 	afx_msg void OnBnClickedBtnChoosedevice();
+
+	afx_msg LRESULT OnDlnaPlayerMsgDeviceVolumeChanged(WPARAM wParam, LPARAM lParam);
 };

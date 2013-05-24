@@ -6,7 +6,7 @@
 
 NPT_SET_LOCAL_LOGGER("shdlnaplayer.shdlnamediaplayer")
 
-//NPT_InputStreamReference CSHDLNAMediaPlayer::m_InputStream;
+#define SH_DLNAPLAYER_DEFAULT_VOLUME		10
 
 /*----------------------------------------------------------------------
 |   CSHDLNAMediaPlayer::CSHDLNAMediaPlayer
@@ -15,12 +15,11 @@ CSHDLNAMediaPlayer::CSHDLNAMediaPlayer()
 : m_MessageNotifyUI(NULL)
 , m_UPnP(NULL)
 , m_MediaServer(NULL)
-, m_MediaLoadState(MLS_CLOSED)
+//, m_MediaLoadState(MLS_CLOSED)
 , m_PlayState(SH_DLNAPLAYER_PLAY_STATE_INVALID)
 , m_MediaInfo(NULL)
 , m_MediaDownloader(NULL)
 {
-	//memset(&m_MediaInfo, 0, sizeof(m_MediaInfo));	
 }
 
 /*----------------------------------------------------------------------
@@ -146,23 +145,18 @@ NPT_Result CSHDLNAMediaPlayer::Open(const char* url)
 {
 	NPT_Result result = NPT_FAILURE;
 
-	//NPT_AutoLock lock(m_MediaLoadStateLock);
-// 	if (m_MediaLoadState == MLS_LOADED ||
-// 		m_MediaLoadState == MLS_LOADING)
-// 	{
-// 		
-// 	}
 	Close();
 
-	m_MediaLoadState = MLS_LOADING;
+	//m_MediaLoadState = MLS_LOADING;
 
+	m_MediaInfoLock.Lock();
 	m_MediaInfo = new SHDLNAMediaInfo_t;
 	m_MediaInfo->url = url;
+	m_MediaInfoLock.Unlock();
 
 	NPT_String strUrl(url);
 	if (strUrl.StartsWith("http://"))
 	{
-		//m_TaskManager.StartTask(new CSHDLNAMediaDownloader(url, this), NULL, false);
 		m_MediaDownloader = new CSHDLNAMediaDownloader(url, this);
 		if (m_MediaDownloader != NULL)
 		{
@@ -171,7 +165,9 @@ NPT_Result CSHDLNAMediaPlayer::Open(const char* url)
 	}
 	else
 	{		
+		m_MediaInfoLock.Lock();
 		m_MediaInfo->title = NPT_FilePath::BaseName(strUrl);
+		m_MediaInfoLock.Unlock();
 
 		std::wstring wstrUrl = mbs2wcs(CP_UTF8, url);
 
@@ -186,22 +182,7 @@ NPT_Result CSHDLNAMediaPlayer::Open(const char* url)
 +---------------------------------------------------------------------*/
 NPT_Result CSHDLNAMediaPlayer::Close(void)
 {
-// 	if (m_MediaLoadState == MLS_LOADED || m_MediaLoadState == MLS_LOADING)
-// 	{
-// 		m_MediaLoadState = MLS_CLOSING;
-// 		Stop();
-// 
-// 		//m_TaskManager.StopAllTasks();
-// 		if (m_MediaDownloader != NULL)
-// 		{
-// 			m_MediaDownloader->Interrupt();
-// 
-// 			delete m_MediaDownloader;
-// 			m_MediaDownloader = NULL;
-// 		}
-// 
-// 	}
-	m_MediaLoadState = MLS_CLOSING;
+	//m_MediaLoadState = MLS_CLOSING;
 	Stop();
 
 	//m_TaskManager.StopAllTasks();
@@ -213,17 +194,19 @@ NPT_Result CSHDLNAMediaPlayer::Close(void)
 		m_MediaDownloader = NULL;
 	}
 	
-	delete m_MediaInfo;
-	m_MediaInfo	= NULL;
-	//memset(&m_MediaInfo, 0, sizeof(m_MediaInfo));
-
+	{
+		NPT_AutoLock lock(m_MediaInfoLock);
+		delete m_MediaInfo;
+		m_MediaInfo	= NULL;
+	}
+	
 	CSHDLNAMediaServer* pMediaServer = dynamic_cast<CSHDLNAMediaServer*>(m_MediaServer.AsPointer());
 	if (pMediaServer != NULL)
 	{
 		pMediaServer->CloseMedia();
 	}
 
-	m_MediaLoadState = MLS_CLOSED;
+	//m_MediaLoadState = MLS_CLOSED;
 
 	{
 		NPT_AutoLock lock(m_PlayStateLock);
@@ -237,23 +220,7 @@ NPT_Result CSHDLNAMediaPlayer::Close(void)
 |   CSHDLNAMediaPlayer::Play
 +---------------------------------------------------------------------*/
 NPT_Result CSHDLNAMediaPlayer::Play(void)
-{
-	{
-		//NPT_AutoLock lock(m_MediaLoadStateLock);
-		if (m_MediaLoadState != MLS_LOADED)
-		{
-			return NPT_FAILURE;
-		}
-	}
-
-// 	{
-// 		NPT_AutoLock lock(m_PlayStateLock);
-// 		if (m_PlayState == SH_DLNAPLAYER_PLAY_STATE_PLAYING)
-// 		{
-// 			return NPT_SUCCESS;
-// 		}
-// 	}
-	
+{	
 	if (!m_MediaController.IsNull())
 	{
 		PLT_DeviceDataReference device;
@@ -263,7 +230,7 @@ NPT_Result CSHDLNAMediaPlayer::Play(void)
 			return m_MediaController->Play(device, 0, "1", NULL);
 		}
 	}
-	return NPT_SUCCESS;
+	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
@@ -271,14 +238,6 @@ NPT_Result CSHDLNAMediaPlayer::Play(void)
 +---------------------------------------------------------------------*/
 NPT_Result CSHDLNAMediaPlayer::Seek(long pos_to_play)
 {
-// 	{
-// 		//NPT_AutoLock lock(m_MediaLoadStateLock);
-// 		if (m_MediaLoadState != MLS_LOADED)
-// 		{
-// 			return NPT_FAILURE;
-// 		}
-// 	}
-
 	if (!m_MediaController.IsNull())
 	{
 		PLT_DeviceDataReference device;
@@ -289,7 +248,7 @@ NPT_Result CSHDLNAMediaPlayer::Seek(long pos_to_play)
 			return m_MediaController->Seek(device, 0, "REL_TIME", target, NULL);
 		}
 	}
-	return NPT_SUCCESS;
+	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
@@ -297,19 +256,6 @@ NPT_Result CSHDLNAMediaPlayer::Seek(long pos_to_play)
 +---------------------------------------------------------------------*/
 NPT_Result CSHDLNAMediaPlayer::Pause()
 {
-// 	{
-// 		//NPT_AutoLock lock(m_MediaLoadStateLock);
-// 		if (m_MediaLoadState != MLS_LOADED)
-// 		{
-// 			return NPT_FAILURE;
-// 		}
-// 	}
-// 	{
-// 		NPT_AutoLock lock(m_PlayStateLock);
-// 		if (m_PlayState != SH_DLNAPLAYER_PLAY_STATE_PLAYING)
-// 			return NPT_SUCCESS;
-// 	}
-
 	if (!m_MediaController.IsNull())
 	{
 		PLT_DeviceDataReference device;
@@ -319,7 +265,7 @@ NPT_Result CSHDLNAMediaPlayer::Pause()
 			return m_MediaController->Pause(device, 0, NULL);
 		}
 	}
-	return NPT_SUCCESS;
+	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
@@ -327,12 +273,6 @@ NPT_Result CSHDLNAMediaPlayer::Pause()
 +---------------------------------------------------------------------*/
 NPT_Result CSHDLNAMediaPlayer::Stop()
 {
-// 	{
-// 		NPT_AutoLock lock(m_PlayStateLock);
-// 		if (m_PlayState == SH_DLNAPLAYER_PLAY_STATE_INVALID || m_PlayState == SH_DLNAPLAYER_PLAY_STATE_STOP)
-// 			return NPT_SUCCESS;
-// 	}
-
 	if (!m_MediaController.IsNull())
 	{
 		PLT_DeviceDataReference device;
@@ -342,7 +282,7 @@ NPT_Result CSHDLNAMediaPlayer::Stop()
 			return m_MediaController->Stop(device, 0, NULL);
 		}
 	}
-	return NPT_SUCCESS;
+	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
@@ -359,63 +299,92 @@ NPT_Result CSHDLNAMediaPlayer::SetVolume(int volume)
 			return m_MediaController->SetVolume(device, 0, "Master", volume, NULL);
 		}
 	}
-	return NPT_SUCCESS;
+	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
 |   CSHDLNAMediaPlayer::GetMediaDuration
 +---------------------------------------------------------------------*/
-NPT_Result CSHDLNAMediaPlayer::GetMediaDuration(void)
+NPT_Result CSHDLNAMediaPlayer::GetMediaDuration(long* duration)
 {
-	//NPT_AutoLock lock(m_MediaLoadStateLock);
-	if (m_MediaLoadState == MLS_LOADED)
+	NPT_CHECK_POINTER(duration);
+
+	*duration = 0;
+	
+	NPT_AutoLock lock(m_MediaInfoLock);
+	if (m_MediaInfo)
 	{
+		if (m_MediaInfo->duration != 0)
+		{
+			*duration = m_MediaInfo->duration;
+			return NPT_SUCCESS;
+		}
+		
 		if (!m_MediaController.IsNull())
 		{
 			PLT_DeviceDataReference device;
 			m_MediaController->GetCurMediaRenderer(device);
 			if (!device.IsNull())
 			{
-				m_MediaController->GetMediaInfo(device, 0, NULL);
+				return m_MediaController->GetMediaInfo(device, 0, NULL);
 			}
 		}
-	}	
+	}
+	
 	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
 |   CSHDLNAMediaPlayer::GetCurPlayPos
 +---------------------------------------------------------------------*/
-NPT_Result CSHDLNAMediaPlayer::GetCurPlayPos(void)
+NPT_Result CSHDLNAMediaPlayer::GetCurPlayPos(long* cur_play_pos)
 {
-	//NPT_AutoLock lock(m_MediaLoadStateLock);
-	if (m_MediaLoadState == MLS_LOADED)
+	NPT_CHECK_POINTER(cur_play_pos);
+
+	*cur_play_pos = 0;
+
 	{
-		if (!m_MediaController.IsNull())
+		NPT_AutoLock lock(m_MediaInfoLock);
+		if (m_MediaInfo)
 		{
-			PLT_DeviceDataReference device;
-			m_MediaController->GetCurMediaRenderer(device);
-			if (!device.IsNull())
-			{
-				return m_MediaController->GetPositionInfo(device, 0, NULL);
-			}
+			*cur_play_pos = m_MediaInfo->play_pos;
 		}
 	}
-	return NPT_FAILURE;
-}
 
-/*----------------------------------------------------------------------
-|   CSHDLNAMediaPlayer::GetVolume
-+---------------------------------------------------------------------*/
-NPT_Result CSHDLNAMediaPlayer::GetVolume(void)
-{
 	if (!m_MediaController.IsNull())
 	{
 		PLT_DeviceDataReference device;
 		m_MediaController->GetCurMediaRenderer(device);
 		if (!device.IsNull())
 		{
-			return m_MediaController->GetVolume(device, 0, "Master", NULL);
+			return m_MediaController->GetPositionInfo(device, 0, NULL);
+		}
+	}
+
+	return NPT_SUCCESS;
+}
+
+/*----------------------------------------------------------------------
+|   CSHDLNAMediaPlayer::GetVolume
++---------------------------------------------------------------------*/
+NPT_Result CSHDLNAMediaPlayer::GetVolume(int* volume)
+{
+	NPT_CHECK_POINTER(volume);
+
+	*volume = 0;
+
+	if (!m_MediaController.IsNull())
+	{
+		PLT_DeviceDataReference device;
+		m_MediaController->GetCurMediaRenderer(device);
+		if (!device.IsNull())
+		{
+			NPT_UInt32 volume_state;
+			if (NPT_SUCCEEDED(m_MediaController->GetVolumeState(device->GetUUID(), volume_state)))
+			{
+				*volume = (int)volume_state;
+				return NPT_SUCCESS;
+			}
 		}
 	}
 	return NPT_FAILURE;
@@ -426,13 +395,33 @@ NPT_Result CSHDLNAMediaPlayer::GetVolume(void)
 +---------------------------------------------------------------------*/
 SH_DLNAPlayer_PlayState CSHDLNAMediaPlayer::GetPlayState(void)
 {
+	//SH_DLNAPlayer_PlayState play_state = SH_DLNAPLAYER_PLAY_STATE_INVALID;
+
 	NPT_AutoLock lock(m_PlayStateLock);
+	m_PlayState = SH_DLNAPLAYER_PLAY_STATE_INVALID;
+
+	if (!m_MediaController.IsNull())
+	{
+		PLT_DeviceDataReference device;
+		m_MediaController->GetCurMediaRenderer(device);
+		if (!device.IsNull())
+		{
+			NPT_String state;
+			if (NPT_SUCCEEDED(m_MediaController->GetTransportState(device->GetUUID(), state)))
+			{				
+				m_PlayState = TransportStatetoPlayState(state);
+			}
+		}
+	}
 	return m_PlayState;
 }
 
+/*----------------------------------------------------------------------
+|   CSHDLNAMediaPlayer::GetTransportInfo
++---------------------------------------------------------------------*/
 NPT_Result CSHDLNAMediaPlayer::GetTransportInfo()
 {
-	NPT_Result result = NPT_SUCCESS;
+	NPT_Result result = NPT_FAILURE;
 
 	if (!m_MediaController.IsNull())
 	{
@@ -472,7 +461,7 @@ NPT_Result CSHDLNAMediaPlayer::OpenMedia(bool media_info_got)
 
 	if (NPT_FAILED(result))
 	{
-		m_MediaLoadState = MLS_CLOSED;
+		//m_MediaLoadState = MLS_CLOSED;
 		if (m_MessageNotifyUI != NULL)
 		{
 			m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_FAILED, NULL, NULL);
@@ -482,8 +471,29 @@ NPT_Result CSHDLNAMediaPlayer::OpenMedia(bool media_info_got)
 	return result;
 }
 
+NPT_Result CSHDLNAMediaPlayer::PushUrlToDevice()
+{
+	NPT_Result result = NPT_FAILURE;
+
+	if (!m_MediaController.IsNull())
+		result = m_MediaController->OpenMedia(m_MediaInfo);
+
+	CSHDLNAMediaServer* pMediaServer = dynamic_cast<CSHDLNAMediaServer*>(m_MediaServer.AsPointer());
+	if (pMediaServer != NULL)
+	{
+		pMediaServer->OpenMedia(m_MediaInfo);
+	}
+
+	if (NPT_FAILED(result))
+	{
+		this->OnOpenResult(result);
+	}
+
+	return result;
+}
+
 /*----------------------------------------------------------------------
-|   
+|   CSHDLNAMediaPlayer::OnCurrentDeviceDisconnect
 +---------------------------------------------------------------------*/
 void CSHDLNAMediaPlayer::OnCurrentDeviceDisconnect()
 {
@@ -495,7 +505,7 @@ void CSHDLNAMediaPlayer::OnCurrentDeviceDisconnect()
 }
 
 /*----------------------------------------------------------------------
-|   
+|   CSHDLNAMediaPlayer::OnNoDeviceChoosen
 +---------------------------------------------------------------------*/
 void CSHDLNAMediaPlayer::OnNoDeviceChoosen()
 {
@@ -506,7 +516,7 @@ void CSHDLNAMediaPlayer::OnNoDeviceChoosen()
 }
 
 /*----------------------------------------------------------------------
-|   
+|   CSHDLNAMediaPlayer::OnDeviceListUpdated
 +---------------------------------------------------------------------*/
 void CSHDLNAMediaPlayer::OnDeviceListUpdated(void* param)
 {
@@ -517,13 +527,28 @@ void CSHDLNAMediaPlayer::OnDeviceListUpdated(void* param)
 }
 
 /*----------------------------------------------------------------------
+|   
++---------------------------------------------------------------------*/
+void CSHDLNAMediaPlayer::OnSetAVTransportURIResult(NPT_Result result)
+{
+	if (NPT_SUCCEEDED(result))
+	{
+		
+	}
+	else
+	{
+		OnOpenResult(result);
+	}
+}
+
+/*----------------------------------------------------------------------
 |   CSHDLNAMediaPlayer::OnOpenResult
 +---------------------------------------------------------------------*/
 void CSHDLNAMediaPlayer::OnOpenResult(NPT_Result result)
 {
 	if (NPT_SUCCEEDED(result))
 	{
-		m_MediaLoadState = MLS_LOADED;
+		//m_MediaLoadState = MLS_LOADED;
 		if (m_MessageNotifyUI != NULL)
 		{
 			m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_SUCCEEDED, NULL, NULL);
@@ -531,7 +556,7 @@ void CSHDLNAMediaPlayer::OnOpenResult(NPT_Result result)
 	}
 	else
 	{
-		m_MediaLoadState = MLS_CLOSED;
+		//m_MediaLoadState = MLS_CLOSED;
 		if (m_MessageNotifyUI != NULL)
 		{
 			m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_OPEN_MEDIA_FAILED, NULL, NULL);
@@ -610,11 +635,12 @@ void CSHDLNAMediaPlayer::OnGetMediaDurationResult(NPT_Result result, void* param
 {
 	if (NPT_SUCCEEDED(result) && m_MessageNotifyUI != NULL)
 	{
+		NPT_AutoLock lock(m_MediaInfoLock);
 		if (m_MediaInfo)
 		{
 			m_MediaInfo->duration = (long)param;
 		}
-		m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_MEDIA_TOTAL_DURATION, param, NULL);
+		//m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_MEDIA_TOTAL_DURATION, param, NULL);
 	}
 }
 
@@ -625,7 +651,12 @@ void CSHDLNAMediaPlayer::OnGetCurPlayPosResult(NPT_Result result, void* param)
 {
 	if (NPT_SUCCEEDED(result) && m_MessageNotifyUI != NULL)
 	{
-		m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_MEDIA_CURRENT_POS, param, NULL);
+		NPT_AutoLock lock(m_MediaInfoLock);
+		if (m_MediaInfo)
+		{
+			m_MediaInfo->play_pos = (long)param;
+		}
+		//m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_MEDIA_CURRENT_POS, param, NULL);
 	}
 }
 
@@ -636,10 +667,13 @@ void CSHDLNAMediaPlayer::OnGetVolumeResult(NPT_Result result, void* param)
 {
 	if (NPT_SUCCEEDED(result) && m_MessageNotifyUI != NULL)
 	{
-		m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME, param, NULL);
+		//m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME, param, NULL);
 	}
 }
 
+/*----------------------------------------------------------------------
+|   CSHDLNAMediaPlayer::OnGetTransportInfoResult
++---------------------------------------------------------------------*/
 void CSHDLNAMediaPlayer::OnGetTransportInfoResult(NPT_Result result, void* param)
 {
 	if (NPT_SUCCEEDED(result) && m_MessageNotifyUI != NULL)
@@ -656,7 +690,57 @@ void CSHDLNAMediaPlayer::OnGetTransportInfoResult(NPT_Result result, void* param
 			{
 
 			}
-			m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_TRANSPORT_INFO, (void*)transport_state, NULL);
+			//m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_TRANSPORT_INFO, (void*)transport_state, NULL);
 		}
 	}
+}
+
+void CSHDLNAMediaPlayer::OnVolumeStateChanged(const NPT_String& volume_state)
+{
+	if (m_PlayState == SH_DLNAPLAYER_PLAY_STATE_INVALID)
+		return;
+	if (m_MessageNotifyUI)
+	{
+		int volume = 0;
+		volume_state.ToInteger(volume);
+		m_MessageNotifyUI(SH_DLNAPLAYER_UI_MESSAGE_DEVICE_VOLUME_CHANGED, (void*)volume, NULL);
+	}
+}
+
+void CSHDLNAMediaPlayer::OnTransportStateChanged(const NPT_String& transport_state)
+{
+	NPT_AutoLock lock(m_PlayStateLock);
+	m_PlayState = TransportStatetoPlayState(transport_state);
+}
+
+
+SH_DLNAPlayer_PlayState	CSHDLNAMediaPlayer::TransportStatetoPlayState(const NPT_String& transport_state)
+{
+	SH_DLNAPlayer_PlayState play_state = SH_DLNAPLAYER_PLAY_STATE_INVALID;
+
+	if (transport_state == "PLAYING" ||
+		transport_state == "TRANSITIONING" ||
+		transport_state == "RECORDING")
+	{
+		play_state = SH_DLNAPLAYER_PLAY_STATE_PLAYING;
+	}
+	else if (transport_state == "PAUSED_PLAYBACK" ||
+		transport_state == "PAUSED_RECORDING")
+	{
+		play_state = SH_DLNAPLAYER_PLAY_STATE_PAUSE;
+	}
+	else if (transport_state == "STOPPED")
+	{
+		play_state = SH_DLNAPLAYER_PLAY_STATE_STOP;
+	}
+	else if (transport_state == "NO_MEDIA_PRESENT")
+	{
+		
+	}
+	else
+	{
+		NPT_LOG_WARNING_1("Unknown TransportState : %s", transport_state);
+	}
+
+	return play_state;
 }

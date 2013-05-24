@@ -164,47 +164,50 @@ SH_DLNAPLAYER_API SH_DLNAPlayer_PlayState SH_DLNAPlayer_GetPlayState(void)
 /*----------------------------------------------------------------------
 |   SH_DLNAPlayer_GetMediaDuration
 +---------------------------------------------------------------------*/
-SH_DLNAPLAYER_API int SH_DLNAPlayer_GetMediaDuration(void)
+SH_DLNAPLAYER_API int SH_DLNAPlayer_GetMediaDuration(long* duration)
 {
 	if (!g_MediaPlayer.IsNull())
 	{
-		return g_MediaPlayer->GetMediaDuration();
+		return g_MediaPlayer->GetMediaDuration(duration);
 	}
-	return 0;
+	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
 |   SH_DLNAPlayer_GetCurPlayPos
 +---------------------------------------------------------------------*/
-SH_DLNAPLAYER_API int SH_DLNAPlayer_GetCurPlayPos(void)
+SH_DLNAPLAYER_API int SH_DLNAPlayer_GetCurPlayPos(long* cur_play_pos)
 {
 	if (!g_MediaPlayer.IsNull())
 	{
-		return g_MediaPlayer->GetCurPlayPos();
+		return g_MediaPlayer->GetMediaDuration(cur_play_pos);
 	}
-	return 0;
+	return NPT_FAILURE;
 }
 
 /*----------------------------------------------------------------------
 |   SH_DLNAPlayer_GetVolume
 +---------------------------------------------------------------------*/
-SH_DLNAPLAYER_API int SH_DLNAPlayer_GetVolume(void)
+SH_DLNAPLAYER_API int SH_DLNAPlayer_GetVolume(int* volume)
 {
 	if (!g_MediaPlayer.IsNull())
 	{
-		return g_MediaPlayer->GetVolume();
+		return g_MediaPlayer->GetVolume(volume);
 	}
-	return 0;
+	return NPT_FAILURE;
 }
 
-SH_DLNAPLAYER_API int SH_DLNAPlayer_GetTransportInfo(void)
-{
-	if (!g_MediaPlayer.IsNull())
-	{
-		return g_MediaPlayer->GetTransportInfo();
-	}
-	return 0;
-}
+/*----------------------------------------------------------------------
+|   SH_DLNAPlayer_GetTransportInfo
++---------------------------------------------------------------------*/
+// SH_DLNAPLAYER_API int SH_DLNAPlayer_GetTransportInfo(void)
+// {
+// 	if (!g_MediaPlayer.IsNull())
+// 	{
+// 		return g_MediaPlayer->GetTransportInfo();
+// 	}
+// 	return 0;
+// }
 
 /*----------------------------------------------------------------------
 |   SH_DLNAPlayer_SetLog

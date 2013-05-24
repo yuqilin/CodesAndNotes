@@ -44,11 +44,12 @@ typedef struct tagSHDLNAMediaInfo {
 	NPT_String						url;
 	NPT_String						title;
 	long							duration;
-	//long							play_pos;
+	long							play_pos;
 	SHMP4HeaderInfo_t*				header_info;
 	
 	tagSHDLNAMediaInfo() {
 		duration = 0;
+		play_pos = 0;
 		header_info = NULL;
 	}
 
@@ -83,9 +84,9 @@ public:
 	NPT_Result		Stop(void);
 	NPT_Result		SetVolume(int volume);	// 0-100
 
-	NPT_Result		GetMediaDuration(void); // ms
-	NPT_Result		GetCurPlayPos(void);	// ms
-	NPT_Result		GetVolume(void);		// 0-100
+	NPT_Result		GetMediaDuration(long* duration); // ms
+	NPT_Result		GetCurPlayPos(long* cur_play_pos);	// ms
+	NPT_Result		GetVolume(int* volume);		// 0-100
 	SH_DLNAPlayer_PlayState		GetPlayState(void);
 
 	NPT_Result		GetTransportInfo();
@@ -93,6 +94,7 @@ public:
 	void			OnCurrentDeviceDisconnect();
 	void			OnNoDeviceChoosen();
 	void			OnDeviceListUpdated(void* param);
+	void			OnSetAVTransportURIResult(NPT_Result result);
 	void			OnOpenResult(NPT_Result result);
 	void			OnPlayResult(NPT_Result result);
 	void			OnPauseResult(NPT_Result result);
@@ -105,26 +107,15 @@ public:
 	void			OnGetVolumeResult(NPT_Result result, void* param);
 	void			OnGetTransportInfoResult(NPT_Result result, void* param);
 
+	// Event Notify
+	void			OnVolumeStateChanged(const NPT_String& volume_state);
+	void			OnTransportStateChanged(const NPT_String& transport_state);
+
+
 protected:
 	NPT_Result		OpenMedia(bool media_info_got);
-
-
-	// 	MEDIA_LOAD_STATE	GetMediaLoadState() {
-	// 		NPT_AutoLock lock(m_MediaLoadStateLock);
-	// 		return m_MediaLoadState;
-	// 	}
-
-	// 	NPT_Result		SetMediaLoadState(MEDIA_LOAD_STATE state) {
-	// 		NPT_AutoLock lock(m_MediaLoadStateLock);
-	// 		m_MediaLoadState = state;
-	// 		return NPT_SUCCESS;
-	// 	}
-
-	// 	NPT_Result		SetPlayState(SH_DLNA_PLAYER_PLAY_STATE state) {
-	// 		NPT_AutoLock lock(m_PlayStateLock);
-	// 		m_PlayState = state;
-	// 		return NPT_SUCCESS;
-	// 	}
+	NPT_Result		PushUrlToDevice();	
+	SH_DLNAPlayer_PlayState	TransportStatetoPlayState(const NPT_String& transport_state);
 
 protected:
 	/*
@@ -156,18 +147,19 @@ protected:
 	 *	media info
 	 */
 	SHDLNAMediaInfo_t*					m_MediaInfo;
+	NPT_Mutex							m_MediaInfoLock;
 
 	/*
 	 *	media load state
 	 */
-	MEDIA_LOAD_STATE					m_MediaLoadState;
+	//MEDIA_LOAD_STATE					m_MediaLoadState;
 	//NPT_Mutex							m_MediaLoadStateLock;
 
 	/*
 	 *	play state
 	 */
-	SH_DLNAPlayer_PlayState				m_PlayState;
-	NPT_Mutex							m_PlayStateLock;
+ 	SH_DLNAPlayer_PlayState				m_PlayState;
+ 	NPT_Mutex							m_PlayStateLock;
 
 	//PLT_TaskManager						m_TaskManager;
 	CSHDLNAMediaDownloader*				m_MediaDownloader;

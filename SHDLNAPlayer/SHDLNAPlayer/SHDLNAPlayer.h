@@ -31,18 +31,18 @@ typedef enum {
 	SH_DLNAPLAYER_UI_MESSAGE_GET_MEDIA_INFO_SUCCEEDED,					// 获取媒体信息成功
 	SH_DLNAPLAYER_UI_MESSAGE_GET_MEDIA_INFO_FAILED,						// 获取媒体信息失败
 
-	SH_DLNAPLAYER_UI_MESSAGE_MEDIA_TOTAL_DURATION,						// 整个视频时长 ms，wParam返回时长(long)
-	SH_DLNAPLAYER_UI_MESSAGE_MEDIA_CURRENT_POS,							// 当前播放位置 ms，wParam返回当前位置(long)
+	SH_DLNAPLAYER_UI_MESSAGE_MEDIA_TOTAL_DURATION,						// 整个视频时长 ms, wParam返回时长(long)
+	SH_DLNAPLAYER_UI_MESSAGE_MEDIA_CURRENT_POS,							// 当前播放位置 ms, wParam返回当前位置(long)
 
-	SH_DLNAPLAYER_UI_MESSAGE_DEVICE_LIST_UPDATED,						// 设备列表更新，wParam返回设备列表(SH_DLNAPlayer_DeviceList*)
+	SH_DLNAPLAYER_UI_MESSAGE_DEVICE_LIST_UPDATED,						// 设备列表更新, wParam返回设备列表(SH_DLNAPlayer_DeviceList*)
 
-	SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME,						// 设备当前播放音量，wParam返回当前音量（int)
+	SH_DLNAPLAYER_UI_MESSAGE_DEVICE_CURRENT_VOLUME,						// 设备当前播放音量, wParam返回当前音量（int)
 
 	SH_DLNAPLAYER_UI_MESSAGE_CURRENT_DEVICE_DISCONNECT,					// 当前设备失去连接
 
 	SH_DLNAPLAYER_UI_MESSAGE_NO_DEVICE_CHOOSEN,							// 没有选择要连接的设备
 
-	SH_DLNAPLAYER_UI_MESSAGE_TRANSPORT_INFO,							// 数据传输状态
+	SH_DLNAPLAYER_UI_MESSAGE_DEVICE_VOLUME_CHANGED,						// 设备音量改变, wParam返回当前音量(int)
 
 } SH_DLNAPlayer_UI_Message;
 
@@ -184,31 +184,27 @@ extern "C"
 
 	/*
 	*	SH_DLNAPlayer_GetMediaDuration
-	*	描述：			获取当前媒体播放时长，以消息通知方式返回结果
-	*	参数：			无
+	*	描述：			获取当前媒体播放时长(毫秒)
+	*	参数：			long*
 	*	返回值：		0 - 成功；非0 - 失败
 	*/
-	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetMediaDuration(void);
+	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetMediaDuration(long* duration);
 
 	/*
 	*	SH_DLNAPlayer_GetCurPlayPos
-	*	描述：			获取当前媒体播放位置，以消息通知方式返回结果
-	*	参数：			无
+	*	描述：			获取当前媒体播放位置(毫秒)
+	*	参数：			long*
 	*	返回值：		0 - 成功；非0 - 失败
 	*/
-	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetCurPlayPos(void);
+	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetCurPlayPos(long* cur_play_pos);
 
 	/*
 	*	SH_DLNAPlayer_GetVolume
-	*	描述：			获取当前播放音量，以消息通知方式返回结果
-	*	参数：			无
+	*	描述：			获取当前播放音量
+	*	参数：			int*
 	*	返回值：		0 - 成功；非0 - 失败
 	*/
-	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetVolume(void);
-
-
-	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetTransportInfo(void);
-
+	SH_DLNAPLAYER_API int		SH_DLNAPlayer_GetVolume(int* volume);
 
 
 #ifdef __cplusplus

@@ -75,7 +75,7 @@ int CMp4DownloadClient::HeaderRequest(const char* url,
 	switch (m_info_ptr->version)
 	{
 	case VER_ORIGINAL:
-		mainfilename = m_info_ptr->name + L"[原话版]";
+		mainfilename = m_info_ptr->name + L"[原画版]";
 		break;
 	case VER_SUPER:
 		mainfilename = m_info_ptr->name + L"[超清版]";
