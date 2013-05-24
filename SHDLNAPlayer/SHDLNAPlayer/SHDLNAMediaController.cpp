@@ -158,31 +158,31 @@ void CSHDLNAMediaController::OnMRRemoved(PLT_DeviceDataReference& device)
 void CSHDLNAMediaController::OnMRStateVariablesChanged(PLT_Service* service,
 													   NPT_List<PLT_StateVariable*>* vars)
 {
-	NPT_String strVolume;
-	if (service)
-	{
-		PLT_StateVariable* var = service->FindStateVariable("Volume");
-		if (var)
-			strVolume = var->GetValue();
-	}
+	PLT_DeviceDataReference device;
+	GetCurMediaRenderer(device);
 
-	for (NPT_List<PLT_StateVariable*>::Iterator Iter = vars->GetFirstItem();
-		Iter;
-		++Iter)
+	if (service != NULL &&
+		!device.IsNull() &&
+		service->GetDevice() &&
+		device->GetUUID().Compare(service->GetDevice()->GetUUID(), true) == 0)
 	{
-		PLT_StateVariable* var = *Iter;
-		NPT_String var_name = var->GetName();
-		NPT_String var_value = var->GetValue();
-		if (var_name == "Volume")
+		for (NPT_List<PLT_StateVariable*>::Iterator Iter = vars->GetFirstItem();
+			Iter;
+			++Iter)
 		{
-			this->OnVolumeStateChanged(var_value);
-		}
-		else if (var_name == "TransportState")
-		{
-			this->OnTransportStateChanged(var_value);
+			PLT_StateVariable* var = *Iter;
+			NPT_String var_name = var->GetName();
+			NPT_String var_value = var->GetValue();
+			if (var_name == "Volume")
+			{
+				this->OnVolumeStateChanged(var_value);
+			}
+			else if (var_name == "TransportState")
+			{
+				this->OnTransportStateChanged(var_value);
+			}
 		}
 	}
-
 }
 
 void CSHDLNAMediaController::OnVolumeStateChanged(const NPT_String& volume_state)

@@ -35,7 +35,10 @@ void CSHDLNAMediaDownloader::Run()
 	ATL::CString mainfilename;
 	CSHDLNAMediaPlayer* player = (CSHDLNAMediaPlayer*)m_User;
 	if (player == NULL || player->m_MediaInfo == NULL)
+	{
+		NPT_LOG_FATAL("player == NULL || player->m_MediaInfo == NULL");
 		goto download_failure;
+	}
 
 	assert(player->m_MediaInfo->header_info == NULL);
 
@@ -43,7 +46,10 @@ void CSHDLNAMediaDownloader::Run()
 		NPT_AutoLock lock(player->m_MediaInfoLock);
 		player->m_MediaInfo->header_info = new SHMP4HeaderInfo_t;
 		if (player->m_MediaInfo->header_info == NULL)
+		{
+			NPT_LOG_FATAL("header_info == NULL, failed to allocate memory");
 			goto download_failure;
+		}
 	}
 
 	m_header_info_ptr = player->m_MediaInfo->header_info;
@@ -51,15 +57,24 @@ void CSHDLNAMediaDownloader::Run()
 	if (NPT_SUCCEEDED(HotVrsRequestVideoInfo(mainfilename)))
 	{
 		player->m_MediaInfo->title = wcs2mbs(CP_UTF8, mainfilename).c_str();
-		player->PushUrlToDevice();
+		if (NPT_FAILED(player->PushUrlToDevice()))
+		{
+			NPT_LOG_FATAL("PushUrlToDevice failed");
+			goto download_failure;
+		}
 	}
 	else
+	{
+		NPT_LOG_FATAL("HotVrsRequestVideoInfo failed");
 		goto download_failure;
+	}
 
 	if (NPT_SUCCEEDED(CDNRequestVideoHeader()))
 	{
 		player->OnOpenResult(NPT_SUCCESS);
+		return;
 	}
+	NPT_LOG_FATAL("CDNRequestVideoHeader failed");
 
 download_failure:
 	player->OnOpenResult(NPT_FAILURE);

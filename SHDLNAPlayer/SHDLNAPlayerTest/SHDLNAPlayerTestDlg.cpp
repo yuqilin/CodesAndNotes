@@ -237,11 +237,14 @@ BOOL CSHDLNAPlayerTestDlg::OnInitDialog()
 	m_PlayState = PLAY_STATE_NONE;
 	m_nVolume = 0;
 
-	((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetPos(1);
+	((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetRange(0, 100);
 
 	UpdateData(FALSE);
 
-	return TRUE;  // return TRUE  unless you set the focus to a control
+	GetDlgItem(IDC_CHECK_ENABLE_DLNA)->SetFocus();
+	//GotoDlgCtrl(GetDlgItem(IDC_CHECK_ENABLE_DLNA));
+
+	return FALSE;  // return TRUE  unless you set the focus to a control
 }
 
 BOOL CSHDLNAPlayerTestDlg::PreTranslateMessage(MSG* pMsg)
@@ -320,7 +323,7 @@ void CSHDLNAPlayerTestDlg::OnTimer(UINT_PTR nIDEvent)
 		CString strCurPlayPos = MsToString(cur_play_pos);
 		GetDlgItem(IDC_STATIC_CUR_PLAY_POS)->SetWindowText(strCurPlayPos);
 
-		if (cur_play_pos >= m_MediaDuration)
+		if (m_MediaDuration > 0 && cur_play_pos >= m_MediaDuration)
 		{
 			KillTimer(TIMERID_GET_CUR_PLAY_POS);
 		}
@@ -342,6 +345,10 @@ void CSHDLNAPlayerTestDlg::OnTimer(UINT_PTR nIDEvent)
 
 		if (media_duration > 0)
 		{
+			m_MediaDuration = media_duration;
+
+			((CSliderCtrl*)GetDlgItem(IDC_SLIDER_PLAY_PROGRESS))->SetRange(0, m_MediaDuration);
+
 			CString strMediaDuration = MsToString(media_duration);
 			GetDlgItem(IDC_STATIC_MEDIA_DURATION)->SetWindowText(strMediaDuration);
 
@@ -406,11 +413,15 @@ void CSHDLNAPlayerTestDlg::SHDLNAPlayerMessageNotifyUI(int msg, void* wParam, vo
 
 void CSHDLNAPlayerTestDlg::OnDLNAPlayerOpenMediaSucceeded()
 {
+	GetDlgItem(IDC_STATIC_PLAY_STATUS)->SetWindowText(_T("Open Succeeded"));
+
+	Sleep(500);
+
 	int volume = 0;
 	SH_DLNAPlayer_GetVolume(&volume);
 
 	if (volume > 10)
-		SH_DLNAPlayer_SetVolume(1);
+		SH_DLNAPlayer_SetVolume(VOLUME_MAX - 1);
 
 	if (0 == SH_DLNAPlayer_Play())
 	{
@@ -659,7 +670,7 @@ LRESULT CSHDLNAPlayerTestDlg::OnDlnaPlayerMsgDeviceVolumeChanged(WPARAM wParam, 
 	::MessageBox(NULL, strMsg, _T(""), MB_OK);
 
 
-	((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetPos(m_nVolume);
+	((CSliderCtrl*)GetDlgItem(IDC_SLIDER_VOLUME))->SetPos(VOLUME_MAX - m_nVolume);
 
 	return 0;
 }

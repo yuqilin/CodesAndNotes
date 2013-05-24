@@ -113,7 +113,7 @@ public:
 
 
 protected:
-	NPT_Result		OpenMedia(bool media_info_got);
+	//NPT_Result		OpenMedia(bool media_info_got);
 	NPT_Result		PushUrlToDevice();	
 	SH_DLNAPlayer_PlayState	TransportStatetoPlayState(const NPT_String& transport_state);
 

@@ -180,7 +180,7 @@ SH_DLNAPLAYER_API int SH_DLNAPlayer_GetCurPlayPos(long* cur_play_pos)
 {
 	if (!g_MediaPlayer.IsNull())
 	{
-		return g_MediaPlayer->GetMediaDuration(cur_play_pos);
+		return g_MediaPlayer->GetCurPlayPos(cur_play_pos);
 	}
 	return NPT_FAILURE;
 }
