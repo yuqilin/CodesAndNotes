@@ -56,6 +56,18 @@ void FreeResourceText(TCHAR * pText)
 }
 
 
+BOOL GetModulePath(HMODULE hModule, TCHAR * pszPath)
+{
+    if(::GetModuleFileName(hModule, pszPath, MAX_PATH) <= 0)
+        return FALSE;
+
+    TCHAR * pEnd = pszPath + lstrlen(pszPath) - 1;
+    while(pEnd > pszPath && *pEnd != '\\') pEnd--;
+    *pEnd = 0;
+    return TRUE;
+}
+
+
 /*----------------------------------------------------------------------
 |   mbs2wcs
 +---------------------------------------------------------------------*/
@@ -110,4 +122,60 @@ std::string	wcs2mbs(int nCodePage, const wchar_t* wcs)
     std::string strText(pText);
     delete[] pText;
     return strText;
+}
+
+void CStringToBin(CString str, CAtlArray<BYTE>& data)
+{
+    str.Trim();
+    ASSERT((str.GetLength() & 1) == 0);
+    data.SetCount(str.GetLength() / 2);
+
+    BYTE b = 0;
+
+    str.MakeUpper();
+    for (int i = 0, j = str.GetLength(); i < j; i++) {
+        TCHAR c = str[i];
+        if (c >= _T('0') && c <= _T('9')) {
+            if (!(i & 1)) {
+                b = ((char(c - _T('0')) << 4) & 0xf0) | (b & 0x0f);
+            } else {
+                b = (char(c - _T('0')) & 0x0f) | (b & 0xf0);
+            }
+        } else if (c >= _T('A') && c <= _T('F')) {
+            if (!(i & 1)) {
+                b = ((char(c - _T('A') + 10) << 4) & 0xf0) | (b & 0x0f);
+            } else {
+                b = (char(c - _T('A') + 10) & 0x0f) | (b & 0xf0);
+            }
+        } else {
+            break;
+        }
+
+        if (i & 1) {
+            data[i >> 1] = b;
+            b = 0;
+        }
+    }
+}
+
+GUID GUIDFromCString(CString str)
+{
+    GUID guid = GUID_NULL;
+    HRESULT hr = CLSIDFromString(CComBSTR(str), &guid);
+    ASSERT(SUCCEEDED(hr));
+    UNREFERENCED_PARAMETER(hr);
+    return guid;
+}
+
+HRESULT GUIDFromCString(CString str, GUID& guid)
+{
+    guid = GUID_NULL;
+    return CLSIDFromString(CComBSTR(str), &guid);
+}
+
+CString CStringFromGUID(const GUID& guid)
+{
+    WCHAR null[128] = {0}, buff[128];
+    StringFromGUID2(GUID_NULL, null, 127);
+    return CString(StringFromGUID2(guid, buff, 127) > 0 ? buff : null);
 }

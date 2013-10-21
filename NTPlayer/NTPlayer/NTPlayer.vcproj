@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)\"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -61,9 +61,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="baseclasses.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(SolutionDir)lib\$(ConfigurationName)\"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				ImportLibrary="$(SolutionDir)lib\$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -90,8 +93,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)\"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -134,10 +137,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(SolutionDir)lib\$(ConfigurationName)\"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="$(SolutionDir)lib\$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -198,15 +203,39 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DSGraph.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FGFilter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FGManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphThread.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NTPlayer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\NTPlayerImpl.cpp"
+				RelativePath=".\NTPlayerCore.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\NTThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerCore.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerSettings.cpp"
 				>
 			</File>
 			<File
@@ -240,7 +269,39 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\BaseGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BasePlayer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CodecsManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DSGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FGFilter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FGManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MediaFormats.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MediaInfo.h"
 				>
 			</File>
 			<File
@@ -248,11 +309,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NTPlayerImpl.h"
+				RelativePath=".\NTPlayerCore.h"
 				>
 			</File>
 			<File
 				RelativePath=".\NTThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerCore.h"
 				>
 			</File>
 			<File
@@ -308,6 +373,10 @@
 		</Filter>
 		<File
 			RelativePath=".\CodecsInfo.xml"
+			>
+		</File>
+		<File
+			RelativePath=".\filters.ini"
 			>
 		</File>
 		<File

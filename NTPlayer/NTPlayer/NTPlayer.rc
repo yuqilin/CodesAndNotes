@@ -52,7 +52,15 @@ END
 // TEXT
 //
 
-IDR_CODECSINFO               TEXT                    "CodecsInfo.xml"
+IDR_CODECSINFO          TEXT                    "CodecsInfo.xml"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// INI
+//
+IDR_FILTERS_INI         INI                     "filters.ini"
+
+
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 

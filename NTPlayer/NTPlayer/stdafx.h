@@ -25,4 +25,6 @@
 #include "Utils.h"
 #include "resource.h"
 
+#include "../DSUtil/DSUtil.h"
+
 using ATL::CString;

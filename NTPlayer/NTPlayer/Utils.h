@@ -16,6 +16,13 @@ std::wstring    mbs2wcs(int nCodePage, const char* mbs);
 std::string	    wcs2mbs(int nCodePage, const wchar_t* wcs);
 
 
+void CStringToBin(CString str, CAtlArray<BYTE>& data);
+
+GUID GUIDFromCString(CString str);
+HRESULT GUIDFromCString(CString str, GUID& guid);
+CString CStringFromGUID(const GUID& guid);
+
+BOOL GetModulePath(HMODULE hModule, TCHAR * pszPath);
 
 #endif
 

@@ -33,6 +33,17 @@ class CFGManager
     , public IGraphBuilderDeadEnd
     , public CCritSec
 {
+protected:
+    static CAtlList<CodecsInfo*> m_Codecs;
+    static bool m_fCodecsLoaded;
+
+public:
+    static HRESULT LoadCodecsInfo();
+    static HRESULT UnloadCodecsInfo();
+
+    CodecsInfo* FindCodecsInfo(const CString& clsid);
+
+
 public:
     struct path_t {
         CLSID clsid;

@@ -14,6 +14,8 @@
 #define IDR_MAINFRAME                   128
 #define IDD_DIALOG1                     129
 #define IDC_EDIT1                       1000
+#define IDC_BUTTON1                     1001
+#define IDC_BTN_OPENFILE                1001
 #define ID_CODECS_CODECSINFO            32771
 #define IDC_STATIC                      -1
 
@@ -24,7 +26,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32772
-#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

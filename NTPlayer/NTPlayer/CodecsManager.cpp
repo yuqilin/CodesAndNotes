@@ -42,23 +42,189 @@ static CodecsTypeAll s_CodecsTypeAll[] = {
 static int s_CodecsTypeAllCount = _countof(s_CodecsTypeAll);
 
 
+//////////////////////////////////////////////////////////////////////////
+CCodecsInfoList::CCodecsInfoList()
+{
+}
+
+CCodecsInfoList::~CCodecsInfoList()
+{
+    RemoveAll();
+}
+
+void CCodecsInfoList::RemoveAll()
+{
+    while (!m_codecs.IsEmpty()) {
+        const codecs_t& f = m_codecs.RemoveHead();
+        if (f.autodelete) {
+            delete f.info;
+        }
+    }
+
+    m_sortedcodecs.RemoveAll();
+}
+
+void CCodecsInfoList::Insert(CodecsInfo* pInfo, int group, bool exactmatch, bool autodelete)
+{
+    bool bInsert = true;
+
+    /*TRACE(_T("FGM: Inserting %d %d %016I64x '%s' --> "), group, exactmatch, pFGF->GetMerit(),
+        pFGF->GetName().IsEmpty() ? CStringFromGUID(pFGF->GetCLSID()) : CString(pFGF->GetName()));*/
+
+    POSITION pos = m_codecs.GetHeadPosition();
+    while (pos) {
+        codecs_t& f = m_codecs.GetNext(pos);
+
+        if (pInfo == f.info) {
+            TRACE(_T("Rejected (exact duplicate)\n"));
+            bInsert = false;
+            break;
+        }
+
+        if (group != f.group) {
+            continue;
+        }
+
+        if (!pInfo->clsid.IsEmpty() && pInfo->clsid == f.info->clsid
+            && f.info->merit == MERIT64_DO_NOT_USE) {
+                TRACE(_T("Rejected (same filter with merit DO_NOT_USE already in the list)\n"));
+                bInsert = false;
+                break;
+        }
+
+    }
+
+    if (bInsert) {
+        TRACE(_T("Success\n"));
+
+        codecs_t f = {(int)m_codecs.GetCount(), pInfo, group, exactmatch, autodelete};
+        m_codecs.AddTail(f);
+
+        m_sortedcodecs.RemoveAll();
+    } else if (autodelete) {
+        delete pInfo;
+    }
+}
+
+POSITION CCodecsInfoList::GetHeadPosition()
+{
+    if (m_sortedcodecs.IsEmpty()) {
+        CAtlArray<codecs_t> sort;
+        sort.SetCount(m_codecs.GetCount());
+        POSITION pos = m_codecs.GetHeadPosition();
+        for (int i = 0; pos; i++) {
+            sort[i] = m_codecs.GetNext(pos);
+        }
+        qsort(&sort[0], sort.GetCount(), sizeof(sort[0]), codecs_cmp);
+        for (size_t i = 0; i < sort.GetCount(); i++) {
+            if (sort[i].info->merit >= MERIT64_DO_USE) {
+                m_sortedcodecs.AddTail(sort[i].pFGF);
+            }
+        }
+    }
+
+#ifdef _DEBUG
+    TRACE(_T("FGM: Sorting filters\n"));
+
+    POSITION pos = m_sortedcodecs.GetHeadPosition();
+    while (pos) {
+        CodecsInfo* info = m_sortedcodecs.GetNext(pos);
+        //TRACE(_T("FGM: - %016I64x '%s'\n"), pFGF->GetMerit(), pFGF->GetName().IsEmpty() ? CStringFromGUID(pFGF->GetCLSID()) : CString(pFGF->GetName()));
+    }
+#endif
+
+    return m_sortedcodecs.GetHeadPosition();
+}
+
+CodecsInfo* CCodecsInfoList::GetNext(POSITION& pos)
+{
+    return m_sortedcodecs.GetNext(pos);
+}
+
+int CCodecsInfoList::codecs_cmp(const void* a, const void* b)
+{
+    codecs_t* fa = (codecs_t*)a;
+    codecs_t* fb = (codecs_t*)b;
+
+    if (fa->group < fb->group) {
+        return -1;
+    }
+    if (fa->group > fb->group) {
+        return +1;
+    }
+
+    if (fa->info->merit > fb->info->merit) {
+        return -1;
+    }
+    if (fa->info->merit < fb->info->merit) {
+        return +1;
+    }
+
+    if (fa->exactmatch && !fb->exactmatch) {
+        return -1;
+    }
+    if (!fa->exactmatch && fb->exactmatch) {
+        return +1;
+    }
+
+    if (fa->index < fb->index) {
+        return -1;
+    }
+    if (fa->index > fb->index) {
+        return +1;
+    }
+
+    return 0;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
 CCodecsManager::CCodecsManager()
 {
 }
 
 CCodecsManager::~CCodecsManager()
 {
-
+    UnLoadCodecsInfo();
 }
 
 HRESULT CCodecsManager::SetCodecsPath(LPCTSTR lpszCodecsPath)
 {
-    m_strCodecsPath = lpszCodecsPath;
+    // TODO: check path is invalid
+
+    if (!PathIsDirectory(lpszCodecsPath) || !PathFileExists(lpszCodecsPath))
+    {
+        return E_INVALIDARG;
+    }
+
+    CString path(lpszCodecsPath);
+    if (!m_strCodecsPath.IsEmpty() &&
+        !path.IsEmpty() &&
+        m_strCodecsPath != path)
+    {
+        POSITION pos = m_CodecsInfoList.GetHeadPosition();
+        while (pos)
+        {
+            CodecsInfo* pInfo = m_CodecsInfoList.GetNext(pos);
+            if (pInfo)
+            {
+                pInfo->path.Replace(m_strCodecsPath, path);
+            }
+        }
+        m_strCodecsPath = path;
+    }
+
     return S_OK;
 }
 
 HRESULT CCodecsManager::LoadCodecsInfo()
 {
+    if (m_fCodecsLoaded)
+    {
+        return S_OK;
+    }
+
     UnLoadCodecsInfo();
 
     HRESULT hr = E_FAIL;
@@ -68,9 +234,7 @@ HRESULT CCodecsManager::LoadCodecsInfo()
         hr = ParseCodecsInfoConfig(pText);
         if (SUCCEEDED(hr))
         {
-            CString strCodecsInfo;
-            PrintCodecsInfo(m_listCodecsInfo, strCodecsInfo);
-            m_strCodecsInfoString = strCodecsInfo;
+            m_fCodecsLoaded = true;
         }
         ::FreeResourceText(pText);
     }
@@ -79,16 +243,19 @@ HRESULT CCodecsManager::LoadCodecsInfo()
 
 void CCodecsManager::UnLoadCodecsInfo()
 {
-    POSITION pos = m_listCodecsInfo.GetHeadPosition();
+    const CodecsInfo* info = NULL;
+    POSITION pos = m_CodecsInfoList.GetHeadPosition();
     while (pos)
     {
-        const CodecsInfo* info = m_listCodecsInfo.GetNext(pos);
+        info = m_CodecsInfoList.GetNext(pos);
         if (info)
         {
             SAFE_DELETE(info);
         }
     }
-    m_listCodecsInfo.RemoveAll();
+    m_CodecsInfoList.RemoveAll();
+
+    m_fCodecsLoaded = false;
 }
 
 void CCodecsManager::PrintCodecsInfo(const CodecsInfoList& InfoList, CString& strToPrint)
@@ -243,15 +410,7 @@ HRESULT CCodecsManager::ParseCodecsInfoConfig(LPCTSTR lpszCodecsInfoConfig)
             SetCodecsInfo(pInfo, subnode);
         }
 
-        m_listCodecsInfo.AddTail(pInfo);
-//         if (pInfo->type == kCodecsTypeSourceFilter)
-//         {
-//             m_listSource.AddTail(pInfo);
-//         }
-//         else
-//         {
-//             m_listTransform.AddTail(pInfo);
-//         }
+        m_CodecsInfoList.AddTail(pInfo);
     }
     return hr;
 }
@@ -263,7 +422,15 @@ HRESULT	CCodecsManager::SetCodecsInfo(CodecsInfo* pInfo, LPCTSTR pcszKey, LPCTST
 
     HRESULT hr = S_OK;
 
-    if(_tcsicmp(pcszKey, _T("name")) == 0)
+    if(_tcsicmp(pcszKey, _T("enable")) == 0)
+    {
+        pInfo->enable = (bool)_tcstoul(pcszValue, NULL, 10);
+    }
+    else if (_tcsicmp(pcszKey, _T("priority") == 0)
+    {
+        pInfo->priority = _tcstoul(pcszValue, NULL, 10);
+    }
+    else if(_tcsicmp(pcszKey, _T("name")) == 0)
     {
         pInfo->name = pcszValue;
     }
@@ -297,7 +464,8 @@ HRESULT	CCodecsManager::SetCodecsInfo(CodecsInfo* pInfo, LPCTSTR pcszKey, LPCTST
     }
     else if(_tcsicmp(pcszKey, _T("checkbyte")) == 0)
     {
-        this->ParseCheckByte(pInfo, pcszValue);
+        //this->ParseCheckByte(pInfo, pcszValue);
+        pInfo->checkbytes = pcszValue;
     }
     else
     {
@@ -467,4 +635,53 @@ CodecsType CCodecsManager::CodecsTypeFromText(LPCTSTR type)
         }
     }
     return kCodecsTypeUnknown;
+}
+
+HRESULT CCodecsManager::CreateCodecsObject(CodecsInfo* pInfo, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+{
+    if (pInfo->type == kCodecsTypeVideoRenderer)
+    {
+        return CreateVideoRenderer(pInfo, ppBF, pUnks);
+    }
+
+    if (pInfo->pathflag == "reg")
+    {
+        CreateCodecsFromRegistry();
+    }
+    else if (pInfo->pathflag == "file")
+    {
+        CreateCodecsFromFile();
+    }
+    else
+    {
+        return E_INVALIDARG;
+    }
+    
+    return S_OK;
+}
+
+HRESULT CCodecsManager::CreateVideoRenderer(pInfo, ppBF, pUnks)
+{
+    
+}
+
+
+CFGFilter* FGFilterFromCodecsInfo(CodecsInfo* pInfo)
+{
+    CFGFilter* pFGF = NULL;
+    if (pInfo->pathflag == "reg")
+    {
+        pFGF = new CFGFilterRegistry(pInfo);
+    }
+    else if (pInfo->pathflag == "file")
+    {
+        if (pFGF)
+            pFGF = new CFGFilterFile(pInfo);
+    }
+//     else if (pInfo->pathflag == "re")
+//     {
+//         
+//     }
+
+    return pFGF;
 }

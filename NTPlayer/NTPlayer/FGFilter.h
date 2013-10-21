@@ -1,23 +1,3 @@
-/*
- * (C) 2003-2006 Gabest
- * (C) 2006-2013 see Authors.txt
- *
- * This file is part of MPC-HC.
- *
- * MPC-HC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * MPC-HC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
 
 #pragma once
 
@@ -29,73 +9,147 @@
 #define MERIT64_PREFERRED   (MERIT64(MERIT_PREFERRED))
 #define MERIT64_ABOVE_DSHOW (MERIT64(1) << 32)
 
+enum CodecsCategory
+{
+    kCodecsCategoryUnknown = 0,
+    kCodecsCategoryDSFilter,
+    kCodecsCategoryDMO,
+    kCodecsCategoryVFW,
+};
+
+enum CodecsType
+{
+    kCodecsTypeUnknown = 0,
+    kCodecsTypeSourceFilter,
+    kCodecsTypeSplitter,
+    kCodecsTypeAudioEffect,
+    kCodecsTypeVideoEffect,
+    kCodecsTypeAudioRenderer,
+    kCodecsTypeVideoRenderer,
+    kCodecsTypeAudioDecoder,
+    kCodecsTypeNullRenderer,
+    kCodecsTypeVideoDecoder,
+    kCodecsTypeAudioEncoder,
+    kCodecsTypeVideoEncoder,
+    kCodecsTypeMuxer,
+    kCodecsTypeFileWriter,
+};
+
+
+struct PathFlagItem
+{
+    CString flag;
+    CString path;
+};
+
+struct CheckByteItem
+{
+    CString checkbyte;
+    CString subtype;
+};
+
+struct MediaTypeItem
+{
+    GUID majortype;
+    GUID subtype;
+};
+
+struct CodecsInfo
+{
+    bool enable;
+    DWORD priority;
+    CString name;
+    CString	pathflag;
+    CString	path;
+    CodecsCategory category;
+    CString	catedata;
+    CodecsType type;
+    GUID clsid;
+    DWORD merit;
+    CAtlList<CString> protocols;
+    CAtlList<CString> extensions;
+    CAtlList<CString> depends;
+    CAtlList<CString> preloads;
+    CAtlList<CString> checkbytes;
+    CAtlList<MediaTypeItem> mediatypes;
+
+    CodecsInfo()
+    {
+        this->category = kCodecsCategoryUnknown;
+        this->type = kCodecsTypeUnknown;
+        this->clsid = GUID_NULL;
+        //this->merit = MERIT64_DO_NOT_USE;
+    }
+
+    ~CodecsInfo()
+    {
+        protocols.RemoveAll();
+        extensions.RemoveAll();
+        depends.RemoveAll();
+        preloads.RemoveAll();
+        checkbytes.RemoveAll();
+        mediatypes.RemoveAll();
+    }
+};
+
 
 class CFGFilter
 {
 protected:
-    CLSID m_clsid;
-    CStringW m_name;
-    struct {
-        union {
-            UINT64 val;
-            struct {
-                UINT64 low: 16, mid: 32, high: 16;
-            };
-        };
-    } m_merit;
-    CAtlList<GUID> m_types;
+    CodecsInfo* m_info;
+
+    UINT64  m_merit;
 
 public:
-    CFGFilter(const CLSID& clsid, CStringW name = L"", UINT64 merit = MERIT64_DO_USE);
-    virtual ~CFGFilter();
+    CFGFilter() : m_info(NULL) {}
 
-    CLSID GetCLSID() const { return m_clsid; }
-    CStringW GetName() const { return m_name; }
-    UINT64 GetMerit() const { return m_merit.val; }
-    DWORD GetMeritForDirectShow() const { return m_merit.mid; }
-    const CAtlList<GUID>& GetTypes() const;
-    void SetTypes(const CAtlList<GUID>& types);
-    void AddType(const GUID& majortype, const GUID& subtype);
+    virtual ~CFGFilter() { m_info = NULL; }
+
+    void SetCodecsInfo(CodecsInfo* info) {
+        m_info = info;
+    }
+
+    GUID GetCLSID() {
+        if (m_info)
+            return m_info->clsid;
+        return GUID_NULL;
+    }
+
+    void SetMerit(UINT64 merit) {
+        m_merit = merit;
+    }
+
+    UINT64 GetMerit() {
+        return m_merit;
+    }
+
     bool CheckTypes(const CAtlArray<GUID>& types, bool fExactMatch);
-
-    CAtlList<CString> m_protocols, m_extensions, m_chkbytes; // TODO: subtype?
 
     virtual HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks) = 0;
 };
 
 class CFGFilterRegistry : public CFGFilter
 {
-protected:
-    CStringW m_DisplayName;
-    CComPtr<IMoniker> m_pMoniker;
-
-    void ExtractFilterData(BYTE* p, UINT len);
-
 public:
-    CFGFilterRegistry(IMoniker* pMoniker, UINT64 merit = MERIT64_DO_USE);
-    CFGFilterRegistry(CStringW DisplayName, UINT64 merit = MERIT64_DO_USE);
-    CFGFilterRegistry(const CLSID& clsid, UINT64 merit = MERIT64_DO_USE);
-
-    CStringW GetDisplayName() { return m_DisplayName; }
-    IMoniker* GetMoniker() { return m_pMoniker; }
+    CFGFilterRegistry() {}
 
     HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
-private:
-    void QueryProperties();
 };
 
 template<class T>
 class CFGFilterInternal : public CFGFilter
 {
 public:
-    CFGFilterInternal(CStringW name = L"", UINT64 merit = MERIT64_DO_USE) : CFGFilter(__uuidof(T), name, merit) {}
+    CFGFilterInternal() {}
 
-    HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks) {
+    HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+    {
         CheckPointer(ppBF, E_POINTER);
 
         HRESULT hr = S_OK;
-        CComPtr<IBaseFilter> pBF = DEBUG_NEW T(nullptr, &hr);
-        if (FAILED(hr)) {
+        CComPtr<IBaseFilter> pBF = new T(NULL, &hr);
+        if (FAILED(hr))
+        {
             return hr;
         }
 
@@ -108,11 +162,10 @@ public:
 class CFGFilterFile : public CFGFilter
 {
 protected:
-    CString m_path;
     HINSTANCE m_hInst;
 
 public:
-    CFGFilterFile(const CLSID& clsid, CString path, CStringW name = L"", UINT64 merit = MERIT64_DO_USE);
+    CFGFilterFile() : m_hInst(NULL) {}
 
     HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
 };
@@ -123,7 +176,11 @@ protected:
     HWND m_hWnd;
 
 public:
-    CFGFilterVideoRenderer(HWND hWnd, const CLSID& clsid, CStringW name = L"", UINT64 merit = MERIT64_DO_USE);
+    CFGFilterVideoRenderer() : m_hWnd(NULL) {}
+
+    void SetVideoWindow(HWND hWnd) {
+        m_hWnd = hWnd;
+    }
 
     HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
 };

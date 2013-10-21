@@ -7,32 +7,42 @@
 
 static CNTPlayer*  s_pPlayer = NULL;
 
-NTPLAYER_API int ntplayer_init()
+NTPLAYER_API HRESULT ntplayer_init()
 {
     if (s_pPlayer == NULL)
     {
         s_pPlayer = new CNTPlayer;
     }
 
-    s_pPlayer->LoadCodecsInfo();
+    if (s_pPlayer != NULL)
+    {
+        s_pPlayer->LoadCodecsInfo();
+    }
 
-    return 0;
+    return S_OK;
 }
 
-NTPLAYER_API int ntplayer_uninit()
+NTPLAYER_API HRESULT ntplayer_uninit()
 {
     SAFE_DELETE(s_pPlayer);
 
-    return 0;
+    return S_OK;
 }
 
-NTPLAYER_API int ntplayer_get_codecs_info_string(const char** info)
+NTPLAYER_API HRESULT ntplayer_get_codecs_info_string(const char** info)
 {
     if (info != NULL && s_pPlayer != NULL)
     {
-        s_pPlayer->GetCodecsInfoString(info);
-
-        return 0;
+        return s_pPlayer->GetCodecsInfoString(info);
     }
-    return -1;
+    return E_FAIL;
+}
+
+NTPLAYER_API HRESULT ntplayer_open_url(const char* url)
+{
+    if (s_pPlayer != NULL)
+    {
+        return s_pPlayer->OpenUrl(url);
+    }
+    return E_FAIL;
 }
