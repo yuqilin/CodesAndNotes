@@ -40,7 +40,8 @@ class OpenFileData : public OpenMediaData
 {
 public:
     OpenFileData() : rtStart(0) {}
-    CAtlList<CString> fns;
+    //CAtlList<CString> fns;
+    CString strFileName;
     REFERENCE_TIME rtStart;
 };
 
@@ -140,9 +141,10 @@ public:
     CPlayerCore();
     ~CPlayerCore();
 
+    HRESULT Open(const char* url);
+    HRESULT Close();
 
-    HRESULT OpenMedia(CAutoPtr<OpenMediaData> pOMD);
-    void CloseMedia();
+
 
     HRESULT Play();
     HRESULT Pause();
@@ -150,7 +152,19 @@ public:
     HRESULT SetCodecsPath(LPCTSTR lpszCodecsPath);
 
 
+    void OnOpenResult(HRESULT hr);
+
+
 protected:
+    HRESULT OpenMedia(CAutoPtr<OpenMediaData> pOMD);
+    HRESULT CloseMedia();
+
+
+    HRESULT CPlayerCore::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD);
+
+    void SetLoadState();
+
+
     void AutoChangeMonitorMode();
     bool CreateFullScreenWindow();
 
@@ -178,6 +192,10 @@ protected:
 
 
     static CCodecsManager m_codecs;
+
+private:
+    HWND m_hVideoWindow;
+    HWND m_hNotifyWindow;
 };
 
 

@@ -79,6 +79,9 @@ struct CPlayerSettings // : public Sington<>
 
     bool fPlayingInFullScreen;
 
+    bool fShowOSD;
+    bool fShowDebugInfo;
+
 public:
     void LoadDefaultSettings();
 

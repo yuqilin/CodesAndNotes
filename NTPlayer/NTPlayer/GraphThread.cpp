@@ -3,64 +3,74 @@
 
 DWORD CGraphThread::ThreadProc()
 {
-    bool running = true;
-    while (running)
+    for (;;)
     {
-        m_evt.Wait();
+        DWORD msg = GetRequest();
 
-        switch (m_msg)
+        switch (msg)
         {
         case GM_OPEN:
             OnOpen();
-            m_evt.Reset();
             break;
+
         case GM_CLOSE:
             OnClose();
-            m_evt.Reset();
             break;
+
         case GM_EXIT:
             OnExit();
-            running = false;
-            break;
+            return 0;
         }
     }
-
     return 0;
 }
 
-void CGraphThread::PostGraphMessage(GraphMessage msg, LPVOID param)
+void CGraphThread::OnOpen(/*void* pParam*/)
 {
-    // need lock
+    Reply(S_OK);
 
-    if (msg > GM_INVALID && msg < GM_UNUSED)
+    HRESULT hr = E_FAIL;
+    CAutoPtr<OpenMediaData> pOMD((OpenMediaData*)m_pParam);
+    
+    
+    if (pOMD && m_pPlayer)
+        hr = m_pPlayer->OpenMediaPrivate(pOMD);
+
+    if (SUCCEEDED(hr))
     {
-        m_param = param;
-        m_evt.Set();
+        m_pPlayer->OnOpenResult(hr);
     }
 }
 
-void CGraphThread::OnOpen()
+void CGraphThread::OnClose(/*void* pParam*/)
 {
-    CAutoPtr<OpenMediaData> pOMD((OpenMediaData*)m_param);
-    HRESULT hr = m_player->OpenMediaPrivate(pOMD);
+    Reply(S_OK);
+//     CAMEvent* evt = (CAMEvent*)pParam;
+//     if (evt)
+//     {
+//         evt->Set();
+//     }
 }
 
-void CGraphThread::OnClose()
+void CGraphThread::OnExit(/*void* pParam*/)
 {
-    if (m_player)
-    {
-        m_player->CloseMediaPrivate();
-    }
-    if (CAMEvent* e = (CAMEvent*)m_param)
-    {
-        e->Set();
-    }
+    Reply(S_OK);
+//     CAMEvent* evt = (CAMEvent*)pParam;
+//     if (evt)
+//     {
+//         evt->Set();
+//     }
 }
 
-void CGraphThread::OnExit()
+HRESULT CGraphThread::PostGraphMessage(GraphMessage msg, void* param)
 {
-    if (CAMEvent* e = (CAMEvent*)m_param)
-    {
-        e->Set();
-    }
+    HRESULT hr = S_OK;
+
+    CAutoLock lock(&m_csLock);
+
+    m_pParam = param;
+
+    CallWorker(msg);
+
+    return hr;
 }

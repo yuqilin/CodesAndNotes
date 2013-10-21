@@ -7,9 +7,20 @@ public:
     CGraphThread(CPlayerCore* player);
     ~CGraphThread();
 
+
+    enum {GM_OPEN, GM_CLOSE, GM_EXIT};
+
     DWORD ThreadProc();
 
-    void PostGraphMessage(GraphMessage msg, LPVOID param);
+    HRESULT PostGraphMessage(GraphMessage msg, void* param);
+
+
+    HRESULT OnOpen(void* omd);
+    HRESULT OnClose(void* evt);
+    HRESULT OnExit(void* evt);
+
+
+
 
 protected:
     void OnOpen();
@@ -33,7 +44,13 @@ private:
 
     CAMEvent m_evt;
 
-    CPlayerCore* m_player;
+    CPlayerCore* m_pPlayer;
+
+    void* m_pParam;
+
+    CCritSec m_csLock;
+
+    //CAutoPtr<OpenMediaData> m_pOMD;
 
 };
 
