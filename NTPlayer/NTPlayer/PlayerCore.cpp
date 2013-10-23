@@ -32,6 +32,15 @@ HRESULT CPlayerCore::Open(const char* url)
     return hr;
 }
 
+HRESULT CPlayerCore::Close()
+{
+    HRESULT hr = S_OK;
+
+    hr = CloseMedia();
+
+    return hr;
+}
+
 HRESULT CPlayerCore::SetCodecsPath(LPCTSTR lpszCodecsPath)
 {
     if (!PathIsDirectory(lpszCodecsPath) || !PathFileExists(lpszCodecsPath))
@@ -88,8 +97,7 @@ HRESULT CPlayerCore::OpenMedia(CAutoPtr<OpenMediaData> pOMD)
     if (fUseThread) 
     {
         //m_pGraphThread->PostGraphMessage(CGraphThread::GM_OPEN, (LPVOID)pOMD.Detach());
-        m_pGraphThread->Open(pOMD);
-        m_pGraphThread->CallWorker(CGraphThread::GM_OPEN);
+        m_pGraphThread->OpenMedia(pOMD);
         m_bOpenedThruThread = true;
     }
     else
@@ -145,11 +153,7 @@ HRESULT CPlayerCore::CloseMedia()
 
     if (m_pGraphThread && m_bOpenedThruThread)
     {
-//         CAMEvent e;
-//         m_pGraphThread->PostThreadMessage(CGraphThread::TM_CLOSE, 0, (LPARAM)&e);
-//         e.Wait(); // either opening or closing has to be blocked to prevent reentering them, closing is the better choice
-        m_pGraphThread->PostGraphMessage(CGraphThread::GM_CLOSE);
-        
+        m_pGraphThread->CloseMedia();        
     }
     else
     {
@@ -301,9 +305,9 @@ HRESULT CPlayerCore::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
             return E_ABORT;
         }
 
-        OpenSetupWindowTitle();
+        //OpenSetupWindowTitle();
 
-        /*
+        ///*
         while (m_iMediaLoadState != MLS_LOADED
             && m_iMediaLoadState != MLS_CLOSING // FIXME
             ) 
@@ -433,6 +437,7 @@ void CPlayerCore::CloseMediaPrivate()
     SetLoadState(MLS_CLOSING); // why it before OnPlayStop()? // TODO: remake or add detailed comments
     OnPlayStop(); // SendMessage(WM_COMMAND, ID_PLAY_STOP);
 
+
     if (m_pMC)
     {
         m_pMC->Stop(); // needed for StreamBufferSource, because m_iMediaLoadState is always MLS_CLOSED // TODO: fix the opening for such media
@@ -447,7 +452,7 @@ void CPlayerCore::CloseMediaPrivate()
 
     {
         CAutoLock cAutoLock(&m_csSubLock);
-        m_pSubStreams.RemoveAll();
+        m_pSubStreams.RemoveAll()   ;
     }
     m_pSubClock.Release();
 
@@ -455,7 +460,7 @@ void CPlayerCore::CloseMediaPrivate()
     //if (m_pVW) m_pVW->put_MessageDrain((OAHWND)NULL), m_pVW->put_Owner((OAHWND)NULL);
 
     // IMPORTANT: IVMRSurfaceAllocatorNotify/IVMRSurfaceAllocatorNotify9 has to be released before the VMR/VMR9, otherwise it will crash in Release()
-    m_OSD.Stop();
+    //m_OSD.Stop();
     m_pCAP2.Release();
     m_pCAP.Release();
     m_pVMRWC.Release();
@@ -480,7 +485,7 @@ void CPlayerCore::CloseMediaPrivate()
     m_pDVDC.Release();
     m_pDVDI.Release();
     m_pAMOP.Release();
-    m_pBI.Release();
+    //m_pBI.Release();
     m_pQP.Release();
     m_pFS.Release();
     m_pMS.Release();
@@ -491,7 +496,8 @@ void CPlayerCore::CloseMediaPrivate()
     m_pMC.Release();
     m_pFSF.Release();
 
-    if (m_pGB) {
+    if (m_pGB)
+    {
         m_pGB->RemoveFromROT();
         m_pGB.Release();
     }
@@ -508,6 +514,66 @@ void CPlayerCore::CloseMediaPrivate()
     //AfxGetAppSettings().nCLSwitches &= CLSW_OPEN | CLSW_PLAY | CLSW_AFTERPLAYBACK_MASK | CLSW_NOFOCUS;
 
     SetLoadState(MLS_CLOSED);
+}
+
+void CPlayerCore::OnPlayStop()
+{
+    if (m_iMediaLoadState == MLS_LOADED)
+    {
+        if (GetPlaybackMode() == PM_FILE)
+        {
+            LONGLONG pos = 0;
+            m_pMS->SetPositions(&pos, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning);
+            m_pMC->Stop();
+        }
+        else if (GetPlaybackMode() == PM_DVD)
+        {
+            m_pDVDC->SetOption(DVD_ResetOnStop, TRUE);
+            m_pMC->Stop();
+            m_pDVDC->SetOption(DVD_ResetOnStop, FALSE);
+        }
+        else if (GetPlaybackMode() == PM_CAPTURE)
+        {
+            m_pMC->Stop();
+        }
+
+        m_dSpeedRate = 1.0;
+
+//         if (m_fFrameSteppingActive) // FIXME
+//         {            
+//             m_fFrameSteppingActive = false;
+//             m_pBA->put_Volume(m_nVolumeBeforeFrameStepping);
+//         }
+    }
+
+    //m_nLoops = 0;
+
+    if (m_hVideoWindow)
+    {
+        MoveVideoWindow();
+    }
+
+//     if (!m_fEndOfStream)
+//     {
+//         CString strOSD = ResStr(ID_PLAY_STOP);
+//         int i = strOSD.Find(_T("\n"));
+//         if (i > 0)
+//         {
+//             strOSD.Delete(i, strOSD.GetLength() - i);
+//         }
+//         m_OSD.DisplayMessage(OSD_TOPLEFT, strOSD, 3000);
+//         m_Lcd.SetStatusMessage(ResStr(IDS_CONTROLS_STOPPED), 3000);
+//     }
+//     else
+//     {
+//         m_fEndOfStream = false;
+//     }
+    //SetPlayState(PS_STOP);
+}
+
+void CPlayerCore::SetLoadState(MPC_LOADSTATE state)
+{
+    m_iMediaLoadState = state;
 }
 
 void CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
@@ -1186,4 +1252,309 @@ HRESULT CPlayerCore::Pause()
 void CPlayerCore::OnOpenResult(HRESULT hr)
 {
     
+}
+
+void CPlayerCore::MoveVideoWindow(bool fShowStats)
+{
+    if ((m_iMediaLoadState == MLS_LOADED) && !m_fAudioOnly && IsWindowVisible())
+    {
+        RECT wr;
+        // fullscreen
+        if (IsD3DFullScreenMode())
+        {
+            m_pFullscreenWnd->GetClientRect(&wr);
+        }
+        // windowed Mode
+        else if (!m_fFullScreen)
+        {
+            m_wndView.GetClientRect(&wr);
+        }
+        // fullscreen on non-primary monitor
+        else
+        {
+            GetWindowRect(&wr);
+            RECT r;
+            m_wndView.GetWindowRect(&r);
+            wr.left   -= r.left;
+            wr.right  -= r.left;
+            wr.top    -= r.top;
+            wr.bottom -= r.top;
+        }
+
+        double dWRWidth  = (double)(wr.right - wr.left);
+        double dWRHeight = (double)(wr.bottom - wr.top);
+
+        RECT vr = {0, 0, 0, 0};
+
+        OAFilterState fs = GetMediaState();
+        if ((fs == State_Paused) || (fs == State_Running) || ((fs == State_Stopped) 
+            && (m_fShockwaveGraph || m_fQuicktimeGraph)))
+        {
+            SIZE arxy = GetVideoSize();
+            double dARx = (double)(arxy.cx);
+            double dARy = (double)(arxy.cy);
+
+            dvstype iDefaultVideoSize = static_cast<dvstype>(AfxGetAppSettings().iDefaultVideoSize);
+            double dVRWidth, dVRHeight;
+            if (iDefaultVideoSize == DVS_HALF) {
+                dVRWidth  = dARx * 0.5;
+                dVRHeight = dARy * 0.5;
+            } else if (iDefaultVideoSize == DVS_NORMAL) {
+                dVRWidth  = dARx;
+                dVRHeight = dARy;
+            } else if (iDefaultVideoSize == DVS_DOUBLE) {
+                dVRWidth  = dARx * 2.0;
+                dVRHeight = dARy * 2.0;
+            } else {
+                dVRWidth  = dWRWidth;
+                dVRHeight = dWRHeight;
+            }
+
+            if (!m_fShockwaveGraph) { // && !m_fQuicktimeGraph)
+                double dCRWidth = dVRHeight * dARx / dARy;
+
+                if (iDefaultVideoSize == DVS_FROMINSIDE) {
+                    if (dVRWidth < dCRWidth) {
+                        dVRHeight = dVRWidth * dARy / dARx;
+                    } else {
+                        dVRWidth = dCRWidth;
+                    }
+                } else if (iDefaultVideoSize == DVS_FROMOUTSIDE) {
+                    if (dVRWidth > dCRWidth) {
+                        dVRHeight = dVRWidth * dARy / dARx;
+                    } else {
+                        dVRWidth = dCRWidth;
+                    }
+                } else if ((iDefaultVideoSize == DVS_ZOOM1) || (iDefaultVideoSize == DVS_ZOOM2)) {
+                    double minw = dCRWidth;
+                    double maxw = dCRWidth;
+
+                    if (dVRWidth < dCRWidth) {
+                        minw = dVRWidth;
+                    } else {
+                        maxw = dVRWidth;
+                    }
+
+                    double scale = (iDefaultVideoSize == DVS_ZOOM1) ?
+                        1.0 / 3.0 :
+                    2.0 / 3.0;
+                    dVRWidth  = minw + (maxw - minw) * scale;
+                    dVRHeight = dVRWidth * dARy / dARx;
+                }
+            }
+
+            double dScaledVRWidth = m_ZoomX * dVRWidth;
+            double dScaledVRHeight = m_ZoomY * dVRHeight;
+            // Rounding is required here, else the left-to-right and top-to-bottom sizes will get distorted through rounding twice each
+            // Todo: clean this up using decent intrinsic rounding instead of floor(x+.5) and truncation cast to LONG on (y+.5)
+            double dPPLeft = floor(m_PosX * (dWRWidth * 3.0 - dScaledVRWidth) - dWRWidth + 0.5);
+            double dPPTop  = floor(m_PosY * (dWRHeight * 3.0 - dScaledVRHeight) - dWRHeight + 0.5);
+            // left and top parts are allowed to be negative
+            vr.left   = (LONG)(dPPLeft);
+            vr.top    = (LONG)(dPPTop);
+            // right and bottom parts are always at picture center or beyond, so never negative
+            vr.right  = (LONG)(dScaledVRWidth + dPPLeft + 0.5);
+            vr.bottom = (LONG)(dScaledVRHeight + dPPTop + 0.5);
+
+            if (fShowStats) {
+                CString info;
+                info.Format(_T("Pos %.3f %.3f, Zoom %.3f %.3f, AR %.3f"), m_PosX, m_PosY, m_ZoomX, m_ZoomY, dScaledVRWidth / dScaledVRHeight);
+                SendStatusMessage(info, 3000);
+            }
+        }
+
+        if (m_pCAP) {
+            m_pCAP->SetPosition(wr, vr);
+            Vector v(Vector::DegToRad(m_AngleX), Vector::DegToRad(m_AngleY), Vector::DegToRad(m_AngleZ));
+            m_pCAP->SetVideoAngle(v);
+        } else {
+            HRESULT hr;
+            hr = m_pBV->SetDefaultSourcePosition();
+            hr = m_pBV->SetDestinationPosition(vr.left, vr.top, vr.right - vr.left, vr.bottom - vr.top);
+            hr = m_pVW->SetWindowPosition(wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top);
+
+            if (m_pMFVDC) {
+                m_pMFVDC->SetVideoPosition(nullptr, &wr);
+            }
+        }
+
+        m_wndView.SetVideoRect(&wr);
+        m_OSD.SetSize(wr, vr);
+    }
+    else
+    {
+        m_wndView.SetVideoRect();
+    }
+
+    UpdateThumbarButton();
+}
+
+CSize CPlayerCore::GetVideoSize() const
+{
+    const CPlayerSettings& s = m_settings;
+
+    bool fKeepAspectRatio = s.fKeepAspectRatio;
+    bool fCompMonDeskARDiff = s.fCompMonDeskARDiff;
+
+    CSize ret(0, 0);
+    if (m_iMediaLoadState != MLS_LOADED || m_fAudioOnly)
+    {
+        return ret;
+    }
+
+    CSize wh(0, 0), arxy(0, 0);
+
+    if (m_pCAP)
+    {
+        wh = m_pCAP->GetVideoSize(false);
+        arxy = m_pCAP->GetVideoSize(fKeepAspectRatio);
+    }
+    else if (m_pMFVDC)
+    {
+        m_pMFVDC->GetNativeVideoSize(&wh, &arxy);   // TODO : check AR !!
+    }
+    else
+    {
+        m_pBV->GetVideoSize(&wh.cx, &wh.cy);
+
+        long arx = 0, ary = 0;
+        CComQIPtr<IBasicVideo2> pBV2 = m_pBV;
+        // FIXME: It can hang here, for few seconds (CPU goes to 100%), after the window have been moving over to another screen,
+        // due to GetPreferredAspectRatio, if it happens before CAudioSwitcherFilter::DeliverEndFlush, it seems.
+        if (pBV2 && SUCCEEDED(pBV2->GetPreferredAspectRatio(&arx, &ary)) && arx > 0 && ary > 0)
+        {
+            arxy.SetSize(arx, ary);
+        }
+    }
+
+    if (wh.cx <= 0 || wh.cy <= 0)
+    {
+        return ret;
+    }
+
+    // with the overlay mixer IBasicVideo2 won't tell the new AR when changed dynamically
+    DVD_VideoAttributes VATR;
+    if (GetPlaybackMode() == PM_DVD && SUCCEEDED(m_pDVDI->GetCurrentVideoAttributes(&VATR))) {
+        arxy.SetSize(VATR.ulAspectX, VATR.ulAspectY);
+    }
+
+    const CSize& ar = s.sizeAspectRatio;
+    if (ar.cx && ar.cy)
+    {
+        arxy = ar;
+    }
+
+    ret = (!fKeepAspectRatio || arxy.cx <= 0 || arxy.cy <= 0)
+        ? wh
+        : CSize(::MulDiv(wh.cy, arxy.cx, arxy.cy), wh.cy);
+
+    if (fCompMonDeskARDiff)
+    {
+        if (HDC hDC = ::GetDC(0))
+        {
+            int _HORZSIZE = GetDeviceCaps(hDC, HORZSIZE);
+            int _VERTSIZE = GetDeviceCaps(hDC, VERTSIZE);
+            int _HORZRES = GetDeviceCaps(hDC, HORZRES);
+            int _VERTRES = GetDeviceCaps(hDC, VERTRES);
+
+            if (_HORZSIZE > 0 && _VERTSIZE > 0 && _HORZRES > 0 && _VERTRES > 0)
+            {
+                double a = 1.0 * _HORZSIZE / _VERTSIZE;
+                double b = 1.0 * _HORZRES / _VERTRES;
+                
+                if (b < a)
+                {
+                    ret.cy = (DWORD)(1.0 * ret.cy * a / b);
+                }
+                else if (a < b)
+                {
+                    ret.cx = (DWORD)(1.0 * ret.cx * b / a);
+                }
+            }
+
+            ::ReleaseDC(0, hDC);
+        }
+    }
+    
+    return ret;
+}
+
+OAFilterState CPlayerCore::GetMediaState() const
+{
+    OAFilterState ret = -1;
+    if (m_iMediaLoadState == MLS_LOADED)
+    {
+        m_pMC->GetState(0, &ret);
+    }
+    return ret;
+}
+
+void CPlayerCore::SetPlaybackMode(int iNewStatus)
+{
+    m_iPlaybackMode = iNewStatus;
+}
+
+void CPlayerCore::SetupVMR9ColorControl()
+{
+    if (m_pVMRMC)
+    {
+        CPlayerSettings& s = m_settings;
+
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Brightness)))) {
+            return;
+        }
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Contrast)))) {
+            return;
+        }
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Hue)))) {
+            return;
+        }
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Saturation)))) {
+            return;
+        }
+
+        SetColorControl(ProcAmp_All, s.iBrightness, s.iContrast, s.iHue, s.iSaturation);
+    }
+}
+
+void CPlayerCore::SetColorControl(DWORD flags, int& brightness, int& contrast, int& hue, int& saturation)
+{
+    static VMR9ProcAmpControl  ClrControl;
+    static DXVA2_ProcAmpValues ClrValues;
+
+    COLORPROPERTY_RANGE* cr;
+    if (flags & ProcAmp_Brightness) {
+        cr = pApp->GetColorControl(ProcAmp_Brightness);
+        brightness = min(max(brightness, cr->MinValue), cr->MaxValue);
+    }
+    if (flags & ProcAmp_Contrast) {
+        cr = pApp->GetColorControl(ProcAmp_Contrast);
+        contrast = min(max(contrast, cr->MinValue), cr->MaxValue);
+    }
+    if (flags & ProcAmp_Hue) {
+        cr = pApp->GetColorControl(ProcAmp_Hue);
+        hue = min(max(hue, cr->MinValue), cr->MaxValue);
+    }
+    if (flags & ProcAmp_Saturation) {
+        cr = pApp->GetColorControl(ProcAmp_Saturation);
+        saturation = min(max(saturation, cr->MinValue), cr->MaxValue);
+    }
+
+    if (m_pVMRMC) {
+        ClrControl.dwSize     = sizeof(ClrControl);
+        ClrControl.dwFlags    = flags;
+        ClrControl.Brightness = (float)brightness;
+        ClrControl.Contrast   = (float)(contrast + 100) / 100;
+        ClrControl.Hue        = (float)hue;
+        ClrControl.Saturation = (float)(saturation + 100) / 100;
+
+        m_pVMRMC->SetProcAmpControl(0, &ClrControl);
+    } else if (m_pMFVP) {
+        ClrValues.Brightness = IntToFixed(brightness);
+        ClrValues.Contrast   = IntToFixed(contrast + 100, 100);
+        ClrValues.Hue        = IntToFixed(hue);
+        ClrValues.Saturation = IntToFixed(saturation + 100, 100);
+
+        m_pMFVP->SetProcAmpValues(flags, &ClrValues);
+    }
 }

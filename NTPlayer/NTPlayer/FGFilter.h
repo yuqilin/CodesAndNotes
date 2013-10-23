@@ -42,11 +42,11 @@ struct PathFlagItem
     CString path;
 };
 
-struct CheckByteItem
-{
-    CString checkbyte;
-    CString subtype;
-};
+// struct CheckByteItem
+// {
+//     CString checkbyte;
+//     CString subtype;
+// };
 
 struct MediaTypeItem
 {
@@ -95,15 +95,15 @@ struct CodecsInfo
 
 class CFGFilter
 {
-protected:
+public:
     CodecsInfo* m_info;
 
     UINT64  m_merit;
 
 public:
-    CFGFilter() : m_info(NULL) {}
+    CFGFilter(CodecsInfo* info) : m_info(info) {}
 
-    virtual ~CFGFilter() { m_info = NULL; }
+    virtual ~CFGFilter() { /*m_info = NULL;*/ }
 
     void SetCodecsInfo(CodecsInfo* info) {
         m_info = info;
@@ -123,6 +123,12 @@ public:
         return m_merit;
     }
 
+    CString GetName() {
+        if (m_info)
+            return m_info->name;
+        return _T("");
+    }
+
     bool CheckTypes(const CAtlArray<GUID>& types, bool fExactMatch);
 
     virtual HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks) = 0;
@@ -131,7 +137,7 @@ public:
 class CFGFilterRegistry : public CFGFilter
 {
 public:
-    CFGFilterRegistry() {}
+    CFGFilterRegistry(CodecsInfo* info) : CFGFilter(info) {}
 
     HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
 };
@@ -140,7 +146,7 @@ template<class T>
 class CFGFilterInternal : public CFGFilter
 {
 public:
-    CFGFilterInternal() {}
+    CFGFilterInternal(CodecsInfo* info) : CFGFilter(info) {}
 
     HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
     {
@@ -165,7 +171,7 @@ protected:
     HINSTANCE m_hInst;
 
 public:
-    CFGFilterFile() : m_hInst(NULL) {}
+    CFGFilterFile(CodecsInfo* info) : CFGFilter(info), m_hInst(NULL) {}
 
     HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
 };
@@ -176,7 +182,7 @@ protected:
     HWND m_hWnd;
 
 public:
-    CFGFilterVideoRenderer() : m_hWnd(NULL) {}
+    CFGFilterVideoRenderer(CodecsInfo* info) : CFGFilter(info), m_hWnd(NULL) {}
 
     void SetVideoWindow(HWND hWnd) {
         m_hWnd = hWnd;

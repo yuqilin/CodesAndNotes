@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <atlcoll.h>
 #include "FGFilter.h"
 #include "IGraphBuilder2.h"
 

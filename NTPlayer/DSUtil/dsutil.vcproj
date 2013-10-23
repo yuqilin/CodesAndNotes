@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FileVersionInfo.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FontInstaller.cpp"
 				>
 			</File>
@@ -250,11 +254,19 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SysVersion.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\text.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\vd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WinAPIUtils.cpp"
 				>
 			</File>
 		</Filter>
@@ -268,6 +280,10 @@
 			</File>
 			<File
 				RelativePath="DSUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FileVersionInfo.h"
 				>
 			</File>
 			<File
@@ -291,11 +307,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SysVersion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\text.h"
 				>
 			</File>
 			<File
 				RelativePath=".\vd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WinAPIUtils.h"
 				>
 			</File>
 		</Filter>

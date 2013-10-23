@@ -82,6 +82,11 @@ struct CPlayerSettings // : public Sington<>
     bool fShowOSD;
     bool fShowDebugInfo;
 
+    bool fKeepAspectRatio;
+
+    bool fCompMonDeskARDiff;
+
+    CSize sizeAspectRatio;
 public:
     void LoadDefaultSettings();
 

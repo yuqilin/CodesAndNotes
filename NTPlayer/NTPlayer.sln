@@ -18,6 +18,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SubPic", "SubPic\SubPic.vcp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dsutil", "DSUtil\dsutil.vcproj", "{FC70988B-1AE5-4381-866D-4F405E28AC42}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoRenderers", "VideoRenderers\VideoRenderers.vcproj", "{58F36D54-7F77-49E2-9CDD-75E641DB678B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SyncClock", "SyncClock\SyncClock.vcproj", "{6C27162A-60E4-442E-9956-516EC48CD2D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -70,6 +74,18 @@ Global
 		{FC70988B-1AE5-4381-866D-4F405E28AC42}.Release|Win32.ActiveCfg = Release|Win32
 		{FC70988B-1AE5-4381-866D-4F405E28AC42}.Release|Win32.Build.0 = Release|Win32
 		{FC70988B-1AE5-4381-866D-4F405E28AC42}.Release|x64.ActiveCfg = Release|Win32
+		{58F36D54-7F77-49E2-9CDD-75E641DB678B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{58F36D54-7F77-49E2-9CDD-75E641DB678B}.Debug|Win32.Build.0 = Debug|Win32
+		{58F36D54-7F77-49E2-9CDD-75E641DB678B}.Debug|x64.ActiveCfg = Debug|Win32
+		{58F36D54-7F77-49E2-9CDD-75E641DB678B}.Release|Win32.ActiveCfg = Release|Win32
+		{58F36D54-7F77-49E2-9CDD-75E641DB678B}.Release|Win32.Build.0 = Release|Win32
+		{58F36D54-7F77-49E2-9CDD-75E641DB678B}.Release|x64.ActiveCfg = Release|Win32
+		{6C27162A-60E4-442E-9956-516EC48CD2D1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C27162A-60E4-442E-9956-516EC48CD2D1}.Debug|Win32.Build.0 = Debug|Win32
+		{6C27162A-60E4-442E-9956-516EC48CD2D1}.Debug|x64.ActiveCfg = Debug|Win32
+		{6C27162A-60E4-442E-9956-516EC48CD2D1}.Release|Win32.ActiveCfg = Release|Win32
+		{6C27162A-60E4-442E-9956-516EC48CD2D1}.Release|Win32.Build.0 = Release|Win32
+		{6C27162A-60E4-442E-9956-516EC48CD2D1}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

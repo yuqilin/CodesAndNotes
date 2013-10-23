@@ -20,26 +20,26 @@
 */
 
 #include "stdafx.h"
+#include <atlpath.h>
 #include <mpconfig.h>
-#include "mplayerc.h"
 #include "FGManager.h"
 #include "DSUtil.h"
 #include "FileVersionInfo.h"
 #include "WinAPIUtils.h"
-#include "../filters/Filters.h"
+//#include "../filters/Filters.h"
 #include "AllocatorCommon7.h"
 #include "AllocatorCommon.h"
 #include "SyncAllocatorPresenter.h"
 #include "madVRAllocatorPresenter.h"
-#include "DeinterlacerFilter.h"
-#include "../DeCSS/VobFile.h"
+//#include "DeinterlacerFilter.h"
+//#include "../DeCSS/VobFile.h"
 #include <InitGuid.h>
 #include <dmodshow.h>
 #include <d3d9.h>
 #include <vmr9.h>
 #include <evr.h>
 #include <evr9.h>
-#include <ksproxy.h>
+//#include <ksproxy.h>
 #include "moreuuids.h"
 
 //
@@ -56,7 +56,7 @@ HRESULT CFGManager::LoadCodecsInfo()
     while (pos)
     {
         CFGFilter* pFGF = NULL;
-        const CodecsInfo* pInfo = m_Codecs.GetNext(pos);
+        CodecsInfo* pInfo = m_Codecs.GetNext(pos);
         if (pInfo)
         {
             if (pInfo->type == kCodecsTypeVideoRenderer)
@@ -72,14 +72,14 @@ HRESULT CFGManager::LoadCodecsInfo()
                 pFGF = new CFGFilterFile(pInfo);
             }
 
-            if (pInfo->type == kCodecsTypeSourceFilter)
-            {
-                m_source.AddTail(pFGF);
-            }
-            else
-            {
-                m_transform.AddTail(pFGF);
-            }
+//             if (pInfo->type == kCodecsTypeSourceFilter)
+//             {
+//                 m_source.AddTail(pFGF);
+//             }
+//             else
+//             {
+//                 m_transform.AddTail(pFGF);
+//             }
         }
     }
 
@@ -219,23 +219,23 @@ bool CFGManager::CheckBytes(HANDLE hFile, CString chkbytes)
     return sl.IsEmpty();
 }
 
-CFGFilter* LookupFilterRegistry(const GUID& guid, CAtlList<CFGFilter*>& list, UINT64 fallback_merit = MERIT64_DO_USE)
-{
-    POSITION pos = list.GetHeadPosition();
-    CFGFilter* pFilter = NULL;
-    while (pos) {
-        CFGFilter* pFGF = list.GetNext(pos);
-        if (pFGF->GetCLSID() == guid) {
-            pFilter = pFGF;
-            break;
-        }
-    }
-    if (pFilter) {
-        return new CFGFilterRegistry(guid, pFilter->GetMerit());
-    } else {
-        return new CFGFilterRegistry(guid, fallback_merit);
-    }
-}
+//CFGFilter* LookupFilterRegistry(const GUID& guid, CAtlList<CFGFilter*>& list, UINT64 fallback_merit = MERIT64_DO_USE)
+//{
+//    POSITION pos = list.GetHeadPosition();
+//    CFGFilter* pFilter = NULL;
+//    while (pos) {
+//        CFGFilter* pFGF = list.GetNext(pos);
+//        if (pFGF->GetCLSID() == guid) {
+//            pFilter = pFGF;
+//            break;
+//        }
+//    }
+//    if (pFilter) {
+//        return new CFGFilterRegistry(guid, pFilter->GetMerit());
+//    } else {
+//        return new CFGFilterRegistry(guid, fallback_merit);
+//    }
+//}
 
 HRESULT CFGManager::EnumSourceFilters(LPCWSTR lpcwstrFileName, CFGFilterList& fl)
 {
@@ -261,8 +261,8 @@ HRESULT CFGManager::EnumSourceFilters(LPCWSTR lpcwstrFileName, CFGFilterList& fl
         }
     }
 
-    TCHAR buff[256];
-    ULONG len;
+//     TCHAR buff[256];
+//     ULONG len;
 
     if (hFile == INVALID_HANDLE_VALUE)
     {
@@ -384,7 +384,8 @@ HRESULT CFGManager::AddSourceFilter(CFGFilter* pFGF, LPCWSTR lpcwstrFileName, LP
 
     CMediaType mt;
     const CAtlList<GUID>& types = pFGF->GetTypes();
-    if (types.GetCount() == 2 && (types.GetHead() != GUID_NULL || types.GetTail() != GUID_NULL)) {
+    if (types.GetCount() == 2 && (types.GetHead() != GUID_NULL || types.GetTail() != GUID_NULL))
+    {
         mt.majortype = types.GetHead();
         mt.subtype = types.GetTail();
         pmt = &mt;

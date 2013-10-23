@@ -43,143 +43,6 @@ static int s_CodecsTypeAllCount = _countof(s_CodecsTypeAll);
 
 
 //////////////////////////////////////////////////////////////////////////
-CCodecsInfoList::CCodecsInfoList()
-{
-}
-
-CCodecsInfoList::~CCodecsInfoList()
-{
-    RemoveAll();
-}
-
-void CCodecsInfoList::RemoveAll()
-{
-    while (!m_codecs.IsEmpty()) {
-        const codecs_t& f = m_codecs.RemoveHead();
-        if (f.autodelete) {
-            delete f.info;
-        }
-    }
-
-    m_sortedcodecs.RemoveAll();
-}
-
-void CCodecsInfoList::Insert(CodecsInfo* pInfo, int group, bool exactmatch, bool autodelete)
-{
-    bool bInsert = true;
-
-    /*TRACE(_T("FGM: Inserting %d %d %016I64x '%s' --> "), group, exactmatch, pFGF->GetMerit(),
-        pFGF->GetName().IsEmpty() ? CStringFromGUID(pFGF->GetCLSID()) : CString(pFGF->GetName()));*/
-
-    POSITION pos = m_codecs.GetHeadPosition();
-    while (pos) {
-        codecs_t& f = m_codecs.GetNext(pos);
-
-        if (pInfo == f.info) {
-            TRACE(_T("Rejected (exact duplicate)\n"));
-            bInsert = false;
-            break;
-        }
-
-        if (group != f.group) {
-            continue;
-        }
-
-        if (!pInfo->clsid.IsEmpty() && pInfo->clsid == f.info->clsid
-            && f.info->merit == MERIT64_DO_NOT_USE) {
-                TRACE(_T("Rejected (same filter with merit DO_NOT_USE already in the list)\n"));
-                bInsert = false;
-                break;
-        }
-
-    }
-
-    if (bInsert) {
-        TRACE(_T("Success\n"));
-
-        codecs_t f = {(int)m_codecs.GetCount(), pInfo, group, exactmatch, autodelete};
-        m_codecs.AddTail(f);
-
-        m_sortedcodecs.RemoveAll();
-    } else if (autodelete) {
-        delete pInfo;
-    }
-}
-
-POSITION CCodecsInfoList::GetHeadPosition()
-{
-    if (m_sortedcodecs.IsEmpty()) {
-        CAtlArray<codecs_t> sort;
-        sort.SetCount(m_codecs.GetCount());
-        POSITION pos = m_codecs.GetHeadPosition();
-        for (int i = 0; pos; i++) {
-            sort[i] = m_codecs.GetNext(pos);
-        }
-        qsort(&sort[0], sort.GetCount(), sizeof(sort[0]), codecs_cmp);
-        for (size_t i = 0; i < sort.GetCount(); i++) {
-            if (sort[i].info->merit >= MERIT64_DO_USE) {
-                m_sortedcodecs.AddTail(sort[i].pFGF);
-            }
-        }
-    }
-
-#ifdef _DEBUG
-    TRACE(_T("FGM: Sorting filters\n"));
-
-    POSITION pos = m_sortedcodecs.GetHeadPosition();
-    while (pos) {
-        CodecsInfo* info = m_sortedcodecs.GetNext(pos);
-        //TRACE(_T("FGM: - %016I64x '%s'\n"), pFGF->GetMerit(), pFGF->GetName().IsEmpty() ? CStringFromGUID(pFGF->GetCLSID()) : CString(pFGF->GetName()));
-    }
-#endif
-
-    return m_sortedcodecs.GetHeadPosition();
-}
-
-CodecsInfo* CCodecsInfoList::GetNext(POSITION& pos)
-{
-    return m_sortedcodecs.GetNext(pos);
-}
-
-int CCodecsInfoList::codecs_cmp(const void* a, const void* b)
-{
-    codecs_t* fa = (codecs_t*)a;
-    codecs_t* fb = (codecs_t*)b;
-
-    if (fa->group < fb->group) {
-        return -1;
-    }
-    if (fa->group > fb->group) {
-        return +1;
-    }
-
-    if (fa->info->merit > fb->info->merit) {
-        return -1;
-    }
-    if (fa->info->merit < fb->info->merit) {
-        return +1;
-    }
-
-    if (fa->exactmatch && !fb->exactmatch) {
-        return -1;
-    }
-    if (!fa->exactmatch && fb->exactmatch) {
-        return +1;
-    }
-
-    if (fa->index < fb->index) {
-        return -1;
-    }
-    if (fa->index > fb->index) {
-        return +1;
-    }
-
-    return 0;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-
 CCodecsManager::CCodecsManager()
 {
 }
@@ -337,11 +200,8 @@ void CCodecsManager::PrintCodecsInfo(const CodecsInfoList& InfoList, CString& st
             while (pos0)
             {
                 strToPrint += _T("checkbytes=");
-                const CheckByteItem& item = info->checkbytes.GetNext(pos0);
-                strToPrint += _T("checkbyte=");
-                strToPrint += item.checkbyte;
-                strToPrint += _T(";subtype=");
-                strToPrint += item.subtype;
+                const CString& chkbytes = info->checkbytes.GetNext(pos0);
+                strToPrint += chkbytes;
                 strToPrint += _T("\r\n");
             }
 
@@ -351,9 +211,9 @@ void CCodecsManager::PrintCodecsInfo(const CodecsInfoList& InfoList, CString& st
                 strToPrint += _T("mediatypes=");
                 const MediaTypeItem& item = info->mediatypes.GetNext(pos0);
                 strToPrint += _T("majortype=");
-                strToPrint += item.majortype;
+                strToPrint += CStringFromGUID(item.majortype);
                 strToPrint += _T(";subtype=");
-                strToPrint += item.subtype;
+                strToPrint += CStringFromGUID(item.subtype);
                 strToPrint += _T("\r\n");
             }
 
@@ -426,7 +286,7 @@ HRESULT	CCodecsManager::SetCodecsInfo(CodecsInfo* pInfo, LPCTSTR pcszKey, LPCTST
     {
         pInfo->enable = (bool)_tcstoul(pcszValue, NULL, 10);
     }
-    else if (_tcsicmp(pcszKey, _T("priority") == 0)
+    else if (_tcsicmp(pcszKey, _T("priority")) == 0)
     {
         pInfo->priority = _tcstoul(pcszValue, NULL, 10);
     }
@@ -444,7 +304,7 @@ HRESULT	CCodecsManager::SetCodecsInfo(CodecsInfo* pInfo, LPCTSTR pcszKey, LPCTST
     }
     else if(_tcsicmp(pcszKey, _T("clsid")) == 0)
     {
-        pInfo->clsid = pcszValue;
+        pInfo->clsid = GUIDFromCString(pcszValue);
     }
     else if(_tcsicmp(pcszKey, _T("category")) == 0)
     {
@@ -465,12 +325,14 @@ HRESULT	CCodecsManager::SetCodecsInfo(CodecsInfo* pInfo, LPCTSTR pcszKey, LPCTST
     else if(_tcsicmp(pcszKey, _T("checkbyte")) == 0)
     {
         //this->ParseCheckByte(pInfo, pcszValue);
-        pInfo->checkbytes = pcszValue;
+        CString checkbyte(pcszValue);
+        if (checkbyte.GetLength() > 0)
+            pInfo->checkbytes.AddTail(checkbyte);
     }
     else
     {
         //g_utility.Log(_T("Unknown filter info item:%s"), pcszKey);
-        assert(0);		
+        assert(0);
         hr = E_INVALIDARG;
     }
 
@@ -525,9 +387,12 @@ HRESULT	CCodecsManager::SetCodecsInfo(CodecsInfo* pInfo, rapidxml::xml_node<TCHA
         rapidxml::xml_attribute<TCHAR>* sub=node->first_attribute(_T("sub"));
         if (major!=NULL && sub!=NULL)
         {
+            CString majortype = major->value();
+            CString subtype = sub->value();
+
             MediaTypeItem mediatype;
-            mediatype.majortype = major->value();
-            mediatype.subtype = sub->value();
+            mediatype.majortype = GUIDFromCString(majortype);
+            mediatype.subtype = GUIDFromCString(subtype);
             pInfo->mediatypes.AddTail(mediatype);
         }
     }
@@ -573,19 +438,20 @@ BOOL CCodecsManager::ParseCheckByte(CodecsInfo* pInfo, const TCHAR* pcszValue)
 {
     CheckPointer(pcszValue, FALSE);
 
-    CheckByteItem item;
+    //CheckByteItem item;
     CString checkbytes(pcszValue);		
-    int i = checkbytes.Find(_T("|"));
-    if(i > 0)
-    {
-        item.checkbyte = checkbytes.Mid(0, i);
-        item.subtype = checkbytes.Mid(i+1);
-    }
-    else
-    {
-        item.checkbyte = checkbytes;
-    }
-    pInfo->checkbytes.AddTail(item);
+//     int i = checkbytes.Find(_T("|"));
+//     if(i > 0)
+//     {
+//         item.checkbyte = checkbytes.Mid(0, i);
+//         item.subtype = checkbytes.Mid(i+1);
+//     }
+//     else
+//     {
+//         item.checkbyte = checkbytes;
+//     }
+//     pInfo->checkbytes.AddTail(item);
+    pInfo->checkbytes.AddTail(checkbytes);
     return TRUE;
 }
 
@@ -637,51 +503,18 @@ CodecsType CCodecsManager::CodecsTypeFromText(LPCTSTR type)
     return kCodecsTypeUnknown;
 }
 
-HRESULT CCodecsManager::CreateCodecsObject(CodecsInfo* pInfo, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
-{
-    if (pInfo->type == kCodecsTypeVideoRenderer)
-    {
-        return CreateVideoRenderer(pInfo, ppBF, pUnks);
-    }
-
-    if (pInfo->pathflag == "reg")
-    {
-        CreateCodecsFromRegistry();
-    }
-    else if (pInfo->pathflag == "file")
-    {
-        CreateCodecsFromFile();
-    }
-    else
-    {
-        return E_INVALIDARG;
-    }
-    
-    return S_OK;
-}
-
-HRESULT CCodecsManager::CreateVideoRenderer(pInfo, ppBF, pUnks)
-{
-    
-}
-
-
-CFGFilter* FGFilterFromCodecsInfo(CodecsInfo* pInfo)
-{
-    CFGFilter* pFGF = NULL;
-    if (pInfo->pathflag == "reg")
-    {
-        pFGF = new CFGFilterRegistry(pInfo);
-    }
-    else if (pInfo->pathflag == "file")
-    {
-        if (pFGF)
-            pFGF = new CFGFilterFile(pInfo);
-    }
-//     else if (pInfo->pathflag == "re")
-//     {
-//         
-//     }
-
-    return pFGF;
-}
+//CFGFilter* FGFilterFromCodecsInfo(CodecsInfo* pInfo)
+//{
+//    CFGFilter* pFGF = NULL;
+//    if (pInfo->pathflag == "reg")
+//    {
+//        pFGF = new CFGFilterRegistry(pInfo);
+//    }
+//    else if (pInfo->pathflag == "file")
+//    {
+//        if (pFGF)
+//            pFGF = new CFGFilterFile(pInfo);
+//    }
+//
+//    return pFGF;
+//}

@@ -1,6 +1,8 @@
 #ifndef _NTPLAYER_GRAPHTHREAD_H_
 #define _NTPLAYER_GRAPHTHREAD_H_
 
+#include "PlayerCore.h"
+
 class CGraphThread : public CAMThread
 {
 public:
@@ -12,15 +14,9 @@ public:
 
     DWORD ThreadProc();
 
-    HRESULT PostGraphMessage(GraphMessage msg, void* param);
-
-
-    HRESULT OnOpen(void* omd);
-    HRESULT OnClose(void* evt);
-    HRESULT OnExit(void* evt);
-
-
-
+    void OpenMedia(CAutoPtr<OpenMediaData> pOMD);
+    void CloseMedia();
+    void Exit();
 
 protected:
     void OnOpen();
@@ -28,17 +24,7 @@ protected:
     void OnExit();
 
 private:
-    typedef enum GraphMessage
-    {
-        GM_INVALID,
-        GM_EXIT,
-        GM_OPEN,
-        GM_CLOSE,
-
-        GM_UNUSED,
-    };
-
-    GraphMessage m_msg;
+    
     void* m_param;
 
 
@@ -50,7 +36,7 @@ private:
 
     CCritSec m_csLock;
 
-    //CAutoPtr<OpenMediaData> m_pOMD;
+    CAutoPtr<OpenMediaData> m_pOMD;
 
 };
 

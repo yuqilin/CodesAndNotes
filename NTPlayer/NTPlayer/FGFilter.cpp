@@ -20,9 +20,9 @@
  */
 
 #include "stdafx.h"
+#include <evr.h>
 #include <mpconfig.h>
 #include "FGFilter.h"
-#include "MainFrm.h"
 #include "DSUtil.h"
 #include "AllocatorCommon7.h"
 #include "AllocatorCommon.h"
@@ -119,7 +119,7 @@ HRESULT CFGFilterFile::Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_
 //
 HRESULT CFGFilterVideoRenderer::Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
 {
-    TRACE(_T("--> CFGFilterVideoRenderer::Create on thread: %d\n"), GetCurrentThreadId());
+    //TRACE(_T("--> CFGFilterVideoRenderer::Create on thread: %d\n"), GetCurrentThreadId());
     CheckPointer(ppBF, E_POINTER);
 
     if (m_info == NULL)
@@ -155,7 +155,7 @@ HRESULT CFGFilterVideoRenderer::Create(IBaseFilter** ppBF, CInterfaceList<IUnkno
                     pUnks.AddTail(pCAP2);
                 }
                 // madVR supports calling IVideoWindow::put_Owner before the pins are connected
-                if (m_clsid == CLSID_madVRAllocatorPresenter)
+                if (clsid == CLSID_madVRAllocatorPresenter)
                 {
                     if (CComQIPtr<IVideoWindow> pVW = pCAP)
                     {
@@ -238,8 +238,8 @@ void CFGFilterList::Insert(CFGFilter* pFGF, int group, bool exactmatch, bool aut
 {
     bool bInsert = true;
 
-    TRACE(_T("FGM: Inserting %d %d %016I64x '%s' --> "), group, exactmatch, pFGF->GetMerit(),
-          pFGF->GetName().IsEmpty() ? CStringFromGUID(pFGF->GetCLSID()) : CString(pFGF->GetName()));
+//     TRACE(_T("FGM: Inserting %d %d %016I64x '%s' --> "), group, exactmatch, pFGF->GetMerit(),
+//           pFGF->GetName().IsEmpty() ? CStringFromGUID(pFGF->GetCLSID()) : CString(pFGF->GetName()));
 
     CFGFilterRegistry* pFGFR = dynamic_cast<CFGFilterRegistry*>(pFGF);
 

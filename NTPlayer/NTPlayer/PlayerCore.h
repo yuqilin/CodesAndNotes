@@ -1,6 +1,9 @@
 #ifndef _NTPLAYER_PLAYERCORE_H_
 #define _NTPLAYER_PLAYERCORE_H_
 
+#include <dxva2api.h>
+#include "SyncClock.h"
+
 //////////////////////////////////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////
@@ -9,6 +12,15 @@
 //////////////////////////////////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////
+
+enum {
+    PM_NONE,
+    PM_FILE,
+    PM_DVD,
+    PM_CAPTURE
+};
+
+
 typedef enum MPC_LOADSTATE {
     MLS_CLOSED,
     MLS_LOADING,
@@ -63,6 +75,38 @@ public:
     int vinput, vchannel, ainput;
 };
 
+typedef enum {
+    ProcAmp_Brightness = 0x1,
+    ProcAmp_Contrast   = 0x2,
+    ProcAmp_Hue        = 0x4,
+    ProcAmp_Saturation = 0x8,
+    ProcAmp_All = ProcAmp_Brightness | ProcAmp_Contrast | ProcAmp_Hue | ProcAmp_Saturation
+} ControlType;
+
+typedef struct {
+    DWORD dwProperty;
+    int   MinValue;
+    int   MaxValue;
+    int   DefaultValue;
+    int   StepSize;
+} COLORPROPERTY_RANGE;
+
+__inline DXVA2_Fixed32 IntToFixed(__in const int _int_, __in const short divisor = 1)
+{
+    // special converter that is resistant to MS bugs
+    DXVA2_Fixed32 _fixed_;
+    _fixed_.Value = SHORT(_int_ / divisor);
+    _fixed_.Fraction = USHORT((_int_ % divisor * 0x10000 + divisor / 2) / divisor);
+    return _fixed_;
+}
+
+__inline int FixedToInt(__in const DXVA2_Fixed32& _fixed_, __in const short factor = 1)
+{
+    // special converter that is resistant to MS bugs
+    return (int)_fixed_.Value * factor + ((int)_fixed_.Fraction * factor + 0x8000) / 0x10000;
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////
@@ -75,6 +119,8 @@ struct SubtitleInput {
     SubtitleInput(CComQIPtr<ISubStream> subStream, CComPtr<IBaseFilter> sourceFilter)
         : subStream(subStream), sourceFilter(sourceFilter) {};
 };
+
+interface ISubClock;
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -154,15 +200,23 @@ public:
 
     void OnOpenResult(HRESULT hr);
 
+    int GetPlaybackMode() const { return m_iPlaybackMode; }
+
+
 
 protected:
     HRESULT OpenMedia(CAutoPtr<OpenMediaData> pOMD);
     HRESULT CloseMedia();
 
 
-    HRESULT CPlayerCore::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD);
+    HRESULT OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD);
+    HRESULT CloseMediaPrivate();
+    void OnPlayStop();
 
-    void SetLoadState();
+    void SetLoadState(MPC_LOADSTATE state);
+
+
+    CSize GetVideoSize() const;
 
 
     void AutoChangeMonitorMode();
@@ -190,8 +244,18 @@ protected:
 
     LARGE_INTEGER m_liLastSaveTime;
 
+    int m_iPlaybackMode;
+
+    double m_dSpeedRate;
 
     static CCodecsManager m_codecs;
+
+    bool m_fLiveWM;
+    bool m_fEndOfStream;
+    REFERENCE_TIME m_rtDurationOverride;
+    std::vector<REFERENCE_TIME> m_kfs;
+    CComPtr<IDSMChapterBag> m_pCB;
+
 
 private:
     HWND m_hVideoWindow;

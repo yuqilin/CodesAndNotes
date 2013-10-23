@@ -23,6 +23,7 @@
 
 #include <atlbase.h>
 #include <atlcoll.h>
+#include <atltypes.h>
 #include "ISubPic.h"
 #include "CoordGeom.h"
 

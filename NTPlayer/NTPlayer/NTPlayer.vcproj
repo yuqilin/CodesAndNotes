@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\baseclasses;..\thirdparty;"
+				AdditionalIncludeDirectories="..\..\baseclasses;..\include;..\NTLog;..\thirdparty;..\DSUtil;..\VideoRenderers;..\SubPic;..\SyncClock;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NTPLAYER_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -203,10 +203,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\DSGraph.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\FGFilter.cpp"
 				>
 			</File>
@@ -220,10 +216,6 @@
 			</File>
 			<File
 				RelativePath=".\NTPlayer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NTPlayerCore.cpp"
 				>
 			</File>
 			<File
@@ -273,15 +265,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BasePlayer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\CodecsManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DSGraph.h"
 				>
 			</File>
 			<File
@@ -306,10 +290,6 @@
 			</File>
 			<File
 				RelativePath=".\NTPlayer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NTPlayerCore.h"
 				>
 			</File>
 			<File

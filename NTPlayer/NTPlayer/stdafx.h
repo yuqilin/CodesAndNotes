@@ -27,4 +27,6 @@
 
 #include "../DSUtil/DSUtil.h"
 
-using ATL::CString;
+//using ATL::CString;
+
+#include "NTLog.h"

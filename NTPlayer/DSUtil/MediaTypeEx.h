@@ -1,5 +1,7 @@
 #pragma once
 
+#include <atlstr.h>
+
 class CMediaTypeEx : public CMediaType
 {
 public:
