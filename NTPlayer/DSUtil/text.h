@@ -4,7 +4,7 @@
 
 // extern CString ExplodeMin(CString str, CAtlList<CString>& sl, TCHAR sep, int limit = 0);
 // extern CString Explode(CString str, CAtlList<CString>& sl, TCHAR sep, int limit = 0);
-// extern CString Implode(CAtlList<CString>& sl, TCHAR sep);
+//extern CString Implode(CAtlList<CString>& sl, TCHAR sep);
 
 template<class T, typename SEP>
 T Explode(T str, CAtlList<T>& sl, SEP sep, int limit = 0)
@@ -45,17 +45,31 @@ T ExplodeMin(T str, CAtlList<T>& sl, SEP sep, int limit = 0)
 	return sl.GetHead();
 }
 
+// template<class T, typename SEP>
+// T Implode(CAtlList<T>& sl, SEP sep)
+// {
+// 	T ret;
+// 	POSITION pos = sl.GetHeadPosition();
+// 	while(pos)
+// 	{
+// 		ret += sl.GetNext(pos);
+// 		if(pos) ret += sep;
+// 	}
+// 	return(ret);
+// }
+
 template<class T, typename SEP>
-T Implode(CAtlList<T>& sl, SEP sep)
+T Implode(const CAtlList<T>& sl, SEP sep)
 {
-	T ret;
-	POSITION pos = sl.GetHeadPosition();
-	while(pos)
-	{
-		ret += sl.GetNext(pos);
-		if(pos) ret += sep;
-	}
-	return(ret);
+    T ret;
+    POSITION pos = sl.GetHeadPosition();
+    while (pos) {
+        ret += sl.GetNext(pos);
+        if (pos) {
+            ret += sep;
+        }
+    }
+    return ret;
 }
 
 //extern CString ExtractTag(CString tag, CMapStringToString& attribs, bool& fClosing);

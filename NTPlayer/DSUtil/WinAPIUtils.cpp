@@ -19,10 +19,13 @@
  */
 
 #include "stdafx.h"
-#include <d3dx9.h>
+#include "dx/d3dx9.h"
 #include "WinAPIUtils.h"
 #include "SysVersion.h"
+#include <atlapp.h>
 #include <atlgdi.h>
+#include <shlobj.h>
+#include <shellapi.h>
 
 
 bool SetPrivilege(LPCTSTR privilege, bool bEnable)
@@ -249,7 +252,7 @@ bool IsFontInstalled(LPCTSTR lpszFont)
     _tcscpy_s(lf.lfFaceName, lpszFont);
     LPARAM lParam = 0;
     // Enumerate fonts
-    EnumFontFamiliesEx(dc.GetSafeHdc(), &lf, (FONTENUMPROC)EnumFontFamExProc, (LPARAM)&lParam, 0);
+    EnumFontFamiliesEx(dc.m_hDC/*dc.GetSafeHdc()*/, &lf, (FONTENUMPROC)EnumFontFamExProc, (LPARAM)&lParam, 0);
 
     return lParam ? true : false;
 }
@@ -321,6 +324,6 @@ HRESULT FileDelete(CString file, HWND hWnd, bool recycle /*= true*/)
     if (fileOpStruct.fAnyOperationsAborted) {
         hRes = E_ABORT;
     }
-    TRACE(_T("Delete recycle=%d hRes=0x%08x, file=%s\n"), recycle, hRes, file);
+//    TRACE(_T("Delete recycle=%d hRes=0x%08x, file=%s\n"), recycle, hRes, file);
     return hRes;
 }

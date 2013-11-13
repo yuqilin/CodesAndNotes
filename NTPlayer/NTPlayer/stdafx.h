@@ -30,3 +30,6 @@
 //using ATL::CString;
 
 #include "NTLog.h"
+
+#include "PlayerCore.h"
+#include "GraphThread.h"

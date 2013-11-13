@@ -21,27 +21,19 @@
 
 #pragma once
 
-#ifdef UNICODE
-#ifdef DEBUG
-#pragma comment(lib, "dsutilDU")
-#else
-#pragma comment(lib, "dsutilRU")
-#endif
-#else
-#ifdef DEBUG
-#pragma comment(lib, "dsutilD")
-#else
-#pragma comment(lib, "dsutilR")
-#endif
-#endif
-
+#include <string>
 #include "NullRenderers.h"
 //#include "MediaTypes.h"
 #include "MediaTypeEx.h"
 #include "vd.h"
 #include "text.h"
+#include "SysVersion.h"
 
 extern HINSTANCE g_hInstance;
+
+bool LoadResource(UINT resid, CStringA& str, LPCTSTR restype);
+extern std::wstring mbs2wcs(int nCodePage, const char* mbs);
+extern std::string	wcs2mbs(int nCodePage, const wchar_t* wcs);
 
 extern void DumpStreamConfig(TCHAR* fn, IAMStreamConfig* pAMVSCCap);
 extern int CountPins(IBaseFilter* pBF, int& nIn, int& nOut, int& nInC, int& nOutC);
@@ -81,10 +73,11 @@ extern CString GetDriveLabel(TCHAR drive);
 //extern bool GetKeyFrames(CString fn, CUIntArray& kfs);
 extern DVD_HMSF_TIMECODE RT2HMSF(REFERENCE_TIME rt, double fps = 0);
 extern REFERENCE_TIME HMSF2RT(DVD_HMSF_TIMECODE hmsf, double fps = 0);
-extern void memsetd(void* dst, unsigned int c, int nbytes);
+extern void memsetd(void* dst, unsigned int c, size_t nbytes);
 extern void memsetw(void* dst, unsigned short c, size_t nbytes);
 extern bool ExtractBIH(const AM_MEDIA_TYPE* pmt, BITMAPINFOHEADER* bih);
 extern bool ExtractBIH(IMediaSample* pMS, BITMAPINFOHEADER* bih);
+extern bool ExtractAvgTimePerFrame(const AM_MEDIA_TYPE* pmt, REFERENCE_TIME& rtAvgTimePerFrame);
 extern bool ExtractDim(const AM_MEDIA_TYPE* pmt, int& w, int& h, int& arx, int& ary);
 extern bool MakeMPEG2MediaType(CMediaType& mt, BYTE* seqhdr, DWORD len, int w, int h);
 extern unsigned __int64 GetFileVersion(LPCTSTR fn);
@@ -116,7 +109,17 @@ extern void RegisterSourceFilter(const CLSID& clsid, const GUID& subtype2, LPCTS
 extern void RegisterSourceFilter(const CLSID& clsid, const GUID& subtype2, const CAtlList<CString>& chkbytes, LPCTSTR ext = NULL, ...);
 extern void UnRegisterSourceFilter(const GUID& subtype);
 
+extern LPCTSTR GetDXVAMode(const GUID* guidDecoder);
+
+
 extern void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName);
+
+typedef enum {
+    PICT_NONE,
+    PICT_TOP_FIELD,
+    PICT_BOTTOM_FIELD,
+    PICT_FRAME
+} FF_FIELD_TYPE;
 
 class CPinInfo : public PIN_INFO
 {
@@ -184,6 +187,10 @@ public:
 #define QI(i) (riid == __uuidof(i)) ? GetInterface((i*)this, ppv) :
 #define QI2(i) (riid == IID_##i) ? GetInterface((i*)this, ppv) :
 
+#define SAFE_DELETE(p)       { if (p) { delete (p);     (p) = NULL; } }
+#define SAFE_DELETE_ARRAY(p) { if (p) { delete [] (p);  (p) = NULL; } }
+#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p) = NULL; } }
+
 template <typename T> __inline void INITDDSTRUCT(T& dd)
 {
     ZeroMemory(&dd, sizeof(dd));
@@ -201,3 +208,20 @@ static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT* phr)
 	return punk;
 }
 
+inline int GCD(int a, int b)
+{
+    if (a == 0 || b == 0) {
+        return 1;
+    }
+    while (a != b) {
+        if (a < b) {
+            b -= a;
+        } else if (a > b) {
+            a -= b;
+        }
+    }
+    return a;
+}
+
+extern void GetProtocolFromURL(const TCHAR * pcszURL, TCHAR * pszProtocol);
+extern void GetFileExtnameFromURL(const TCHAR * pcszURL, TCHAR * pszExtname);

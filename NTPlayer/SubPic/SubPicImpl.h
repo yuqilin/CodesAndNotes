@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <atltypes.h>
 #include "ISubPic.h"
 
 class CSubPicImpl : public CUnknown, public ISubPic

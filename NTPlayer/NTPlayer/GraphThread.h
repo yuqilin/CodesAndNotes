@@ -1,8 +1,6 @@
 #ifndef _NTPLAYER_GRAPHTHREAD_H_
 #define _NTPLAYER_GRAPHTHREAD_H_
 
-#include "PlayerCore.h"
-
 class CGraphThread : public CAMThread
 {
 public:
@@ -17,6 +15,10 @@ public:
     void OpenMedia(CAutoPtr<OpenMediaData> pOMD);
     void CloseMedia();
     void Exit();
+
+    void Terminate() {
+        ::TerminateThread(m_hThread, -1);
+    }
 
 protected:
     void OnOpen();

@@ -1,6 +1,9 @@
 #ifndef _NTPLAYER_PLAYERSETTINGS_H_
 #define _NTPLAYER_PLAYERSETTINGS_H_
 
+#include "atltypes.h"
+#include "MediaFormats.h"
+
 enum {
     VIDRNDT_DS_DEFAULT,
     VIDRNDT_DS_OLDRENDERER,
@@ -87,6 +90,14 @@ struct CPlayerSettings // : public Sington<>
     bool fCompMonDeskARDiff;
 
     CSize sizeAspectRatio;
+
+    //bool fReportFailedPins;
+    
+    int iBrightness;
+    int iContrast;
+    int iHue;
+    int iSaturation;
+
 public:
     void LoadDefaultSettings();
 

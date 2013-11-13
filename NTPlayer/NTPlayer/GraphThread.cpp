@@ -76,16 +76,3 @@ void CGraphThread::OnExit(/*void* pParam*/)
 {
     Reply(S_OK);
 }
-
-HRESULT CGraphThread::PostGraphMessage(GraphMessage msg, void* param)
-{
-    HRESULT hr = S_OK;
-
-    CAutoLock lock(&m_csLock);
-
-    m_pParam = param;
-
-    CallWorker(msg);
-
-    return hr;
-}

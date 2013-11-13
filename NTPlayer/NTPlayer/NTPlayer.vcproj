@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\baseclasses;..\include;..\NTLog;..\thirdparty;..\DSUtil;..\VideoRenderers;..\SubPic;..\SyncClock;"
+				AdditionalIncludeDirectories="..\..\baseclasses;..\include;..\include\dx;..\NTLog;..\thirdparty;..\DSUtil;..\VideoRenderers;..\SubPic;..\SyncClock;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NTPLAYER_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -212,6 +212,10 @@
 			</File>
 			<File
 				RelativePath=".\GraphThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MediaFormats.cpp"
 				>
 			</File>
 			<File

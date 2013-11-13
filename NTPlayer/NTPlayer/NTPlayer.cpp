@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "NTPlayer.h"
-#include "NTPlayerImpl.h"
 
 static CPlayerCore*  s_pPlayer = NULL;
 
@@ -50,11 +49,11 @@ NTPLAYER_API NTPLAYER_RESULT ntplayer_open(const char* url)
     return E_FAIL;
 }
 
-NTPLAYER_API NTPLAYER_RESULT ntplayer_close(const char* url)
+NTPLAYER_API NTPLAYER_RESULT ntplayer_close()
 {
     if (s_pPlayer != NULL)
     {
-        return s_pPlayer->Close(url);
+        return s_pPlayer->Close();
     }
     return E_FAIL;
 }

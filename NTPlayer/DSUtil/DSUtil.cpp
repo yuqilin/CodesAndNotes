@@ -26,7 +26,14 @@
 #include "winddk\ntddcdrm.h"
 #include "DSUtil.h"
 #include "moreuuids.h"
+#include <InitGuid.h>
+#include <d3d9types.h>
+#include <dxva.h>
+#include <dxva2api.h>
 
+#include "../ntplayercore/playerlog.h"
+
+static const TCHAR* EMPTY_STRING = _T("");
 /*
 void DumpStreamConfig(TCHAR* fn, IAMStreamConfig* pAMVSCCap)
 {
@@ -131,6 +138,84 @@ void DumpStreamConfig(TCHAR* fn, IAMStreamConfig* pAMVSCCap)
 }
 //*/
 
+//////////////////////////////////////////////////////////////////////////
+bool LoadResource(UINT resid, CStringA& str, LPCTSTR restype)
+{
+    str.Empty();
+    HRSRC hrsrc = FindResource(g_hInstance, MAKEINTRESOURCE(resid), restype);
+    if (!hrsrc) {
+        return false;
+    }
+    HGLOBAL hGlobal = LoadResource(g_hInstance, hrsrc);
+    if (!hGlobal) {
+        return false;
+    }
+    DWORD size = SizeofResource(g_hInstance, hrsrc);
+    if (!size) {
+        return false;
+    }
+    memcpy(str.GetBufferSetLength(size), LockResource(hGlobal), size);
+    return true;
+}
+
+//////////////////////////////////////////////////////////////////////////
+std::wstring mbs2wcs(int nCodePage, const char* mbs)
+{
+    if (!mbs)
+        return std::wstring(L"");
+
+    int cchWideChar = MultiByteToWideChar(nCodePage,
+        0, 
+        mbs, 
+        -1, 
+        NULL, 
+        0);  
+    wchar_t *pText = new wchar_t[cchWideChar+1];
+    memset(pText, 0, (cchWideChar+1)*sizeof(wchar_t));
+    MultiByteToWideChar(nCodePage, 
+        0, 
+        mbs,
+        -1, 
+        pText, 
+        cchWideChar);
+
+    std::wstring wstrText(pText);
+    delete[] pText;
+    return wstrText;
+
+}
+
+std::string	wcs2mbs(int nCodePage, const wchar_t* wcs)
+{
+    if (!wcs)
+        return std::string("");
+
+    char* pText;
+    int cbMultiByte = WideCharToMultiByte(nCodePage,
+        0,
+        wcs,
+        -1,
+        NULL,
+        0,
+        NULL,
+        NULL);
+    pText=new char[cbMultiByte+1];
+    memset(pText, 0, (cbMultiByte+1)*sizeof(char));
+    WideCharToMultiByte(nCodePage,
+        0,
+        wcs,
+        -1,
+        pText,
+        cbMultiByte,
+        NULL,
+        NULL);
+
+    std::string strText(pText);
+    delete[] pText;
+    return strText;
+}
+
+//////////////////////////////////////////////////////////////////////////
 int CountPins(IBaseFilter* pBF, int& nIn, int& nOut, int& nInC, int& nOutC)
 {
 	nIn = nOut = 0;
@@ -1038,6 +1123,23 @@ bool ExtractBIH(IMediaSample* pMS, BITMAPINFOHEADER* bih)
 	return(false);
 }
 
+bool ExtractAvgTimePerFrame(const AM_MEDIA_TYPE* pmt, REFERENCE_TIME& rtAvgTimePerFrame)
+{
+    if (pmt->formattype == FORMAT_VideoInfo) {
+        rtAvgTimePerFrame = ((VIDEOINFOHEADER*)pmt->pbFormat)->AvgTimePerFrame;
+    } else if (pmt->formattype == FORMAT_VideoInfo2) {
+        rtAvgTimePerFrame = ((VIDEOINFOHEADER2*)pmt->pbFormat)->AvgTimePerFrame;
+    } else if (pmt->formattype == FORMAT_MPEGVideo) {
+        rtAvgTimePerFrame = ((MPEG1VIDEOINFO*)pmt->pbFormat)->hdr.AvgTimePerFrame;
+    } else if (pmt->formattype == FORMAT_MPEG2Video) {
+        rtAvgTimePerFrame = ((MPEG2VIDEOINFO*)pmt->pbFormat)->hdr.AvgTimePerFrame;
+    } else {
+        return false;
+    }
+
+    return true;
+}
+
 bool ExtractDim(const AM_MEDIA_TYPE* pmt, int& w, int& h, int& arx, int& ary)
 {
 	w = h = arx = ary = 0;
@@ -1314,7 +1416,7 @@ HRESULT LoadExternalObject(LPCTSTR path, REFCLSID clsid, REFIID iid, void** ppv)
 {
 	CheckPointer(ppv, E_POINTER);
 
-	CString fullpath = MakeFullPath(path);
+	CString fullpath(path);// = MakeFullPath(path);
 
 	HINSTANCE hInst = NULL;
 	bool fFound = false;
@@ -1333,24 +1435,40 @@ HRESULT LoadExternalObject(LPCTSTR path, REFCLSID clsid, REFIID iid, void** ppv)
 
 	HRESULT hr = E_FAIL;
 
-	if(hInst || (hInst = CoLoadLibrary(CComBSTR(fullpath), TRUE)))
+    if (hInst == NULL)
+    {
+        hInst = (HINSTANCE)::LoadLibraryEx(path, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
+        if(hInst == NULL)
+        {
+            player_log(0,  _T("LoadLibraryEx failed, LastError = %d"), ::GetLastError()); 
+            hr = TYPE_E_CANTLOADLIBRARY;
+        }
+    }
+
+	if(hInst != NULL)
 	{
 		typedef HRESULT (__stdcall * PDllGetClassObject)(REFCLSID rclsid, REFIID riid, LPVOID* ppv);
-		PDllGetClassObject p = (PDllGetClassObject)GetProcAddress(hInst, "DllGetClassObject");
+		PDllGetClassObject pfnDllGetClassObject = (PDllGetClassObject)GetProcAddress(hInst, "DllGetClassObject");
 
-		if(p && FAILED(hr = p(clsid, iid, ppv)))
-		{
-			CComPtr<IClassFactory> pCF;
-			if(SUCCEEDED(hr = p(clsid, __uuidof(IClassFactory), (void**)&pCF)))
-			{
-				hr = pCF->CreateInstance(NULL, iid, ppv);
-			}
-		}
+        if (pfnDllGetClassObject == NULL)
+        {
+            player_log(kLogLevelError, _T("LoadExternalObject,GetProcAddress of 'DllGetClassObject' failed")); 
+            hr = CO_E_ERRORINDLL;
+        }
+        else
+        {
+            CComPtr<IClassFactory> pCF;
+            hr = pfnDllGetClassObject(clsid, IID_IClassFactory, (void**)&pCF);
+            if (SUCCEEDED(hr))
+            {
+                hr = pCF->CreateInstance(NULL, iid, ppv);
+            }
+        }
 	}
 
 	if(FAILED(hr) && hInst && !fFound)
 	{
-		CoFreeLibrary(hInst);
+        FreeLibrary(hInst);
 		return hr;
 	}
 
@@ -1368,7 +1486,7 @@ HRESULT LoadExternalObject(LPCTSTR path, REFCLSID clsid, REFIID iid, void** ppv)
 
 HRESULT LoadExternalFilter(LPCTSTR path, REFCLSID clsid, IBaseFilter** ppBF)
 {
-	return LoadExternalObject(path, clsid, __uuidof(IBaseFilter), (void**)ppBF);
+	return LoadExternalObject(path, clsid, IID_IBaseFilter, (void**)ppBF);
 }
 
 HRESULT LoadExternalPropertyPage(IPersist* pP, REFCLSID clsid, IPropertyPage** ppPP)
@@ -1395,7 +1513,7 @@ void UnloadExternalObjects()
 	while(pos)
 	{
 		ExternalObject& eo = s_extobjs.GetNext(pos);
-		CoFreeLibrary(eo.hInst);
+		FreeLibrary(eo.hInst);
 	}
 	s_extobjs.RemoveAll();
 }
@@ -2269,6 +2387,87 @@ void UnRegisterSourceFilter(const GUID& subtype)
 	DeleteRegKey(_T("Media Type\\") + CStringFromGUID(MEDIATYPE_Stream), CStringFromGUID(subtype));
 }
 
+//////////////////////////////////////////////////////////////////////////
+typedef struct {
+    const GUID*   Guid;
+    const LPCTSTR Description;
+} DXVA2_DECODER;
+
+static const DXVA2_DECODER DXVA2Decoder[] = {
+    {&GUID_NULL,                        _T("Unknown")},
+    {&GUID_NULL,                        _T("Not using DXVA")},
+    {&DXVA_Intel_H264_ClearVideo,       _T("H.264 bitstream decoder, ClearVideo(tm)")},  // Intel ClearVideo H264 bitstream decoder
+    {&DXVA_Intel_VC1_ClearVideo,        _T("VC-1 bitstream decoder, ClearVideo(tm)")},   // Intel ClearVideo VC-1 bitstream decoder
+    {&DXVA_Intel_VC1_ClearVideo_2,      _T("VC-1 bitstream decoder 2, ClearVideo(tm)")}, // Intel ClearVideo VC-1 bitstream decoder 2
+    {&DXVA_MPEG4_ASP,                   _T("MPEG-4 ASP bitstream decoder")},             // Nvidia MPEG-4 ASP bitstream decoder
+    {&DXVA_ModeNone,                    _T("Mode none")},
+    {&DXVA_ModeH261_A,                  _T("H.261 A, post processing")},
+    {&DXVA_ModeH261_B,                  _T("H.261 B, deblocking")},
+    {&DXVA_ModeH263_A,                  _T("H.263 A, motion compensation, no FGT")},
+    {&DXVA_ModeH263_B,                  _T("H.263 B, motion compensation, FGT")},
+    {&DXVA_ModeH263_C,                  _T("H.263 C, IDCT, no FGT")},
+    {&DXVA_ModeH263_D,                  _T("H.263 D, IDCT, FGT")},
+    {&DXVA_ModeH263_E,                  _T("H.263 E, bitstream decoder, no FGT")},
+    {&DXVA_ModeH263_F,                  _T("H.263 F, bitstream decoder, FGT")},
+    {&DXVA_ModeMPEG1_A,                 _T("MPEG-1 A, post processing")},
+    {&DXVA_ModeMPEG2_A,                 _T("MPEG-2 A, motion compensation")},
+    {&DXVA_ModeMPEG2_B,                 _T("MPEG-2 B, motion compensation + blending")},
+    {&DXVA_ModeMPEG2_C,                 _T("MPEG-2 C, IDCT")},
+    {&DXVA_ModeMPEG2_D,                 _T("MPEG-2 D, IDCT + blending")},
+    {&DXVA_ModeH264_A,                  _T("H.264 A, motion compensation, no FGT")},
+    {&DXVA_ModeH264_B,                  _T("H.264 B, motion compensation, FGT")},
+    {&DXVA_ModeH264_C,                  _T("H.264 C, IDCT, no FGT")},
+    {&DXVA_ModeH264_D,                  _T("H.264 D, IDCT, FGT")},
+    {&DXVA_ModeH264_E,                  _T("H.264 E, bitstream decoder, no FGT")},
+    {&DXVA_ModeH264_F,                  _T("H.264 F, bitstream decoder, FGT")},
+    {&DXVA_ModeWMV8_A,                  _T("WMV8 A, post processing")},
+    {&DXVA_ModeWMV8_B,                  _T("WMV8 B, motion compensation")},
+    {&DXVA_ModeWMV9_A,                  _T("WMV9 A, post processing")},
+    {&DXVA_ModeWMV9_B,                  _T("WMV9 B, motion compensation")},
+    {&DXVA_ModeWMV9_C,                  _T("WMV9 C, IDCT")},
+    {&DXVA_ModeVC1_A,                   _T("VC-1 A, post processing")},
+    {&DXVA_ModeVC1_B,                   _T("VC-1 B, motion compensation")},
+    {&DXVA_ModeVC1_C,                   _T("VC-1 C, IDCT")},
+    {&DXVA_ModeVC1_D,                   _T("VC-1 D, bitstream decoder")},
+    {&DXVA_NoEncrypt,                   _T("No encryption")},
+    {&DXVA2_ModeMPEG2_MoComp,           _T("MPEG-2 motion compensation")},
+    {&DXVA2_ModeMPEG2_IDCT,             _T("MPEG-2 IDCT")},
+    {&DXVA2_ModeMPEG2_VLD,              _T("MPEG-2 variable-length decoder")},
+    {&DXVA2_ModeH264_A,                 _T("H.264 A, motion compensation, no FGT")},
+    {&DXVA2_ModeH264_B,                 _T("H.264 B, motion compensation, FGT")},
+    {&DXVA2_ModeH264_C,                 _T("H.264 C, IDCT, no FGT")},
+    {&DXVA2_ModeH264_D,                 _T("H.264 D, IDCT, FGT")},
+    {&DXVA2_ModeH264_E,                 _T("H.264 E, bitstream decoder, no FGT")},
+    {&DXVA2_ModeH264_F,                 _T("H.264 F, bitstream decoder, FGT")},
+    {&DXVA2_ModeWMV8_A,                 _T("WMV8 A, post processing")},
+    {&DXVA2_ModeWMV8_B,                 _T("WMV8 B, motion compensation")},
+    {&DXVA2_ModeWMV9_A,                 _T("WMV9 A, post processing")},
+    {&DXVA2_ModeWMV9_B,                 _T("WMV9 B, motion compensation")},
+    {&DXVA2_ModeWMV9_C,                 _T("WMV9 C, IDCT")},
+    {&DXVA2_ModeVC1_A,                  _T("VC-1 A, post processing")},
+    {&DXVA2_ModeVC1_B,                  _T("VC-1 B, motion compensation")},
+    {&DXVA2_ModeVC1_C,                  _T("VC-1 C, IDCT")},
+    {&DXVA2_ModeVC1_D,                  _T("VC-1 D, bitstream decoder")},
+    {&DXVA2_NoEncrypt,                  _T("No encryption")},
+    {&DXVA2_VideoProcProgressiveDevice, _T("Progressive scan")},
+    {&DXVA2_VideoProcBobDevice,         _T("Bob deinterlacing")},
+    {&DXVA2_VideoProcSoftwareDevice,    _T("Software processing")}
+};
+
+LPCTSTR GetDXVAMode(const GUID* guidDecoder)
+{
+    int nPos = 0;
+
+    for (int i = 1; i < _countof(DXVA2Decoder); i++) {
+        if (*guidDecoder == *DXVA2Decoder[i].Guid) {
+            nPos = i;
+            break;
+        }
+    }
+
+    return DXVA2Decoder[nPos].Description;
+}
+
 
 //
 // Usage: SetThreadName (-1, "MainThread");
@@ -2292,4 +2491,124 @@ void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName)
         RaiseException(0x406D1388, 0, sizeof(info) / sizeof(DWORD), (ULONG_PTR*)&info);
     } __except (EXCEPTION_CONTINUE_EXECUTION) {
     }
+}
+
+//////////////////////////////////////////////////////////////////////////
+void TrimFileNameParam(TCHAR * pcszFileName)
+{
+    TCHAR * p = pcszFileName;
+    TCHAR * pEnd = pcszFileName + lstrlen(pcszFileName);
+    while(p < pEnd)
+    {
+        if(*p == '?')
+        {
+            *p = 0;
+            break;
+        }
+        p++;
+    }
+}
+
+void GetProtocolFromURL(const TCHAR * pcszURL, TCHAR * pszProtocol)
+{
+    // Get header
+    const TCHAR * pColon = _tcsstr(pcszURL, _T(":"));
+    if(pColon != NULL)
+    {
+        int nLength = int(pColon - pcszURL);
+        memcpy(pszProtocol, pcszURL, nLength * sizeof(TCHAR));
+        pszProtocol[nLength] = 0;
+        _tcslwr_s(pszProtocol, nLength+1);
+
+        if(nLength == 1)
+        {
+            if(pszProtocol[0] >= 'a' && pszProtocol[0] <= 'z')
+                lstrcpy(pszProtocol, _T("file"));
+        }
+    }
+    else
+    {
+        if(lstrlen(pcszURL) > 2 && pcszURL[0] == '\\' && pcszURL[1] == '\\')
+            lstrcpy(pszProtocol, _T("file"));
+        else
+            lstrcpy(pszProtocol, EMPTY_STRING);
+    }
+}
+
+
+void GetFileExtnameFromURL(const TCHAR * pcszURL, TCHAR * pszExtname)
+{
+    // Trim file name param
+    TCHAR * pURL = new TCHAR[_tcslen(pcszURL) + 1];
+    if(pURL == NULL)
+    {
+        lstrcpy(pszExtname, EMPTY_STRING);
+        return;
+    }
+    lstrcpy(pURL, pcszURL);
+    if(_tcsstr(pURL, _T("?")) != NULL)
+        TrimFileNameParam(pURL);
+
+    // Get extname
+    if(_tcsstr(pURL, _T(".")) != NULL)
+    {
+        if(pURL[1] == ':')
+        {
+            const TCHAR * p = pURL + lstrlen(pURL) - 1;
+            while(p > pURL && *p != '.') p--;
+            lstrcpy(pszExtname, p);
+        }
+        else
+        {
+            const TCHAR * p1 = pURL + lstrlen(pURL) - 1;
+            const TCHAR * p2 = p1;
+
+            while(p1 > pURL && *p1 != '.') p1--;
+            while(p2 > pURL && *p2 != '?') p2--;
+
+            if(p1 < p2)
+            {
+                int nLength = (int)(p2 - p1);
+                memcpy(pszExtname, p1, nLength * sizeof(TCHAR));
+                pszExtname[nLength] = 0;
+            }
+            else if(p1 > p2)
+            {
+                if(p2 != pURL)
+                {
+                    const TCHAR * p3 = p2;
+                    while(p3 > pURL && *p3 != '.') p3--;
+                    if(p3 != pURL)
+                    {
+                        int nLength = (int)(p2 - p3);
+                        memcpy(pszExtname, p3, nLength * sizeof(TCHAR));
+                        pszExtname[nLength] = 0;
+                    }
+                    else
+                        lstrcpy(pszExtname, EMPTY_STRING);
+                }
+                else
+                    lstrcpy(pszExtname, p1);
+            }
+            else
+                lstrcpy(pszExtname, EMPTY_STRING);
+        }
+    }
+    else
+    {
+        lstrcpy(pszExtname, EMPTY_STRING);
+    }
+
+    // Check is valid
+    if(lstrlen(pszExtname) > 0)
+    {
+        if(_tcsstr(pszExtname, _T("\\")) != NULL || _tcsstr(pszExtname, _T("/")) != NULL)
+            lstrcpy(pszExtname, EMPTY_STRING);
+    }
+
+    // Convert to lower case
+    _tcslwr(pszExtname);
+
+    // Free URL buffer
+    delete pURL;
 }

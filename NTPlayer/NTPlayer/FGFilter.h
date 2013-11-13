@@ -90,6 +90,23 @@ struct CodecsInfo
         checkbytes.RemoveAll();
         mediatypes.RemoveAll();
     }
+
+    bool IsVideoType() {
+        return 
+            ( type == kCodecsTypeVideoDecoder   ||
+              type == kCodecsTypeVideoEffect    ||
+              type == kCodecsTypeVideoEncoder   ||
+              type == kCodecsTypeVideoRenderer  );
+
+    }
+
+    bool IsAudioType() {
+        return 
+            ( type == kCodecsTypeAudioDecoder   ||
+            type == kCodecsTypeAudioEffect    ||
+            type == kCodecsTypeAudioEncoder   ||
+            type == kCodecsTypeAudioRenderer  );
+    }
 };
 
 

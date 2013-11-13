@@ -1,9 +1,37 @@
 #include "stdafx.h"
 #include "PlayerCore.h"
+#include "RenderersSettings.h"
+#include "FGManager.h"
+
+#define sCLSID_AudioSwitcher		_T("{18C16B08-6497-420E-AD14-22D21C2CEAB7}")
+#define sCLSID_VsFilter				_T("{93A22E7A-5091-45EF-BA61-6DA26156A5D0}")
+
+// {18C16B08-6497-420E-AD14-22D21C2CEAB7}
+DEFINE_GUID(CLSID_AudioSwitcher, 
+            0x18C16B08, 0x6497, 0x420E, 0xAD, 0x14, 0x22, 0xD2, 0x1C, 0x2C, 0xEA, 0xB7);
+
+
+enum {
+    WM_GRAPHNOTIFY = WM_RESET_DEVICE + 1,
+    WM_RESUMEFROMSTATE,
+    WM_SAVESETTINGS,
+    WM_TUNER_SCAN_PROGRESS,
+    WM_TUNER_SCAN_END,
+    WM_TUNER_STATS,
+    WM_TUNER_NEW_CHANNEL
+};
+
 
 CPlayerCore::CPlayerCore()
 {
     m_settings.LoadDefaultSettings();
+
+    m_ZoomX = 1;
+    m_ZoomY = 1;
+    m_PosX = 0.5;
+    m_PosY = 0.5;
+
+    m_AngleX = m_AngleY = m_AngleZ = 0;
 }
 
 CPlayerCore::~CPlayerCore()
@@ -14,6 +42,8 @@ CPlayerCore::~CPlayerCore()
 HRESULT CPlayerCore::Open(const char* url)
 {
     HRESULT hr = E_FAIL;
+
+    m_codecs.LoadCodecsInfo();
 
     OpenFileData* pOFD = new OpenFileData();
     if (pOFD == NULL)
@@ -89,14 +119,13 @@ HRESULT CPlayerCore::OpenMedia(CAutoPtr<OpenMediaData> pOMD)
     }
 
     // Create D3DFullscreen window if launched in fullscreen
-    if (m_settings.IsD3DFullscreen() && m_fStartInD3DFullscreen)
-    {
-        m_fStartInD3DFullscreen = false;
-    }
+    //     if (m_settings.IsD3DFullscreen() && m_fStartInD3DFullscreen)
+    //     {
+    //         m_fStartInD3DFullscreen = false;
+    //     }
 
     if (fUseThread) 
     {
-        //m_pGraphThread->PostGraphMessage(CGraphThread::GM_OPEN, (LPVOID)pOMD.Detach());
         m_pGraphThread->OpenMedia(pOMD);
         m_bOpenedThruThread = true;
     }
@@ -134,7 +163,8 @@ HRESULT CPlayerCore::CloseMedia()
         {
             //MessageBeep(MB_ICONEXCLAMATION);
             TRACE(_T("CRITICAL ERROR: !!! Must kill opener thread !!!"));
-            TerminateThread(m_pGraphThread->m_hThread, (DWORD) - 1);
+            //TerminateThread(m_pGraphThread->m_hThread, (DWORD) - 1);
+            m_pGraphThread->Terminate();
             //m_pGraphThread = (CGraphThread*)AfxBeginThread(RUNTIME_CLASS(CGraphThread));
             m_bOpenedThruThread = false;
             break;
@@ -190,249 +220,246 @@ HRESULT CPlayerCore::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
 
     CString err;
 
-        CComPtr<IVMRMixerBitmap9>    pVMB;
-        CComPtr<IMFVideoMixerBitmap> pMFVMB;
-        //CComPtr<IMadVRTextOsd>       pMVTO;
-         if (m_fOpeningAborted)
-         {
-             //throw (UINT)IDS_AG_ABORTED;
-             return E_ABORT;
-         }
+    CComPtr<IVMRMixerBitmap9>    pVMB;
+    CComPtr<IMFVideoMixerBitmap> pMFVMB;
+    if (m_fOpeningAborted)
+    {
+        return E_ABORT;
+    }
 
-        OpenCreateGraphObject(pOMD);
+    OpenCreateGraphObject(pOMD);
 
-         if (m_fOpeningAborted)
-         {
-             //throw (UINT)IDS_AG_ABORTED;
-             return E_ABORT;
-         }
+    if (m_fOpeningAborted)
+    {
+        return E_ABORT;
+    }
 
-        if (pFileData)
-        {
-            OpenFile(pFileData);
-        }
+    if (pFileData)
+    {
+        OpenFile(pFileData);
+    }
 
-        m_pCAP2 = NULL;
-        m_pCAP = NULL;
+    m_pCAP2 = NULL;
+    m_pCAP = NULL;
 
-        m_pGB->FindInterface(__uuidof(ISubPicAllocatorPresenter), (void**)&m_pCAP, TRUE);
-        m_pGB->FindInterface(__uuidof(ISubPicAllocatorPresenter2), (void**)&m_pCAP2, TRUE);
-        m_pGB->FindInterface(__uuidof(IVMRWindowlessControl9), (void**)&m_pVMRWC, FALSE); // might have IVMRMixerBitmap9, but not IVMRWindowlessControl9
-        m_pGB->FindInterface(__uuidof(IVMRMixerControl9), (void**)&m_pVMRMC, TRUE);
-        m_pGB->FindInterface(__uuidof(IVMRMixerBitmap9), (void**)&pVMB, TRUE);
-        m_pGB->FindInterface(__uuidof(IMFVideoMixerBitmap), (void**)&pMFVMB, TRUE);
-        //pMVTO = m_pCAP;
+    m_pGB->FindInterface(__uuidof(ISubPicAllocatorPresenter), (void**)&m_pCAP, TRUE);
+    m_pGB->FindInterface(__uuidof(ISubPicAllocatorPresenter2), (void**)&m_pCAP2, TRUE);
+    m_pGB->FindInterface(__uuidof(IVMRWindowlessControl9), (void**)&m_pVMRWC, FALSE); // might have IVMRMixerBitmap9, but not IVMRWindowlessControl9
+    m_pGB->FindInterface(__uuidof(IVMRMixerControl9), (void**)&m_pVMRMC, TRUE);
+    m_pGB->FindInterface(__uuidof(IVMRMixerBitmap9), (void**)&pVMB, TRUE);
+    m_pGB->FindInterface(__uuidof(IMFVideoMixerBitmap), (void**)&pMFVMB, TRUE);
+    //pMVTO = m_pCAP;
 
-        if (s.fShowOSD || s.fShowDebugInfo) // Force OSD on when the debug switch is used
-        {
-            if (pVMB)
-            {
-                m_OSD.Start(m_hVideoWindow, pVMB, IsD3DFullScreenMode());
-            }
-            else if (pMFVMB)
-            {
-                m_OSD.Start(m_hVideoWindow, pMFVMB, IsD3DFullScreenMode());
-            }
-        }
-
-        SetupVMR9ColorControl();
-
-        // === EVR !
-        m_pGB->FindInterface(__uuidof(IMFVideoDisplayControl), (void**)&m_pMFVDC, TRUE);
-        m_pGB->FindInterface(__uuidof(IMFVideoProcessor), (void**)&m_pMFVP, TRUE);
-        if (m_pMFVDC)
-        {
-            m_pMFVDC->SetVideoWindow(m_hVideoWindow);
-        }
-
-        //SetupEVRColorControl();
-        //does not work at this location
-        //need to choose the correct mode (IMFVideoProcessor::SetVideoProcessorMode)
-
-//         BeginEnumFilters(m_pGB, pEF, pBF)
+//     if (s.fShowOSD || s.fShowDebugInfo) // Force OSD on when the debug switch is used
+//     {
+//         if (pVMB)
 //         {
-//             if (m_pLN21 = pBF)
-//             {
-//                 m_pLN21->SetServiceState(s.fClosedCaptions ? AM_L21_CCSTATE_On : AM_L21_CCSTATE_Off);
-//                 break;
-//             }
+//             m_OSD.Start(m_hVideoWindow, pVMB, IsD3DFullScreenMode());
 //         }
-//         EndEnumFilters;
-
-        if (m_fOpeningAborted)
-        {
-            return E_ABORT;
-        }
-
-        OpenCustomizeGraph();
-
-        if (m_fOpeningAborted)
-        {
-            return E_ABORT;
-        }
-
-        OpenSetupVideo();
-
-        if (m_fOpeningAborted)
-        {
-            return E_ABORT;
-        }
-
-        OpenSetupAudio();
-
-        if (m_fOpeningAborted)
-        {
-            return E_ABORT;
-        }
-
-        if (m_pCAP && (!m_fAudioOnly || m_fRealMediaGraph))
-        {
-            if (s.fDisableInternalSubtitles)
-            {
-                m_pSubStreams.RemoveAll(); // Needs to be replaced with code that checks for forced subtitles.
-            }
-
-            m_posFirstExtSub = NULL;
-            POSITION pos = pOMD->subs.GetHeadPosition();
-            while (pos)
-            {
-                //LoadSubtitle(pOMD->subs.GetNext(pos), NULL, true);
-            }
-        }
-
-        if (m_fOpeningAborted)
-        {
-            return E_ABORT;
-        }
-
-        //OpenSetupWindowTitle();
-
-        ///*
-        while (m_iMediaLoadState != MLS_LOADED
-            && m_iMediaLoadState != MLS_CLOSING // FIXME
-            ) 
-        {
-               Sleep(50);
-        }
-        //*/
-
-        DWORD audstm = SetupAudioStreams();
-        DWORD substm = SetupSubtitleStreams();
-
-        if (audstm)
-        {
-            //OnPlayAudio(ID_AUDIO_SUBITEM_START + audstm);
-        }
-        if (substm)
-        {
-            //SetSubtitle(substm - 1);
-        }
-
-        // PostMessage instead of SendMessage because the user might call CloseMedia and then we would deadlock
-
-        //PostMessage(WM_COMMAND, ID_PLAY_PAUSE);
-
-        //m_bFirstPlay = true;
-
-//         if (!(s.nCLSwitches & CLSW_OPEN) && (s.nLoops > 0)) {
-//             PostMessage(WM_COMMAND, ID_PLAY_PLAY);
-//         } else {
-//             // If we don't start playing immediately, we need to initialize
-//             // the seekbar and the time counter.
-//             OnTimer(TIMER_STREAMPOSPOLLER);
-//             OnTimer(TIMER_STREAMPOSPOLLER2);
+//         else if (pMFVMB)
+//         {
+//             m_OSD.Start(m_hVideoWindow, pMFVMB, IsD3DFullScreenMode());
 //         }
+//     }
 
-        //s.nCLSwitches &= ~CLSW_OPEN;
+    SetupVMR9ColorControl();
 
-//         if (pFileData) {
-//             if (pFileData->rtStart > 0) {
-//                 PostMessage(WM_RESUMEFROMSTATE, (WPARAM)PM_FILE, (LPARAM)(pFileData->rtStart / 10000));  // REFERENCE_TIME doesn't fit in LPARAM under a 32bit env.
-//             }
-//         } else if (pDVDData) {
-//             if (pDVDData->pDvdState) {
-//                 PostMessage(WM_RESUMEFROMSTATE, (WPARAM)PM_DVD, (LPARAM)(CComPtr<IDvdState>(pDVDData->pDvdState).Detach()));    // must be released by the called message handler
-//             }
-//         } else if (pDeviceData) {
-//             m_wndCaptureBar.m_capdlg.SetVideoInput(pDeviceData->vinput);
-//             m_wndCaptureBar.m_capdlg.SetVideoChannel(pDeviceData->vchannel);
-//             m_wndCaptureBar.m_capdlg.SetAudioInput(pDeviceData->ainput);
-//         }
-    
+    // === EVR !
+    m_pGB->FindInterface(__uuidof(IMFVideoDisplayControl), (void**)&m_pMFVDC, TRUE);
+    m_pGB->FindInterface(__uuidof(IMFVideoProcessor), (void**)&m_pMFVP, TRUE);
+    if (m_pMFVDC)
+    {
+        m_pMFVDC->SetVideoWindow(m_hVideoWindow);
+    }
+
+    //SetupEVRColorControl();
+    //does not work at this location
+    //need to choose the correct mode (IMFVideoProcessor::SetVideoProcessorMode)
+
+    //         BeginEnumFilters(m_pGB, pEF, pBF)
+    //         {
+    //             if (m_pLN21 = pBF)
+    //             {
+    //                 m_pLN21->SetServiceState(s.fClosedCaptions ? AM_L21_CCSTATE_On : AM_L21_CCSTATE_Off);
+    //                 break;
+    //             }
+    //         }
+    //         EndEnumFilters;
+
+    if (m_fOpeningAborted)
+    {
+        return E_ABORT;
+    }
+
+    OpenCustomizeGraph();
+
+    if (m_fOpeningAborted)
+    {
+        return E_ABORT;
+    }
+
+    OpenSetupVideo();
+
+    if (m_fOpeningAborted)
+    {
+        return E_ABORT;
+    }
+
+    OpenSetupAudio();
+
+    if (m_fOpeningAborted)
+    {
+        return E_ABORT;
+    }
+
+    if (m_pCAP && (!m_fAudioOnly || m_fRealMediaGraph))
+    {
+        if (s.fDisableInternalSubtitles)
+        {
+            m_pSubStreams.RemoveAll(); // Needs to be replaced with code that checks for forced subtitles.
+        }
+
+        m_posFirstExtSub = NULL;
+        POSITION pos = pOMD->subs.GetHeadPosition();
+        while (pos)
+        {
+            //LoadSubtitle(pOMD->subs.GetNext(pos), NULL, true);
+        }
+    }
+
+    if (m_fOpeningAborted)
+    {
+        return E_ABORT;
+    }
+
+    //OpenSetupWindowTitle();
+
+    ///*
+    while (m_iMediaLoadState != MLS_LOADED
+        && m_iMediaLoadState != MLS_CLOSING // FIXME
+        ) 
+    {
+        Sleep(50);
+    }
+    //*/
+
+    DWORD audstm = SetupAudioStreams();
+    DWORD substm = SetupSubtitleStreams();
+
+    if (audstm)
+    {
+        //OnPlayAudio(ID_AUDIO_SUBITEM_START + audstm);
+    }
+    if (substm)
+    {
+        //SetSubtitle(substm - 1);
+    }
+
+    // PostMessage instead of SendMessage because the user might call CloseMedia and then we would deadlock
+
+    //PostMessage(WM_COMMAND, ID_PLAY_PAUSE);
+
+    //m_bFirstPlay = true;
+
+    //         if (!(s.nCLSwitches & CLSW_OPEN) && (s.nLoops > 0)) {
+    //             PostMessage(WM_COMMAND, ID_PLAY_PLAY);
+    //         } else {
+    //             // If we don't start playing immediately, we need to initialize
+    //             // the seekbar and the time counter.
+    //             OnTimer(TIMER_STREAMPOSPOLLER);
+    //             OnTimer(TIMER_STREAMPOSPOLLER2);
+    //         }
+
+    //s.nCLSwitches &= ~CLSW_OPEN;
+
+    //         if (pFileData) {
+    //             if (pFileData->rtStart > 0) {
+    //                 PostMessage(WM_RESUMEFROMSTATE, (WPARAM)PM_FILE, (LPARAM)(pFileData->rtStart / 10000));  // REFERENCE_TIME doesn't fit in LPARAM under a 32bit env.
+    //             }
+    //         } else if (pDVDData) {
+    //             if (pDVDData->pDvdState) {
+    //                 PostMessage(WM_RESUMEFROMSTATE, (WPARAM)PM_DVD, (LPARAM)(CComPtr<IDvdState>(pDVDData->pDvdState).Detach()));    // must be released by the called message handler
+    //             }
+    //         } else if (pDeviceData) {
+    //             m_wndCaptureBar.m_capdlg.SetVideoInput(pDeviceData->vinput);
+    //             m_wndCaptureBar.m_capdlg.SetVideoChannel(pDeviceData->vchannel);
+    //             m_wndCaptureBar.m_capdlg.SetAudioInput(pDeviceData->ainput);
+    //         }
+
 
 
     //EndWaitCursor();
 
-//     if (!err.IsEmpty()) {
-//         CloseMediaPrivate();
-//         m_closingmsg = err;
-// 
-//         if (err != ResStr(IDS_AG_ABORTED)) {
-//             if (pFileData) {
-//                 m_wndPlaylistBar.SetCurValid(false);
-// 
-//                 if (m_wndPlaylistBar.IsAtEnd()) {
-//                     m_nLoops++;
-//                 }
-// 
-//                 if (s.fLoopForever || m_nLoops < s.nLoops) {
-//                     bool hasValidFile = false;
-// 
-//                     if (m_nLastSkipDirection == ID_NAVIGATE_SKIPBACK) {
-//                         hasValidFile = m_wndPlaylistBar.SetPrev();
-//                     } else {
-//                         hasValidFile = m_wndPlaylistBar.SetNext();
-//                     }
-// 
-//                     if (hasValidFile) {
-//                         OpenCurPlaylistItem();
-//                     }
-//                 } else if (m_wndPlaylistBar.GetCount() > 1) {
-//                     DoAfterPlaybackEvent();
-//                 }
-//             } else {
-//                 OnNavigateSkip(ID_NAVIGATE_SKIPFORWARD);
-//             }
-//         }
-//     }
-//     else
-//     {
-//         m_wndPlaylistBar.SetCurValid(true);
-// 
-//         // Apply command line audio shift
-//         if (s.rtShift != 0)
-//         {
-//             SetAudioDelay(s.rtShift);
-//             s.rtShift = 0;
-//         }
-//     }
-// 
-//     m_nLastSkipDirection = 0;
-// 
-//     if (s.AutoChangeFullscrRes.bEnabled && (m_fFullScreen || IsD3DFullScreenMode()))
-//     {
-//         AutoChangeMonitorMode();
-//     }
-//     if (m_fFullScreen && s.fRememberZoomLevel)
-//     {
-//         m_fFirstFSAfterLaunchOnFS = true;
-//     }
-// 
-//     m_LastOpenFile = pOMD->title;
-// 
-//     PostMessage(WM_KICKIDLE); // calls main thread to update things
-// 
-//     if (!m_bIsBDPlay)
-//     {
-//         m_MPLSPlaylist.RemoveAll();
-//         m_LastOpenBDPath = _T("");
-//     }
-//     m_bIsBDPlay = false;
+    //     if (!err.IsEmpty()) {
+    //         CloseMediaPrivate();
+    //         m_closingmsg = err;
+    // 
+    //         if (err != ResStr(IDS_AG_ABORTED)) {
+    //             if (pFileData) {
+    //                 m_wndPlaylistBar.SetCurValid(false);
+    // 
+    //                 if (m_wndPlaylistBar.IsAtEnd()) {
+    //                     m_nLoops++;
+    //                 }
+    // 
+    //                 if (s.fLoopForever || m_nLoops < s.nLoops) {
+    //                     bool hasValidFile = false;
+    // 
+    //                     if (m_nLastSkipDirection == ID_NAVIGATE_SKIPBACK) {
+    //                         hasValidFile = m_wndPlaylistBar.SetPrev();
+    //                     } else {
+    //                         hasValidFile = m_wndPlaylistBar.SetNext();
+    //                     }
+    // 
+    //                     if (hasValidFile) {
+    //                         OpenCurPlaylistItem();
+    //                     }
+    //                 } else if (m_wndPlaylistBar.GetCount() > 1) {
+    //                     DoAfterPlaybackEvent();
+    //                 }
+    //             } else {
+    //                 OnNavigateSkip(ID_NAVIGATE_SKIPFORWARD);
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         m_wndPlaylistBar.SetCurValid(true);
+    // 
+    //         // Apply command line audio shift
+    //         if (s.rtShift != 0)
+    //         {
+    //             SetAudioDelay(s.rtShift);
+    //             s.rtShift = 0;
+    //         }
+    //     }
+    // 
+    //     m_nLastSkipDirection = 0;
+    // 
+    //     if (s.AutoChangeFullscrRes.bEnabled && (m_fFullScreen || IsD3DFullScreenMode()))
+    //     {
+    //         AutoChangeMonitorMode();
+    //     }
+    //     if (m_fFullScreen && s.fRememberZoomLevel)
+    //     {
+    //         m_fFirstFSAfterLaunchOnFS = true;
+    //     }
+    // 
+    //     m_LastOpenFile = pOMD->title;
+    // 
+    //     PostMessage(WM_KICKIDLE); // calls main thread to update things
+    // 
+    //     if (!m_bIsBDPlay)
+    //     {
+    //         m_MPLSPlaylist.RemoveAll();
+    //         m_LastOpenBDPath = _T("");
+    //     }
+    //     m_bIsBDPlay = false;
 
     return hr;
 }
 
-void CPlayerCore::CloseMediaPrivate()
+HRESULT CPlayerCore::CloseMediaPrivate()
 {
     SetLoadState(MLS_CLOSING); // why it before OnPlayStop()? // TODO: remake or add detailed comments
     OnPlayStop(); // SendMessage(WM_COMMAND, ID_PLAY_STOP);
@@ -467,8 +494,8 @@ void CPlayerCore::CloseMediaPrivate()
     m_pVMRMC.Release();
     m_pMFVP.Release();
     m_pMFVDC.Release();
-//     m_pLN21.Release();
-//     m_pSyncClock.Release();
+    //     m_pLN21.Release();
+    //     m_pSyncClock.Release();
 
     m_pAMXBar.Release();
     m_pAMDF.Release();
@@ -514,6 +541,8 @@ void CPlayerCore::CloseMediaPrivate()
     //AfxGetAppSettings().nCLSwitches &= CLSW_OPEN | CLSW_PLAY | CLSW_AFTERPLAYBACK_MASK | CLSW_NOFOCUS;
 
     SetLoadState(MLS_CLOSED);
+
+    return S_OK;
 }
 
 void CPlayerCore::OnPlayStop()
@@ -523,7 +552,7 @@ void CPlayerCore::OnPlayStop()
         if (GetPlaybackMode() == PM_FILE)
         {
             LONGLONG pos = 0;
-            m_pMS->SetPositions(&pos, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning);
+            m_pMS->SetPositions(&pos, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning);
             m_pMC->Stop();
         }
         else if (GetPlaybackMode() == PM_DVD)
@@ -539,11 +568,11 @@ void CPlayerCore::OnPlayStop()
 
         m_dSpeedRate = 1.0;
 
-//         if (m_fFrameSteppingActive) // FIXME
-//         {            
-//             m_fFrameSteppingActive = false;
-//             m_pBA->put_Volume(m_nVolumeBeforeFrameStepping);
-//         }
+        //         if (m_fFrameSteppingActive) // FIXME
+        //         {            
+        //             m_fFrameSteppingActive = false;
+        //             m_pBA->put_Volume(m_nVolumeBeforeFrameStepping);
+        //         }
     }
 
     //m_nLoops = 0;
@@ -553,21 +582,21 @@ void CPlayerCore::OnPlayStop()
         MoveVideoWindow();
     }
 
-//     if (!m_fEndOfStream)
-//     {
-//         CString strOSD = ResStr(ID_PLAY_STOP);
-//         int i = strOSD.Find(_T("\n"));
-//         if (i > 0)
-//         {
-//             strOSD.Delete(i, strOSD.GetLength() - i);
-//         }
-//         m_OSD.DisplayMessage(OSD_TOPLEFT, strOSD, 3000);
-//         m_Lcd.SetStatusMessage(ResStr(IDS_CONTROLS_STOPPED), 3000);
-//     }
-//     else
-//     {
-//         m_fEndOfStream = false;
-//     }
+    //     if (!m_fEndOfStream)
+    //     {
+    //         CString strOSD = ResStr(ID_PLAY_STOP);
+    //         int i = strOSD.Find(_T("\n"));
+    //         if (i > 0)
+    //         {
+    //             strOSD.Delete(i, strOSD.GetLength() - i);
+    //         }
+    //         m_OSD.DisplayMessage(OSD_TOPLEFT, strOSD, 3000);
+    //         m_Lcd.SetStatusMessage(ResStr(IDS_CONTROLS_STOPPED), 3000);
+    //     }
+    //     else
+    //     {
+    //         m_fEndOfStream = false;
+    //     }
     //SetPlayState(PS_STOP);
 }
 
@@ -576,7 +605,7 @@ void CPlayerCore::SetLoadState(MPC_LOADSTATE state)
     m_iMediaLoadState = state;
 }
 
-void CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
+HRESULT CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
 {
     ASSERT(m_pGB == NULL);
 
@@ -587,9 +616,9 @@ void CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
 
     if (OpenFileData* p = dynamic_cast<OpenFileData*>(pOMD))
     {
-        engine_t engine = s.m_Formats.GetEngine(p->fns.GetHead());
+        engine_t engine = s.m_Formats.GetEngine(p->strFileName);
 
-        CStringA ct = GetContentType(p->fns.GetHead());
+        CStringA ct = "";//GetContentType(p->strFileName);
 
         if (ct == "video/x-ms-asf")
         {
@@ -626,45 +655,45 @@ void CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
             //  throw ResStr(IDS_REALVIDEO_INCOMPATIBLE);
 
             //pUnk = (IUnknown*)(INonDelegatingUnknown*)new DSObjects::CRealMediaGraph(m_pVideoWnd->m_hWnd, hr);
-//             if (!pUnk)
-//             {
-//                 throw (UINT)IDS_AG_OUT_OF_MEMORY;
-//             }
+            //             if (!pUnk)
+            //             {
+            //                 throw (UINT)IDS_AG_OUT_OF_MEMORY;
+            //             }
 
-//             if (SUCCEEDED(hr))
-//             {
-//                 m_pGB = CComQIPtr<IGraphBuilder>(pUnk);
-//                 if (m_pGB)
-//                 {
-//                     m_fRealMediaGraph = true;
-//                 }
-//             }
+            //             if (SUCCEEDED(hr))
+            //             {
+            //                 m_pGB = CComQIPtr<IGraphBuilder>(pUnk);
+            //                 if (m_pGB)
+            //                 {
+            //                     m_fRealMediaGraph = true;
+            //                 }
+            //             }
         }
         else if (engine == ShockWave)
         {
             //pUnk = (IUnknown*)(INonDelegatingUnknown*)new DSObjects::CShockwaveGraph(m_pVideoWnd->m_hWnd, hr);
-//             if (!pUnk)
-//             {
-//                 throw (UINT)IDS_AG_OUT_OF_MEMORY;
-//             }
+            //             if (!pUnk)
+            //             {
+            //                 throw (UINT)IDS_AG_OUT_OF_MEMORY;
+            //             }
 
-//             if (SUCCEEDED(hr))
-//             {
-//                 m_pGB = CComQIPtr<IGraphBuilder>(pUnk);
-//             }
-//             if (FAILED(hr) || !m_pGB)
-//             {
-//                 throw (UINT)IDS_MAINFRM_77;
-//             }
+            //             if (SUCCEEDED(hr))
+            //             {
+            //                 m_pGB = CComQIPtr<IGraphBuilder>(pUnk);
+            //             }
+            //             if (FAILED(hr) || !m_pGB)
+            //             {
+            //                 throw (UINT)IDS_MAINFRM_77;
+            //             }
             //m_fShockwaveGraph = true;
         }
         else if (engine == QuickTime)
         {
             //pUnk = (IUnknown*)(INonDelegatingUnknown*)new DSObjects::CQuicktimeGraph(m_pVideoWnd->m_hWnd, hr);
-//             if (!pUnk)
-//             {
-//                 throw (UINT)IDS_AG_OUT_OF_MEMORY;
-//             }
+            //             if (!pUnk)
+            //             {
+            //                 throw (UINT)IDS_AG_OUT_OF_MEMORY;
+            //             }
 
             if (SUCCEEDED(hr))
             {
@@ -689,14 +718,14 @@ void CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
     }
     else if (OpenDeviceData* p = dynamic_cast<OpenDeviceData*>(pOMD))
     {
-//         if (s.iDefaultCaptureDevice == 1)
-//         {
-//             m_pGB = new CFGManagerBDA(_T("CFGManagerBDA"), NULL, m_hVideoWindow);
-//         }
-//         else
-//         {
-//             m_pGB = new CFGManagerCapture(_T("CFGManagerCapture"), NULL, m_hVideoWindow);
-//         }
+        //         if (s.iDefaultCaptureDevice == 1)
+        //         {
+        //             m_pGB = new CFGManagerBDA(_T("CFGManagerBDA"), NULL, m_hVideoWindow);
+        //         }
+        //         else
+        //         {
+        //             m_pGB = new CFGManagerCapture(_T("CFGManagerCapture"), NULL, m_hVideoWindow);
+        //         }
     }
 
     if (!m_pGB)
@@ -719,7 +748,7 @@ void CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
         || !(m_pVW && m_pBV)
         || !(m_pBA))
     {
-            //throw (UINT)IDS_GRAPH_INTERFACES_ERROR;
+        //throw (UINT)IDS_GRAPH_INTERFACES_ERROR;
         return E_FAIL;
     }
 
@@ -731,12 +760,14 @@ void CPlayerCore::OpenCreateGraphObject(OpenMediaData* pOMD)
 
     //m_pProv = (IUnknown*)new CKeyProvider();
 
-//     if (CComQIPtr<IObjectWithSite> pObjectWithSite = m_pGB)
-//     {
-//         pObjectWithSite->SetSite(m_pProv);
-//     }
-// 
-//     m_pCB = new CDSMChapterBag(NULL, NULL);
+    //     if (CComQIPtr<IObjectWithSite> pObjectWithSite = m_pGB)
+    //     {
+    //         pObjectWithSite->SetSite(m_pProv);
+    //     }
+    // 
+    //     m_pCB = new CDSMChapterBag(NULL, NULL);
+
+    return S_OK;
 }
 
 void CPlayerCore::OpenCustomizeGraph()
@@ -759,476 +790,67 @@ void CPlayerCore::OpenSetupAudio()
 
 DWORD CPlayerCore::SetupAudioStreams()
 {
-    if (m_iMediaLoadState != MLS_LOADED)
-    {
-        return 0;
-    }
-
-    CComQIPtr<IAMStreamSelect> pSS = FindFilter(__uuidof(CAudioSwitcherFilter), m_pGB);
-//     if (!pSS)
-//     {
-//         pSS = FindFilter(CLSID_MorganStreamSwitcher, m_pGB);
-//     }
-
-    DWORD cStreams = 0;
-    if (pSS && SUCCEEDED(pSS->Count(&cStreams)) && cStreams > 1)
-    {
-        const CPlayerSettings& s = m_settings;
-
-        CAtlArray<CString> langs;
-        int tPos = 0;
-        CString lang = s.strAudiosLanguageOrder.Tokenize(_T(",; "), tPos);
-        while (tPos != -1)
-        {
-            langs.Add(lang.MakeLower());
-            lang = s.strAudiosLanguageOrder.Tokenize(_T(",; "), tPos);
-        }
-
-        DWORD selected = 1;
-        int  maxrating = 0;
-        for (DWORD i = 0; i < cStreams; i++)
-        {
-            DWORD dwFlags, dwGroup;
-            WCHAR* pName = NULL;
-            CComPtr<IUnknown> pObject;
-            if (FAILED(pSS->Info(i, NULL, &dwFlags, NULL, &dwGroup, &pName, &pObject, NULL)))
-            {
-                continue;
-            }
-            CString name(pName);
-            CoTaskMemFree(pName);
-
-            // If the track is controlled by a splitter and isn't selected at splitter level
-            if (dwGroup == 1)
-            {
-                bool bSkipTrack;
-
-                // If the splitter is the internal LAV Splitter and no language preferences
-                // have been set at splitter level, we can override its choice safely
-                CComQIPtr<IBaseFilter> pBF = pObject;
-                if (pBF && CFGFilterLAV::IsInternalInstance(pBF))
-                {
-                    bSkipTrack = false;
-                    if (CComQIPtr<ILAVFSettings> pLAVFSettings = pBF)
-                    {
-                        LPWSTR langPrefs = NULL;
-                        if (SUCCEEDED(pLAVFSettings->GetPreferredLanguages(&langPrefs)) && langPrefs && wcslen(langPrefs))
-                        {
-                            bSkipTrack = true;
-                        }
-                        CoTaskMemFree(langPrefs);
-                    }
-                }
-                else
-                {
-                    bSkipTrack = !s.bAllowOverridingExternalSplitterChoice;
-                }
-
-                if (bSkipTrack)
-                {
-                    continue;
-                }
-            }
-
-            name.Trim();
-            name.MakeLower();
-
-            int rating = 0;
-            for (size_t j = 0; j < langs.GetCount(); j++)
-            {
-                int num = _tstoi(langs[j]) - 1;
-                if (num >= 0)
-                { // this is track number
-                    if (i != num)
-                    {
-                        continue;  // not matched
-                    }
-                }
-                else
-                { // this is lang string
-                    int len = langs[j].GetLength();
-                    if (name.Left(len) != langs[j] && name.Find(_T("[") + langs[j]) < 0)
-                    {
-                        continue; // not matched
-                    }
-                }
-                rating = 16 * int(langs.GetCount() - j);
-                break;
-            }
-
-            if (name.Find(_T("[default,forced]")) != -1)
-            { // for LAV Splitter
-                rating += 4 + 2;
-            }
-            if (name.Find(_T("[forced]")) != -1)
-            {
-                rating += 4;
-            }
-            if (name.Find(_T("[default]")) != -1)
-            {
-                rating += 2;
-            }
-            if (i == 0)
-            {
-                rating += 1;
-            }
-
-            if (rating > maxrating)
-            {
-                maxrating = rating;
-                selected = i;
-            }
-        }
-        return selected + 1;
-    }
-
     return 0;
 }
 
 DWORD CPlayerCore::SetupSubtitleStreams()
 {
-    const CPlayerSettings& s = m_settings;
-
-    size_t cStreams = m_pSubStreams.GetCount();
-    if (cStreams > 0)
-    {
-        bool externalPriority = false;
-        CAtlArray<CString> langs;
-        int tPos = 0;
-        CString lang = s.strSubtitlesLanguageOrder.Tokenize(_T(",; "), tPos);
-        while (tPos != -1)
-        {
-            langs.Add(lang.MakeLower());
-            lang = s.strSubtitlesLanguageOrder.Tokenize(_T(",; "), tPos);
-        }
-
-        DWORD selected = 0;
-        DWORD i = 0;
-        int  maxrating = 0;
-        POSITION pos = m_pSubStreams.GetHeadPosition();
-        while (pos)
-        {
-            if (m_posFirstExtSub == pos)
-            {
-                externalPriority = s.fPrioritizeExternalSubtitles;
-            }
-            SubtitleInput& subInput = m_pSubStreams.GetNext(pos);
-            CComPtr<ISubStream> pSubStream = subInput.subStream;
-            CComQIPtr<IAMStreamSelect> pSSF = subInput.sourceFilter;
-
-            bool bAllowOverridingSplitterChoice;
-            // If the internal LAV Splitter has its own language preferences set, we choose not to override its choice
-            if (pSSF && CFGFilterLAV::IsInternalInstance(subInput.sourceFilter))
-            {
-                bAllowOverridingSplitterChoice = true;
-                if (CComQIPtr<ILAVFSettings> pLAVFSettings = subInput.sourceFilter)
-                {
-                    LPWSTR langPrefs = NULL;
-                    if (SUCCEEDED(pLAVFSettings->GetPreferredSubtitleLanguages(&langPrefs)) && langPrefs && wcslen(langPrefs))
-                    {
-                        bAllowOverridingSplitterChoice = false;
-                    }
-                    CoTaskMemFree(langPrefs);
-                }
-            }
-            else
-            {
-                bAllowOverridingSplitterChoice = s.bAllowOverridingExternalSplitterChoice;
-            }
-
-            int count = 0;
-            if (pSSF)
-            {
-                DWORD cStreams;
-                if (SUCCEEDED(pSSF->Count(&cStreams)))
-                {
-                    count = (int)cStreams;
-                }
-            }
-            else
-            {
-                count = pSubStream->GetStreamCount();
-            }
-
-            for (int j = 0; j < count; j++)
-            {
-                WCHAR* pName;
-                HRESULT hr;
-                if (pSSF)
-                {
-                    DWORD dwFlags, dwGroup = 2;
-                    hr = pSSF->Info(j, NULL, &dwFlags, NULL, &dwGroup, &pName, NULL, NULL);
-                    if (dwGroup != 2)
-                    {
-                        CoTaskMemFree(pName);
-                        continue;
-                    }
-                    else if (!bAllowOverridingSplitterChoice && !(dwFlags & (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE)))
-                    {
-                        // If we aren't allowed to modify the splitter choice and the current
-                        // track isn't already selected at splitter level we need to skip it.
-                        CoTaskMemFree(pName);
-                        i++;
-                        continue;
-                    }
-                }
-                else
-                {
-                    hr = pSubStream->GetStreamInfo(j, &pName, NULL);
-                }
-                CString name(pName);
-                CoTaskMemFree(pName);
-                name.Trim();
-                name.MakeLower();
-
-                int rating = 0;
-                for (size_t k = 0; k < langs.GetCount(); k++)
-                {
-                    int num = _tstoi(langs[k]) - 1;
-                    if (num >= 0)
-                    { // this is track number
-                        if (i != num)
-                        {
-                            continue;  // not matched
-                        }
-                    }
-                    else
-                    { // this is lang string
-                        int len = langs[k].GetLength();
-                        if (name.Left(len) != langs[k] && name.Find(_T("[") + langs[k]) < 0)
-                        {
-                            continue; // not matched
-                        }
-                    }
-                    rating = 16 * int(langs.GetCount() - k);
-                    break;
-                }
-                if (externalPriority)
-                { // External tracks are given a higher priority than language matches
-                    rating += 16 * int(langs.GetCount() + 1);
-                }
-                if (s.bPreferDefaultForcedSubtitles)
-                {
-                    if (name.Find(_T("[default,forced]")) != -1)
-                    { // for LAV Splitter
-                        rating += 4 + 2;
-                    }
-                    if (name.Find(_T("[forced]")) != -1)
-                    {
-                        rating += 4;
-                    }
-                    if (name.Find(_T("[default]")) != -1)
-                    {
-                        rating += 2;
-                    }
-                }
-
-                if (rating > maxrating || !selected)
-                {
-                    maxrating = rating;
-                    selected = i + 1;
-                }
-                i++;
-            }
-        }
-        return selected;
-    }
-
     return 0;
 }
 
 HRESULT CPlayerCore::OpenFile(OpenFileData* pOFD)
 {
-    if (pOFD->fns.IsEmpty())
+    if (pOFD == NULL || pOFD->strFileName.IsEmpty())
     {
-        //throw (UINT)IDS_MAINFRM_81;
-        return E_FAIL;
+        return E_INVALIDARG;
     }
 
-    CPlayerSettings& s = m_settings;
+    CString fn = pOFD->strFileName;
 
-    bool bMainFile = true;
+    HRESULT hr = m_pGB->RenderFile(CStringW(fn), NULL);
 
-    POSITION pos = pOFD->fns.GetHeadPosition();
-    while (pos)
+    if (FAILED(hr))
     {
-        CString fn = pOFD->fns.GetNext(pos);
-
-        fn.Trim();
-        if (fn.IsEmpty() && !bMainFile)
+        if (m_settings.fReportFailedPins)
         {
-            break;
+            CComQIPtr<IGraphBuilderDeadEnd> pGBDE = m_pGB;
+            if (pGBDE && pGBDE->GetCount())
+            {
+                //CMediaTypesDlg(pGBDE, GetModalParent()).DoModal();
+            }
         }
+    }
+    return hr;
 
-        HRESULT hr = m_pGB->RenderFile(CStringW(fn), NULL);
 
-        if (bMainFile)
-        {
-            // Don't try to save file position if source isn't seekable
-            REFERENCE_TIME rtDur = 0;
-            m_pMS->GetDuration(&rtDur);
+//     if (!(m_pAMOP = m_pGB))
+//     {
+//         BeginEnumFilters(m_pGB, pEF, pBF);
+//         if (m_pAMOP = pBF)
+//         {
+//             break;
+//         }
+//         EndEnumFilters;
+//     }
 
-//             m_bRememberFilePos = s.fKeepHistory && s.fRememberFilePos && rtDur > 0;
+//     CComQIPtr<IKeyFrameInfo> pKFI;
+//     BeginEnumFilters(m_pGB, pEF, pBF);
+//     if (pKFI = pBF)
+//     {
+//         break;
+//     }
+//     EndEnumFilters;
 // 
-//             if (m_bRememberFilePos && !s.filePositions.AddEntry(fn))
-//             {
-//                 REFERENCE_TIME rtPos = s.filePositions.GetLatestEntry()->llPosition;
-//                 if (m_pMS)
-//                 {
-//                     m_pMS->SetPositions(&rtPos, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning);
-//                 }
-//             }
-        }
-        QueryPerformanceCounter(&m_liLastSaveTime);
-
-        if (FAILED(hr))
-        {
-            if (bMainFile)
-            {
-                if (s.fReportFailedPins)
-                {
-                    CComQIPtr<IGraphBuilderDeadEnd> pGBDE = m_pGB;
-                    if (pGBDE && pGBDE->GetCount())
-                    {
-                        //CMediaTypesDlg(pGBDE, GetModalParent()).DoModal();
-                    }
-                }
-
-                UINT err;
-
-//                 switch (hr)
-//                 {
-//                     case E_ABORT:
-//                     case RFS_E_ABORT:
-//                         err = IDS_MAINFRM_82;
-//                         break;
-//                     case E_FAIL:
-//                     case E_POINTER:
-//                     default:
-//                         err = IDS_MAINFRM_83;
-//                         break;
-//                     case E_INVALIDARG:
-//                         err = IDS_MAINFRM_84;
-//                         break;
-//                     case E_OUTOFMEMORY:
-//                         err = IDS_AG_OUT_OF_MEMORY;
-//                         break;
-//                     case VFW_E_CANNOT_CONNECT:
-//                         err = IDS_MAINFRM_86;
-//                         break;
-//                     case VFW_E_CANNOT_LOAD_SOURCE_FILTER:
-//                         err = IDS_MAINFRM_87;
-//                         break;
-//                     case VFW_E_CANNOT_RENDER:
-//                         err = IDS_MAINFRM_88;
-//                         break;
-//                     case VFW_E_INVALID_FILE_FORMAT:
-//                         err = IDS_MAINFRM_89;
-//                         break;
-//                     case VFW_E_NOT_FOUND:
-//                         err = IDS_MAINFRM_90;
-//                         break;
-//                     case VFW_E_UNKNOWN_FILE_TYPE:
-//                         err = IDS_MAINFRM_91;
-//                         break;
-//                     case VFW_E_UNSUPPORTED_STREAM:
-//                         err = IDS_MAINFRM_92;
-//                         break;
-//                     case RFS_E_NO_FILES:
-//                         err = IDS_RFS_NO_FILES;
-//                         break;
-//                     case RFS_E_COMPRESSED:
-//                         err = IDS_RFS_COMPRESSED;
-//                         break;
-//                     case RFS_E_ENCRYPTED:
-//                         err = IDS_RFS_ENCRYPTED;
-//                         break;
-//                     case RFS_E_MISSING_VOLS:
-//                         err = IDS_RFS_MISSING_VOLS;
-//                         break;
-//                 }
-
-                //throw err;
-                return E_FAIL;
-            }
-        }
-
-        // We don't keep track of piped inputs since that hardly makes any sense
-        if (s.fKeepHistory && fn.Find(_T("pipe:")) != 0)
-        {
-            CRecentFileList* pMRU = bMainFile ? &s.MRU : &s.MRUDub;
-            pMRU->ReadList();
-            pMRU->Add(fn);
-            pMRU->WriteList();
-            SHAddToRecentDocs(SHARD_PATH, fn);
-        }
-
-        if (bMainFile)
-        {
-            pOFD->title = fn;
-            if (!(m_pFSF = m_pGB))
-            {
-                BeginEnumFilters(m_pGB, pEF, pBF);
-                if (m_pFSF = pBF)
-                {
-                    break;
-                }
-                EndEnumFilters;
-            }
-        }
-
-        bMainFile = false;
-
-        if (m_fCustomGraph)
-        {
-            break;
-        }
-    }
-
-    if (s.fReportFailedPins)
-    {
-        CComQIPtr<IGraphBuilderDeadEnd> pGBDE = m_pGB;
-        if (pGBDE && pGBDE->GetCount())
-        {
-            CMediaTypesDlg(pGBDE, GetModalParent()).DoModal();
-        }
-    }
-
-    if (!(m_pAMOP = m_pGB))
-    {
-        BeginEnumFilters(m_pGB, pEF, pBF);
-        if (m_pAMOP = pBF)
-        {
-            break;
-        }
-        EndEnumFilters;
-    }
-
-    if (FindFilter(CLSID_MPCShoutcastSource, m_pGB))
-    {
-        m_fUpdateInfoBar = true;
-    }
-
-    SetupChapters();
-
-    CComQIPtr<IKeyFrameInfo> pKFI;
-    BeginEnumFilters(m_pGB, pEF, pBF);
-    if (pKFI = pBF)
-    {
-        break;
-    }
-    EndEnumFilters;
-
-    UINT nKFs = 0;
-    if (pKFI && S_OK == pKFI->GetKeyFrameCount(nKFs) && nKFs > 0)
-    {
-        UINT k = nKFs;
-        m_kfs.resize(k);
-        if (FAILED(pKFI->GetKeyFrames(&TIME_FORMAT_MEDIA_TIME, m_kfs.data(), k)) || k != nKFs)
-        {
-            m_kfs.clear();
-        }
-    }
+//     UINT nKFs = 0;
+//     if (pKFI && S_OK == pKFI->GetKeyFrameCount(nKFs) && nKFs > 0)
+//     {
+//         UINT k = nKFs;
+//         m_kfs.resize(k);
+//         if (FAILED(pKFI->GetKeyFrames(&TIME_FORMAT_MEDIA_TIME, m_kfs.data(), k)) || k != nKFs)
+//         {
+//             m_kfs.clear();
+//         }
+//     }
 
     SetPlaybackMode(PM_FILE);
 }
@@ -1251,35 +873,38 @@ HRESULT CPlayerCore::Pause()
 
 void CPlayerCore::OnOpenResult(HRESULT hr)
 {
-    
+
 }
 
 void CPlayerCore::MoveVideoWindow(bool fShowStats)
 {
-    if ((m_iMediaLoadState == MLS_LOADED) && !m_fAudioOnly && IsWindowVisible())
+    if ((m_iMediaLoadState == MLS_LOADED) && !m_fAudioOnly && IsWindowVisible(m_hVideoWindow))
     {
-        RECT wr;
+//        RECT wr;
         // fullscreen
-        if (IsD3DFullScreenMode())
-        {
-            m_pFullscreenWnd->GetClientRect(&wr);
-        }
+//         if (IsD3DFullScreenMode())
+//         {
+//             m_pFullscreenWnd->GetClientRect(&wr);
+//         }
         // windowed Mode
-        else if (!m_fFullScreen)
-        {
-            m_wndView.GetClientRect(&wr);
-        }
+//         else if (!m_fFullScreen)
+//         {
+//             m_wndView.GetClientRect(&wr);
+//         }
         // fullscreen on non-primary monitor
-        else
-        {
-            GetWindowRect(&wr);
-            RECT r;
-            m_wndView.GetWindowRect(&r);
-            wr.left   -= r.left;
-            wr.right  -= r.left;
-            wr.top    -= r.top;
-            wr.bottom -= r.top;
-        }
+//         else
+//         {
+//             GetWindowRect(&wr);
+//             RECT r;
+//             m_wndView.GetWindowRect(&r);
+//             wr.left   -= r.left;
+//             wr.right  -= r.left;
+//             wr.top    -= r.top;
+//             wr.bottom -= r.top;
+//         }
+
+        RECT wr;
+        GetClientRect(m_hVideoWindow, &wr);        
 
         double dWRWidth  = (double)(wr.right - wr.left);
         double dWRHeight = (double)(wr.bottom - wr.top);
@@ -1294,53 +919,55 @@ void CPlayerCore::MoveVideoWindow(bool fShowStats)
             double dARx = (double)(arxy.cx);
             double dARy = (double)(arxy.cy);
 
-            dvstype iDefaultVideoSize = static_cast<dvstype>(AfxGetAppSettings().iDefaultVideoSize);
+            //dvstype iDefaultVideoSize = static_cast<dvstype>(AfxGetAppSettings().iDefaultVideoSize);
             double dVRWidth, dVRHeight;
-            if (iDefaultVideoSize == DVS_HALF) {
-                dVRWidth  = dARx * 0.5;
-                dVRHeight = dARy * 0.5;
-            } else if (iDefaultVideoSize == DVS_NORMAL) {
-                dVRWidth  = dARx;
-                dVRHeight = dARy;
-            } else if (iDefaultVideoSize == DVS_DOUBLE) {
-                dVRWidth  = dARx * 2.0;
-                dVRHeight = dARy * 2.0;
-            } else {
-                dVRWidth  = dWRWidth;
-                dVRHeight = dWRHeight;
-            }
+//             if (iDefaultVideoSize == DVS_HALF) {
+//                 dVRWidth  = dARx * 0.5;
+//                 dVRHeight = dARy * 0.5;
+//             } else if (iDefaultVideoSize == DVS_NORMAL) {
+//                 dVRWidth  = dARx;
+//                 dVRHeight = dARy;
+//             } else if (iDefaultVideoSize == DVS_DOUBLE) {
+//                 dVRWidth  = dARx * 2.0;
+//                 dVRHeight = dARy * 2.0;
+//             } else {
+//                 dVRWidth  = dWRWidth;
+//                 dVRHeight = dWRHeight;
+//             }
+            dVRWidth = dWRWidth;
+            dVRHeight = dWRHeight;
 
             if (!m_fShockwaveGraph) { // && !m_fQuicktimeGraph)
                 double dCRWidth = dVRHeight * dARx / dARy;
 
-                if (iDefaultVideoSize == DVS_FROMINSIDE) {
-                    if (dVRWidth < dCRWidth) {
-                        dVRHeight = dVRWidth * dARy / dARx;
-                    } else {
-                        dVRWidth = dCRWidth;
-                    }
-                } else if (iDefaultVideoSize == DVS_FROMOUTSIDE) {
-                    if (dVRWidth > dCRWidth) {
-                        dVRHeight = dVRWidth * dARy / dARx;
-                    } else {
-                        dVRWidth = dCRWidth;
-                    }
-                } else if ((iDefaultVideoSize == DVS_ZOOM1) || (iDefaultVideoSize == DVS_ZOOM2)) {
-                    double minw = dCRWidth;
-                    double maxw = dCRWidth;
-
-                    if (dVRWidth < dCRWidth) {
-                        minw = dVRWidth;
-                    } else {
-                        maxw = dVRWidth;
-                    }
-
-                    double scale = (iDefaultVideoSize == DVS_ZOOM1) ?
-                        1.0 / 3.0 :
-                    2.0 / 3.0;
-                    dVRWidth  = minw + (maxw - minw) * scale;
-                    dVRHeight = dVRWidth * dARy / dARx;
-                }
+//                 if (iDefaultVideoSize == DVS_FROMINSIDE) {
+//                     if (dVRWidth < dCRWidth) {
+//                         dVRHeight = dVRWidth * dARy / dARx;
+//                     } else {
+//                         dVRWidth = dCRWidth;
+//                     }
+//                 } else if (iDefaultVideoSize == DVS_FROMOUTSIDE) {
+//                     if (dVRWidth > dCRWidth) {
+//                         dVRHeight = dVRWidth * dARy / dARx;
+//                     } else {
+//                         dVRWidth = dCRWidth;
+//                     }
+//                 } else if ((iDefaultVideoSize == DVS_ZOOM1) || (iDefaultVideoSize == DVS_ZOOM2)) {
+//                     double minw = dCRWidth;
+//                     double maxw = dCRWidth;
+// 
+//                     if (dVRWidth < dCRWidth) {
+//                         minw = dVRWidth;
+//                     } else {
+//                         maxw = dVRWidth;
+//                     }
+// 
+//                     double scale = (iDefaultVideoSize == DVS_ZOOM1) ?
+//                         1.0 / 3.0 :
+//                     2.0 / 3.0;
+//                     dVRWidth  = minw + (maxw - minw) * scale;
+//                     dVRHeight = dVRWidth * dARy / dARx;
+//                 }
             }
 
             double dScaledVRWidth = m_ZoomX * dVRWidth;
@@ -1359,7 +986,7 @@ void CPlayerCore::MoveVideoWindow(bool fShowStats)
             if (fShowStats) {
                 CString info;
                 info.Format(_T("Pos %.3f %.3f, Zoom %.3f %.3f, AR %.3f"), m_PosX, m_PosY, m_ZoomX, m_ZoomY, dScaledVRWidth / dScaledVRHeight);
-                SendStatusMessage(info, 3000);
+                //SendStatusMessage(info, 3000);
             }
         }
 
@@ -1374,19 +1001,17 @@ void CPlayerCore::MoveVideoWindow(bool fShowStats)
             hr = m_pVW->SetWindowPosition(wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top);
 
             if (m_pMFVDC) {
-                m_pMFVDC->SetVideoPosition(nullptr, &wr);
+                m_pMFVDC->SetVideoPosition(NULL, &wr);
             }
         }
-
-        m_wndView.SetVideoRect(&wr);
-        m_OSD.SetSize(wr, vr);
+        //m_OSD.SetSize(wr, vr);
     }
     else
     {
-        m_wndView.SetVideoRect();
+        //m_wndView.SetVideoRect();
     }
 
-    UpdateThumbarButton();
+    //UpdateThumbarButton();
 }
 
 CSize CPlayerCore::GetVideoSize() const
@@ -1461,7 +1086,7 @@ CSize CPlayerCore::GetVideoSize() const
             {
                 double a = 1.0 * _HORZSIZE / _VERTSIZE;
                 double b = 1.0 * _HORZRES / _VERTRES;
-                
+
                 if (b < a)
                 {
                     ret.cy = (DWORD)(1.0 * ret.cy * a / b);
@@ -1475,7 +1100,7 @@ CSize CPlayerCore::GetVideoSize() const
             ::ReleaseDC(0, hDC);
         }
     }
-    
+
     return ret;
 }
 
@@ -1500,16 +1125,16 @@ void CPlayerCore::SetupVMR9ColorControl()
     {
         CPlayerSettings& s = m_settings;
 
-        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Brightness)))) {
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, NULL/*pApp->GetVMR9ColorControl(ProcAmp_Brightness)*/))) {
             return;
         }
-        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Contrast)))) {
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, NULL/*pApp->GetVMR9ColorControl(ProcAmp_Contrast)*/))) {
             return;
         }
-        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Hue)))) {
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, NULL/*pApp->GetVMR9ColorControl(ProcAmp_Hue)*/))) {
             return;
         }
-        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, pApp->GetVMR9ColorControl(ProcAmp_Saturation)))) {
+        if (FAILED(m_pVMRMC->GetProcAmpControlRange(0, NULL/*pApp->GetVMR9ColorControl(ProcAmp_Saturation)*/))) {
             return;
         }
 
@@ -1519,24 +1144,25 @@ void CPlayerCore::SetupVMR9ColorControl()
 
 void CPlayerCore::SetColorControl(DWORD flags, int& brightness, int& contrast, int& hue, int& saturation)
 {
+    /*
     static VMR9ProcAmpControl  ClrControl;
     static DXVA2_ProcAmpValues ClrValues;
 
     COLORPROPERTY_RANGE* cr;
     if (flags & ProcAmp_Brightness) {
-        cr = pApp->GetColorControl(ProcAmp_Brightness);
+        cr = GetColorControl(ProcAmp_Brightness);
         brightness = min(max(brightness, cr->MinValue), cr->MaxValue);
     }
     if (flags & ProcAmp_Contrast) {
-        cr = pApp->GetColorControl(ProcAmp_Contrast);
+        cr = GetColorControl(ProcAmp_Contrast);
         contrast = min(max(contrast, cr->MinValue), cr->MaxValue);
     }
     if (flags & ProcAmp_Hue) {
-        cr = pApp->GetColorControl(ProcAmp_Hue);
+        cr = GetColorControl(ProcAmp_Hue);
         hue = min(max(hue, cr->MinValue), cr->MaxValue);
     }
     if (flags & ProcAmp_Saturation) {
-        cr = pApp->GetColorControl(ProcAmp_Saturation);
+        cr = GetColorControl(ProcAmp_Saturation);
         saturation = min(max(saturation, cr->MinValue), cr->MaxValue);
     }
 
@@ -1557,4 +1183,5 @@ void CPlayerCore::SetColorControl(DWORD flags, int& brightness, int& contrast, i
 
         m_pMFVP->SetProcAmpValues(flags, &ClrValues);
     }
+    */
 }

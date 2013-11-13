@@ -7,18 +7,16 @@
 #define NTPLAYER_API __declspec(dllimport)
 #endif
 
-typedef long NTPLAYER_RESULT;
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-NTPLAYER_API NTPLAYER_RESULT ntplayer_init();
-NTPLAYER_API NTPLAYER_RESULT ntplayer_uninit();
-NTPLAYER_API NTPLAYER_RESULT ntplayer_get_codecs_info_string(const char** info);
-NTPLAYER_API NTPLAYER_RESULT ntplayer_open(const char* url);
-NTPLAYER_API NTPLAYER_RESULT ntplayer_close();
+NTPLAYER_API long ntplayer_init();
+NTPLAYER_API long ntplayer_uninit();
+NTPLAYER_API long ntplayer_get_codecs_info_string(const char** info);
+NTPLAYER_API long ntplayer_open(const char* url);
+NTPLAYER_API long ntplayer_close();
 
 
 

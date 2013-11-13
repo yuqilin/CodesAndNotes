@@ -50,13 +50,14 @@ HRESULT CFGManager::LoadCodecsInfo()
 {
     // load codecsinfo.xml
 
+    const CodecsInfoList& codecs = CPlayerCore::GetCodecsManager().GetCodecsInfoList();
 
     // create CFGFilter
-    POSITION pos = m_Codecs.GetHeadPosition();
+    POSITION pos = codecs.GetHeadPosition();
     while (pos)
     {
         CFGFilter* pFGF = NULL;
-        CodecsInfo* pInfo = m_Codecs.GetNext(pos);
+        CodecsInfo* pInfo = codecs.GetNext(pos);
         if (pInfo)
         {
             if (pInfo->type == kCodecsTypeVideoRenderer)
@@ -72,19 +73,38 @@ HRESULT CFGManager::LoadCodecsInfo()
                 pFGF = new CFGFilterFile(pInfo);
             }
 
-//             if (pInfo->type == kCodecsTypeSourceFilter)
-//             {
-//                 m_source.AddTail(pFGF);
-//             }
-//             else
-//             {
-//                 m_transform.AddTail(pFGF);
-//             }
+            if (pInfo->type == kCodecsTypeSourceFilter)
+            {
+                m_source.AddTail(pFGF);
+            }
+            else
+            {
+                m_transform.AddTail(pFGF);
+            }
         }
     }
 
     return S_OK;
 }
+
+CFGFilter* CFGManager::FindFromFilterList(const GUID& clsid, CAtlList<CFGFilter*>& filter_list)
+{
+    CFGFilter* pFound = NULL;
+
+    POSITION pos = filter_list.GetHeadPosition();
+    while (pos)
+    {
+        CFGFilter* pFGF = filter_list.GetNext(pos);
+        if (pFGF && pFGF->GetCLSID() == clsid)
+        {
+            pFound = pFGF;
+            break;
+        }
+    }
+
+    return pFound;
+}
+
 
 CodecsInfo* CFGManager::FindCodecsInfo(const CString& clsid)
 {
@@ -382,14 +402,14 @@ HRESULT CFGManager::AddSourceFilter(CFGFilter* pFGF, LPCWSTR lpcwstrFileName, LP
 
     const AM_MEDIA_TYPE* pmt = NULL;
 
-    CMediaType mt;
-    const CAtlList<GUID>& types = pFGF->GetTypes();
-    if (types.GetCount() == 2 && (types.GetHead() != GUID_NULL || types.GetTail() != GUID_NULL))
-    {
-        mt.majortype = types.GetHead();
-        mt.subtype = types.GetTail();
-        pmt = &mt;
-    }
+//     CMediaType mt;
+//     const CAtlList<GUID>& types = pFGF->GetTypes();
+//     if (types.GetCount() == 2 && (types.GetHead() != GUID_NULL || types.GetTail() != GUID_NULL))
+//     {
+//         mt.majortype = types.GetHead();
+//         mt.subtype = types.GetTail();
+//         pmt = &mt;
+//     }
 
     // sometimes looping with AviSynth
     if (FAILED(hr = pFSF->Load(lpcwstrFileName, pmt))) {
@@ -398,23 +418,23 @@ HRESULT CFGManager::AddSourceFilter(CFGFilter* pFGF, LPCWSTR lpcwstrFileName, LP
     }
 
     // doh :P
-    BeginEnumMediaTypes(GetFirstPin(pBF, PINDIR_OUTPUT), pEMT, pmt) {
-        static const GUID guid1 =
-        { 0x640999A0, 0xA946, 0x11D0, { 0xA5, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } };
-        static const GUID guid2 =
-        { 0x640999A1, 0xA946, 0x11D0, { 0xA5, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } };
-        static const GUID guid3 =
-        { 0xD51BD5AE, 0x7548, 0x11CF, { 0xA5, 0x20, 0x00, 0x80, 0xC7, 0x7E, 0xF5, 0x8A } };
-
-        if (pmt->subtype == guid1 || pmt->subtype == guid2 || pmt->subtype == guid3) {
-            RemoveFilter(pBF);
-            pFGF = new CFGFilterRegistry(CLSID_NetShowSource);
-            hr = AddSourceFilter(pFGF, lpcwstrFileName, lpcwstrFilterName, ppBF);
-            delete pFGF;
-            return hr;
-        }
-    }
-    EndEnumMediaTypes(pmt);
+//     BeginEnumMediaTypes(GetFirstPin(pBF, PINDIR_OUTPUT), pEMT, pmt) {
+//         static const GUID guid1 =
+//         { 0x640999A0, 0xA946, 0x11D0, { 0xA5, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } };
+//         static const GUID guid2 =
+//         { 0x640999A1, 0xA946, 0x11D0, { 0xA5, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } };
+//         static const GUID guid3 =
+//         { 0xD51BD5AE, 0x7548, 0x11CF, { 0xA5, 0x20, 0x00, 0x80, 0xC7, 0x7E, 0xF5, 0x8A } };
+// 
+//         if (pmt->subtype == guid1 || pmt->subtype == guid2 || pmt->subtype == guid3) {
+//             RemoveFilter(pBF);
+//             pFGF = new CFGFilterRegistry(CLSID_NetShowSource);
+//             hr = AddSourceFilter(pFGF, lpcwstrFileName, lpcwstrFilterName, ppBF);
+//             delete pFGF;
+//             return hr;
+//         }
+//     }
+//     EndEnumMediaTypes(pmt);
 
     *ppBF = pBF.Detach();
 
@@ -492,14 +512,14 @@ STDMETHODIMP CFGManager::ConnectDirect(IPin* pPinOut, IPin* pPinIn, const AM_MED
     CLSID clsid = GetCLSID(pBF);
 
     // TODO: GetUpStreamFilter goes up on the first input pin only
-    for (CComPtr<IBaseFilter> pBFUS = GetFilterFromPin(pPinOut); pBFUS; pBFUS = GetUpStreamFilter(pBFUS)) {
-        if (pBFUS == pBF) {
-            return VFW_E_CIRCULAR_GRAPH;
-        }
-        if (clsid != CLSID_Proxy && GetCLSID(pBFUS) == clsid) {
-            return VFW_E_CANNOT_CONNECT;
-        }
-    }
+//     for (CComPtr<IBaseFilter> pBFUS = GetFilterFromPin(pPinOut); pBFUS; pBFUS = GetUpStreamFilter(pBFUS)) {
+//         if (pBFUS == pBF) {
+//             return VFW_E_CIRCULAR_GRAPH;
+//         }
+//         if (clsid != CLSID_Proxy && GetCLSID(pBFUS) == clsid) {
+//             return VFW_E_CANNOT_CONNECT;
+//         }
+//     }
 
     return CComQIPtr<IFilterGraph2>(m_pUnkInner)->ConnectDirect(pPinOut, pPinIn, pmt);
 }
@@ -688,13 +708,13 @@ HRESULT CFGManager::Connect(IPin* pPinOut, IPin* pPinIn, bool bContinueRender)
                 continue;
             }
 
-            if (pMadVRAllocatorPresenter && (pFGF->GetCLSID() == CLSID_madVR))
-            {
-                // the pure madVR filter was selected (without the allocator presenter)
-                // subtitles, OSD etc don't work correctly without the allocator presenter
-                // so we prefer the allocator presenter over the pure filter
-                pFGF = pMadVRAllocatorPresenter;
-            }
+//             if (pMadVRAllocatorPresenter && (pFGF->GetCLSID() == CLSID_madVR))
+//             {
+//                 // the pure madVR filter was selected (without the allocator presenter)
+//                 // subtitles, OSD etc don't work correctly without the allocator presenter
+//                 // so we prefer the allocator presenter over the pure filter
+//                 pFGF = pMadVRAllocatorPresenter;
+//             }
 
             TRACE(_T("FGM: Connecting '%s'\n"), pFGF->GetName());
 
@@ -880,7 +900,8 @@ STDMETHODIMP CFGManager::RenderFile(LPCWSTR lpcwstrFileName, LPCWSTR lpcwstrPlay
         CComPtr<IBaseFilter> pBF;
         CFGFilter* pFG = fl.GetNext(pos);
 
-        if (pFG->m_info && SUCCEEDED(hr = AddSourceFilter(pFG, lpcwstrFileName, pFG->m_info->name), &pBF))
+        if (pFG->m_info &&
+            SUCCEEDED(hr = AddSourceFilter(pFG, lpcwstrFileName, pFG->GetName(), &pBF)))
         {
             m_streampath.RemoveAll();
             m_deadends.RemoveAll();
@@ -1087,7 +1108,7 @@ STDMETHODIMP CFGManager::ConnectFilter(IBaseFilter* pBF, IPin* pPinIn)
 
     int nTotal = 0, nRendered = 0;
 
-    const CPlayerSettings& s = AfxGetAppSettings();
+    const CPlayerSettings& s = CPlayerCore::m_settings;
 
     BeginEnumPins(pBF, pEP, pPin) {
         if (S_OK == IsPinDirection(pPin, PINDIR_OUTPUT)
@@ -1097,22 +1118,22 @@ STDMETHODIMP CFGManager::ConnectFilter(IBaseFilter* pBF, IPin* pPinIn)
                 CLSID clsid;
                 pBF->GetClassID(&clsid);
                 // Disable DVD subtitle mixing in EVR (CP) and Sync Renderer for Microsoft DTV-DVD Video Decoder, it corrupts DVD playback.
-                if (clsid == CLSID_CMPEG2VidDecoderDS) {
-                    if (s.iDSVideoRendererType == VIDRNDT_DS_EVR_CUSTOM || s.iDSVideoRendererType == VIDRNDT_DS_SYNC) {
-                        if (GetPinName(pPin)[0] == '~') {
-                            continue;
-                        }
-                    }
-                }
-                // No multiple pin for Internal MPEG2 Software Decoder, Nvidia PureVideo Decoder, Sonic Cinemaster VideoDecoder
-                else if (clsid == CLSID_CMpeg2DecFilter
-                    || clsid == CLSID_NvidiaVideoDecoder
-                    || clsid == CLSID_SonicCinemasterVideoDecoder) {
-                        if (GetPinName(pPin)[0] == '~') {
-                            continue;
-                        }
-                        //TODO: enable multiple pins for the renderer, if the video decoder supports DXVA
-                }
+//                 if (clsid == CLSID_CMPEG2VidDecoderDS) {
+//                     if (s.iDSVideoRendererType == VIDRNDT_DS_EVR_CUSTOM || s.iDSVideoRendererType == VIDRNDT_DS_SYNC) {
+//                         if (GetPinName(pPin)[0] == '~') {
+//                             continue;
+//                         }
+//                     }
+//                 }
+//                 // No multiple pin for Internal MPEG2 Software Decoder, Nvidia PureVideo Decoder, Sonic Cinemaster VideoDecoder
+//                 else if (clsid == CLSID_CMpeg2DecFilter
+//                     || clsid == CLSID_NvidiaVideoDecoder
+//                     || clsid == CLSID_SonicCinemasterVideoDecoder) {
+//                         if (GetPinName(pPin)[0] == '~') {
+//                             continue;
+//                         }
+//                         //TODO: enable multiple pins for the renderer, if the video decoder supports DXVA
+//                 }
 
                 m_streampath.Append(pBF, pPin);
 
@@ -1339,7 +1360,7 @@ STDMETHODIMP CFGManagerCustom::AddFilter(IBaseFilter* pBF, LPCWSTR pName)
         return hr;
     }
 
-    CPlayerSettings& s = CPlayerCore::m_settings();
+    CPlayerSettings& s = CPlayerCore::m_settings;
 
     if (GetCLSID(pBF) == CLSID_DMOWrapperFilter) {
         if (CComQIPtr<IPropertyBag> pPB = pBF) {
@@ -1349,12 +1370,12 @@ STDMETHODIMP CFGManagerCustom::AddFilter(IBaseFilter* pBF, LPCWSTR pName)
     }
 
     // set AudioSwitcher
-    if (CComQIPtr<IAudioSwitcherFilter> pASF = pBF) {
-        pASF->EnableDownSamplingTo441(s.fDownSampleTo441);
-        pASF->SetSpeakerConfig(s.fCustomChannelMapping, s.pSpeakerToChannelMap);
-        pASF->SetAudioTimeShift(s.fAudioTimeShift ? 10000i64 * s.iAudioTimeShift : 0);
-        pASF->SetNormalizeBoost2(s.fAudioNormalize, s.nAudioMaxNormFactor, s.fAudioNormalizeRecover, s.nAudioBoost);
-    }
+//     if (CComQIPtr<IAudioSwitcherFilter> pASF = pBF) {
+//         pASF->EnableDownSamplingTo441(s.fDownSampleTo441);
+//         pASF->SetSpeakerConfig(s.fCustomChannelMapping, s.pSpeakerToChannelMap);
+//         pASF->SetAudioTimeShift(s.fAudioTimeShift ? 10000i64 * s.iAudioTimeShift : 0);
+//         pASF->SetNormalizeBoost2(s.fAudioNormalize, s.nAudioMaxNormFactor, s.fAudioNormalizeRecover, s.nAudioBoost);
+//     }
 
     return hr;
 }
@@ -1411,7 +1432,7 @@ CFGManagerPlayer::CFGManagerPlayer(LPCTSTR pName, LPUNKNOWN pUnk, HWND hWnd)
     POSITION pos = m_transform.GetHeadPosition();
     while (pos)
     {
-        const CFGFilter* pFGF = m_transform.GetNext(pos);
+        CFGFilter* pFGF = m_transform.GetNext(pos);
         if (pFGF && pFGF->m_info)
         {
             if (pFGF->m_info->IsVideoType())
@@ -1472,36 +1493,40 @@ CFGManagerPlayer::CFGManagerPlayer(LPCTSTR pName, LPUNKNOWN pUnk, HWND hWnd)
         break;
     }
 
-    CString SelAudioRenderer = s.SelectedAudioRenderer();
-    if (SelAudioRenderer == AUDRNDT_NULL_COMP) {
-        pFGF = new CFGFilterInternal<CNullAudioRenderer>(AUDRNDT_NULL_COMP, MERIT64_ABOVE_DSHOW + 2);
-        pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
-        m_transform.AddTail(pFGF);
-    } else if (SelAudioRenderer == AUDRNDT_NULL_UNCOMP) {
-        pFGF = new CFGFilterInternal<CNullUAudioRenderer>(AUDRNDT_NULL_UNCOMP, MERIT64_ABOVE_DSHOW + 2);
-        pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
-        m_transform.AddTail(pFGF);
-    } else if (SelAudioRenderer == AUDRNDT_MPC) {
-        pFGF = new CFGFilterInternal<CMpcAudioRenderer>(AUDRNDT_MPC, MERIT64_ABOVE_DSHOW + 2);
-        pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
-        m_transform.AddTail(pFGF);
-    } else if (!SelAudioRenderer.IsEmpty()) {
-        pFGF = new CFGFilterRegistry(SelAudioRenderer, m_armerit);
-        pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
-        m_transform.AddTail(pFGF);
-    }
+//     CString SelAudioRenderer = s.SelectedAudioRenderer();
+//     if (SelAudioRenderer == AUDRNDT_NULL_COMP) {
+//         pFGF = new CFGFilterInternal<CNullAudioRenderer>(AUDRNDT_NULL_COMP, MERIT64_ABOVE_DSHOW + 2);
+//         pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
+//         m_transform.AddTail(pFGF);
+//     } else if (SelAudioRenderer == AUDRNDT_NULL_UNCOMP) {
+//         pFGF = new CFGFilterInternal<CNullUAudioRenderer>(AUDRNDT_NULL_UNCOMP, MERIT64_ABOVE_DSHOW + 2);
+//         pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
+//         m_transform.AddTail(pFGF);
+//     } else if (SelAudioRenderer == AUDRNDT_MPC) {
+//         pFGF = new CFGFilterInternal<CMpcAudioRenderer>(AUDRNDT_MPC, MERIT64_ABOVE_DSHOW + 2);
+//         pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
+//         m_transform.AddTail(pFGF);
+//     } else if (!SelAudioRenderer.IsEmpty()) {
+//         pFGF = new CFGFilterRegistry(SelAudioRenderer, m_armerit);
+//         pFGF->AddType(MEDIATYPE_Audio, MEDIASUBTYPE_NULL);
+//         m_transform.AddTail(pFGF);
+//     }
 
     CFGFilter* pFGF = FindFromFilterList(selVideoRenderer, m_transform);
-    pFGF->SetMerit(m_vrmerit);
+    if (pFGF != NULL)
+        pFGF->SetMerit(m_vrmerit);
 
     pFGF = FindFromFilterList(selAudioRenderer, m_transform);
-    pFGF->SetMerit(m_armerit);
+    if (pFGF)
+        pFGF->SetMerit(m_armerit);
 
-    pFGF = FindFromFilterList(CLSID_VSFilter, m_transform);
-    pFGF->SetMerit(m_vrmerit + 0x100);
+    pFGF = FindFromFilterList(GUID_NULL/*CLSID_VSFilter*/, m_transform);
+    if (pFGF)
+        pFGF->SetMerit(m_vrmerit + 0x100);
 
-    pFGF = FindFromFilterList(CLSID_AudioSwitcher, m_transform);
-    pFGF->SetMerit(m_armerit + 0x100);
+    pFGF = FindFromFilterList(GUID_NULL/*CLSID_AudioSwitcher*/, m_transform);
+    if (pFGF)
+        pFGF->SetMerit(m_armerit + 0x100);
 }
 
 STDMETHODIMP CFGManagerPlayer::ConnectDirect(IPin* pPinOut, IPin* pPinIn, const AM_MEDIA_TYPE* pmt)
@@ -1604,9 +1629,9 @@ STDMETHODIMP CFGManagerDVD::AddSourceFilter(LPCWSTR lpcwstrFileName, LPCWSTR lpc
     pDVDC->SetOption(DVD_ResetOnStop, FALSE);
     pDVDC->SetOption(DVD_HMSF_TimeCodeEvents, TRUE);
 
-    if (clsid == CLSID_DVDNavigator) {
-        CResetDVD(CString(buff));
-    }
+//     if (clsid == CLSID_DVDNavigator) {
+//         CResetDVD(CString(buff));
+//     }
 
     *ppFilter = pBF.Detach();
 

@@ -35,14 +35,15 @@ class CFGManager
     , public CCritSec
 {
 protected:
-    static CAtlList<CodecsInfo*> m_Codecs;
     static bool m_fCodecsLoaded;
 
 public:
-    static HRESULT LoadCodecsInfo();
-    static HRESULT UnloadCodecsInfo();
+    HRESULT LoadCodecsInfo();
+    HRESULT UnloadCodecsInfo();
 
     CodecsInfo* FindCodecsInfo(const CString& clsid);
+
+    CFGFilter* FindFromFilterList(const GUID& clsid, CAtlList<CFGFilter*>& filter_list);
 
 
 public:
@@ -144,6 +145,8 @@ public:
 public:
     CFGManagerCustom(LPCTSTR pName, LPUNKNOWN pUnk);
 };
+
+CCritSec
 
 class CFGManagerPlayer : public CFGManagerCustom
 {

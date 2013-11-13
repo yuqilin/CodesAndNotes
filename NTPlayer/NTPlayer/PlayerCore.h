@@ -1,8 +1,18 @@
 #ifndef _NTPLAYER_PLAYERCORE_H_
 #define _NTPLAYER_PLAYERCORE_H_
 
+#include <d3d9.h>
+#include <d3d9types.h>
 #include <dxva2api.h>
+#include <vmr9.h>
+#include <evr.h>
+#include <evr9.h>
 #include "SyncClock.h"
+#include "CodecsManager.h"
+#include "PlayerSettings.h"
+#include "DSMPropertyBag.h"
+#include "ISubPic.h"
+#include "IGraphBuilder2.h"
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -128,6 +138,8 @@ interface ISubClock;
 //////////////////////////////////////////////////////////////////////////
 class CPlayerCore
 {
+    friend class CGraphThread;
+
     // TODO: wrap these graph objects into a class to make it look cleaner
 
     CComPtr<IGraphBuilder2> m_pGB;
@@ -174,7 +186,7 @@ class CPlayerCore
 
     CCritSec m_csSubLock;
 
-    CList<SubtitleInput> m_pSubStreams;
+    CAtlList<SubtitleInput> m_pSubStreams;
     POSITION m_posFirstExtSub;
     ISubStream* m_pCurrentSubStream;
 
@@ -203,6 +215,11 @@ public:
     int GetPlaybackMode() const { return m_iPlaybackMode; }
 
 
+    static CCodecsManager& GetCodecsManager() {
+        return m_codecs;
+    }
+
+
 
 protected:
     HRESULT OpenMedia(CAutoPtr<OpenMediaData> pOMD);
@@ -211,6 +228,21 @@ protected:
 
     HRESULT OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD);
     HRESULT CloseMediaPrivate();
+
+    HRESULT OpenCreateGraphObject(OpenMediaData* pOMD);
+    HRESULT OpenFile(OpenFileData* pOFD);
+
+    void OpenCustomizeGraph();
+    void OpenSetupVideo();
+    void OpenSetupAudio();
+
+    DWORD SetupAudioStreams();
+    DWORD SetupSubtitleStreams();
+
+    void SetPlaybackMode(int iNewStatus);
+
+    void MoveVideoWindow(bool fShowStats = false);
+
     void OnPlayStop();
 
     void SetLoadState(MPC_LOADSTATE state);
@@ -221,6 +253,12 @@ protected:
 
     void AutoChangeMonitorMode();
     bool CreateFullScreenWindow();
+
+    void SetupVMR9ColorControl();
+
+    OAFilterState GetMediaState() const;
+
+    void SetColorControl(DWORD flags, int& brightness, int& contrast, int& hue, int& saturation);
 
 public:
     static CPlayerSettings  m_settings;
@@ -233,8 +271,6 @@ protected:
     bool m_fAudioOnly;
 
 
-
-    friend class CGraphThread;
     CGraphThread* m_pGraphThread;
     bool m_bOpenedThruThread;
 
@@ -255,6 +291,14 @@ protected:
     REFERENCE_TIME m_rtDurationOverride;
     std::vector<REFERENCE_TIME> m_kfs;
     CComPtr<IDSMChapterBag> m_pCB;
+
+
+    double m_ZoomX;
+    double m_ZoomY;
+    double m_PosX;
+    double m_PosY;
+
+    int m_AngleX, m_AngleY, m_AngleZ;
 
 
 private:
