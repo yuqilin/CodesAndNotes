@@ -24,6 +24,20 @@ struct MEMORY_DATA
 {
     int	    size;
     BYTE *	data;
+
+    MEMORY_DATA() {
+        size = 0;
+        data = NULL;
+    }
+
+    ~MEMORY_DATA() {
+        Reset();
+    }
+
+    void Reset() {
+        SAFE_DELETE(data);
+        size = 0;
+    }
 };
 
 class MediaInfo

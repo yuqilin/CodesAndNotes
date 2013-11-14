@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PlayerBaseStream.h"
+
 class PlayerFileStream : public PlayerBaseStream
 {
 public:
@@ -7,12 +9,10 @@ public:
     ~PlayerFileStream();
 
     // PlayerBaseStream
-    HRESULT Load(LPCWSTR fn);
-
-    // Operations
-    BOOL Open(LPCTSTR lpszFileName);
+    HRESULT Open(LPCTSTR lpszFileName);
     void Close();
 
+    // CAyncStream
     HRESULT SetPointer(LONGLONG llPos);
     HRESULT Read(PBYTE pbBuffer,
         DWORD dwBytesToRead,
@@ -21,8 +21,5 @@ public:
     LONGLONG Size(LONGLONG *pSizeAvailable = NULL);
 
 protected:
-    CString m_strFileName;
     HANDLE m_hFile;
-    ULONGLONG m_llFileSize;
-    LONGLONG m_llPosition;
 };

@@ -208,10 +208,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\FileStream.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MediaInfo.cpp"
 				>
 			</File>
@@ -232,6 +228,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlayerBaseStream.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PlayerCodecs.cpp"
 				>
 			</File>
@@ -248,15 +248,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlayerQvodStream.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PlayerSettings.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\PlayerThread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\QvodStream.cpp"
 				>
 			</File>
 			<File
@@ -290,10 +290,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BaseStream.h"
-				>
-			</File>
-			<File
 				RelativePath=".\CodecsInfo.h"
 				>
 			</File>
@@ -303,10 +299,6 @@
 			</File>
 			<File
 				RelativePath=".\ffdshow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FileStream.h"
 				>
 			</File>
 			<File
@@ -358,15 +350,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlayerQvodStream.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PlayerSettings.h"
 				>
 			</File>
 			<File
 				RelativePath=".\PlayerThread.h"
-				>
-			</File>
-			<File
-				RelativePath=".\QvodStream.h"
 				>
 			</File>
 			<File
@@ -379,10 +371,6 @@
 			</File>
 			<File
 				RelativePath=".\ShowDebug.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SHP2PService.h"
 				>
 			</File>
 			<File

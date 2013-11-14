@@ -7,7 +7,7 @@ PlayerAsyncReader : public CAsyncReader
                   , public IFileSourceFilter
 {
 public:
-    PlayerAsyncReader(HRESULT* phr);
+    PlayerAsyncReader(CAsyncStream* pStream, HRESULT* phr);
     ~PlayerAsyncReader();
 
     DECLARE_IUNKNOWN
@@ -17,10 +17,8 @@ public:
     STDMETHODIMP		Load(LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt);
     STDMETHODIMP		GetCurFile(LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt);
 
-protected:
-    static BOOL CheckBytes();
 
 protected:
-    PlayerAsyncStream   m_stream;
+    CAsyncStream*       m_pStream;
     CStringW            m_fn;
 };

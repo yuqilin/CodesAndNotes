@@ -14,7 +14,6 @@ class BaseGraph;
 //////////////////////////////////////////////////////////////////////////
 class PlayerCore
 {
-    friend class PlayerThread;
 public:
     PlayerCore();
     ~PlayerCore();
@@ -33,7 +32,7 @@ public:
     HRESULT GetDuration(long* duration);
     HRESULT GetCurrentPlayPos(long* current_play_pos);
     HRESULT SetPlayPos(long pos_to_play);
-    bool         IsPlaying();
+    //bool    IsPlaying();
 
     // video display
     HRESULT SetVideoWindow(HWND video_window);
@@ -69,7 +68,6 @@ public:
 //     }
 
 protected:
-
     HRESULT CreatePlayerThread();
     HRESULT DestroyPlayerThread();
 
@@ -84,7 +82,7 @@ protected:
 
 protected:
     BaseGraph* m_PlayerGraph;
-    PlayerBaseStream* m_Stream;
+    PlayerBaseStream* m_pStream;
 
     PlayerState state_;
     FastMutex   state_mutex_;

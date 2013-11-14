@@ -3,7 +3,6 @@
 #include "PlayerBaseStream.h"
 
 #define MAX_URL_LENGTH          2048
-#define MEDIA_HEADER_LENGTH		65536
 
 MediaInfo::MediaInfo(LPCTSTR lpcszUrl, HRESULT& hr)
 : m_pUrl(NULL)

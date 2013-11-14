@@ -3,8 +3,8 @@
 #include "PlayerCore.h"
 #include "SingletonHolder.h"
 #include "DirectShowGraph.h"
-#include "FileStream.h"
-#include "QvodStream.h"
+#include "PlayerFileStream.h"
+#include "PlayerQvodStream.h"
 
 //////////////////////////////////////////////////////////////////////////
 static SingletonHolder<PlayerSettings> s_settings;
@@ -21,7 +21,7 @@ static DWORD s_dwStop = 0;
 //////////////////////////////////////////////////////////////////////////
 PlayerCore::PlayerCore()
 : m_PlayerGraph(0)
-, m_Stream(0)
+, m_pStream(0)
 , m_fCreated(false)
 , state_(kPlayerStateNothingSpecial)
 , m_PlayerThread(NULL)
@@ -44,7 +44,7 @@ HRESULT PlayerCore::Create()
         //assert(thread_ == 0);
         assert(m_MediaInfo == NULL);
         assert(m_PlayerGraph == 0);
-        assert(m_Stream == 0);
+        assert(m_pStream == 0);
 
         // load default settings
         hr = GetPlayerSettings().LoadSettings();
@@ -87,7 +87,7 @@ HRESULT PlayerCore::Destroy()
         DestroyPlayerThread();
 
         SAFE_DELETE(m_PlayerGraph);
-        SAFE_DELETE(m_Stream);
+        SAFE_DELETE(m_pStream);
         SAFE_DELETE(m_MediaInfo);
 
         GetPlayerCodecs().FreeCodecs();
@@ -324,7 +324,7 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
 
     HRESULT hr = E_FAIL;
 
-    // MediaInfo
+    // Create MediaInfo
     m_MediaInfo = new MediaInfo(strUrl->GetBuffer(), hr);
 
     if (FAILED(hr) || !m_MediaInfo)
@@ -333,25 +333,24 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
         return hr;
     }
 
-    // Stream
+    // Create Stream
     MediaProtocol protocol = m_MediaInfo->GetProtocol();
     if (protocol == kProtocolFile)
     {
-        m_Stream = new FileStream;
+        m_pStream = new PlayerFileStream;
 
     }
     else if (protocol == kProtocolQvod)
     {
-        m_Stream = new QvodStream;
+        m_pStream = new PlayerQvodStream;
     }
     
-    if (FAILED(hr = m_Stream->Load(m_MediaInfo->GetUrl())))
+    if (FAILED(hr = m_pStream->Open(m_MediaInfo->GetUrl())))
     {
         return hr;
     }
 
-
-    // Filter Graph
+    // Create Graph
     m_PlayerGraph = new DirectShowGraph(hr);
     if (FAILED(hr) || !m_PlayerGraph)
     {
@@ -388,7 +387,7 @@ HRESULT PlayerCore::DoClose()
     HRESULT res = NOERROR;
 
     SAFE_DELETE(m_PlayerGraph);
-    SAFE_DELETE(m_Stream);
+    SAFE_DELETE(m_pStream);
     SAFE_DELETE(m_MediaInfo);
 
     

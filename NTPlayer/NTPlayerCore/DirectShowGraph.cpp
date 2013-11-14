@@ -26,12 +26,6 @@ HRESULT DirectShowGraph::OpenMedia(MediaInfo* media_info)
 
     m_pMediaInfo = media_info;
 
-//     if (FAILED(hr = PrepareRenderFile()))
-//     {
-//         return hr;
-//     }
-// 
-//     hr = RenderFile(m_pMediaInfo->GetUrl());
     hr = Core_Render();
 
     return hr;
@@ -504,6 +498,30 @@ HRESULT DirectShowGraph::Core_EnumSourceFilters(CodecsListEx& fl)
     return S_OK;
 }
 
+HRESULT DirectShowGraph::Core_AddFilter(CodecsInfo* info, IBaseFilter** ppBF)
+{
+    HRESULT hr = E_FAIL;
+    CComPtr<IBaseFilter> pBF;
+    CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
+    hr = PlayerCore::GetPlayerCodecs().CreateCodecsObject(info, &pBF, pUnks);
+
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+    if (FAILED(hr = Core_AddFilter(pBF, info->name)))
+    {
+        pUnks.RemoveAll();
+        return hr;
+    }
+
+    *ppBF = pBF.Detach();
+
+    m_pUnks.AddTailList(&pUnks);
+
+    return S_OK;
+}
+
 HRESULT DirectShowGraph::Core_AddFilter(IBaseFilter* pBF, LPCWSTR pName)
 {
     HRESULT hr = E_FAIL;
@@ -566,16 +584,7 @@ HRESULT DirectShowGraph::Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** pp
     HRESULT hr = E_FAIL;
 
     CComPtr<IBaseFilter> pBF;
-    CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
-    hr = PlayerCore::GetPlayerCodecs().CreateCodecsObject(info, &pBF, pUnks);
-
-    if (FAILED(hr))
-    {
-        return hr;
-    }
-
-    
-    if (FAILED(hr = Core_AddFilter(pBF, info->name)))
+    if (FAILED(hr = Core_AddFilter(info, &pBF)))
     {
         return hr;
     }
@@ -585,14 +594,11 @@ HRESULT DirectShowGraph::Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** pp
         return hr;
     }
 
-
     *ppBF = pBF.Detach();
-
-    m_pUnks.AddTailList(&pUnks);
-
 
     return S_OK;
 }
+
 
 HRESULT DirectShowGraph::Core_ConnectFilterDirect(IPin* pPinOut, IBaseFilter* pBF, const AM_MEDIA_TYPE* pmt)
 {
@@ -727,15 +733,8 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
             player_log(kLogLevelTrace, _T("Connecting '%s'"), info->name);
 
             CComPtr<IBaseFilter> pBF;
-            CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
-            if (FAILED(PlayerCore::GetPlayerCodecs().CreateCodecsObject(info, &pBF, pUnks)))
+            if (FAILED(hr = Core_AddFilter(info, &pBF)))
             {
-                continue;
-            }
-
-            if (FAILED(hr = Core_AddFilter(pBF, info->name)))
-            {
-                pUnks.RemoveAll();
                 pBF.Release();
                 continue;
             }

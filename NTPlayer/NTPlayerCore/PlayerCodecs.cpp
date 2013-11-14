@@ -28,6 +28,14 @@ struct CodecsPathFlagAll
     const char* name;
 };
 
+typedef HRESULT (*pfnCodecsInnerCreate)(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
+struct CodecsInner
+{
+    GUID clsid;
+    pfnCodecsInnerCreate pfnCreate; 
+};
+
+//////////////////////////////////////////////////////////////////////////
 static CodecsCategoryAll s_CodecsCategoryAll[] = {
     { kCodecsCategoryDSFilter, "dsfilter" },
     { kCodecsCategoryDMO, "dmo" },
@@ -56,6 +64,10 @@ static CodecsPathFlagAll s_CodecsPathFlagAll[] = {
     { kCodecsPathFlagInner,     "inner" },
 };
 
+static CodecsInner s_CodecsInner[] = {
+    { __uuidof(PlayerAsyncReader), PlayerCodecsInner::Create<PlayerAsyncReader> },
+    
+};
 // static int s_CodecsCategoryAllCount = _countof(s_CodecsCategoryAll);
 // static int s_CodecsTypeAllCount = _countof(s_CodecsTypeAll);
 // static int s_CodecsPathFlagAllCount = _countof(s_CodecsPathFlagAll);
@@ -346,7 +358,15 @@ HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CIn
 
 HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
 {
+    CheckPointer(info, E_POINTER);
+
     HRESULT hr = E_FAIL;
+
+    CComPtr<IBaseFilter> pBF;
+    if (info->clsid == __uuidof(PlayerAsyncReader))
+    {
+        pBF = new PlayerAsyncReader();
+    }
 
     return hr;
 }

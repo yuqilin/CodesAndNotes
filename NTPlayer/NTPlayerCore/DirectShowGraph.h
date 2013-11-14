@@ -73,6 +73,8 @@ protected:
     HRESULT Core_EnumSourceFilters(CodecsListEx& fl);
     HRESULT Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** ppBF);
     HRESULT Core_FileSourceFilterLoad(IBaseFilter* pBF, LPCTSTR pSubtype);
+    HRESULT Core_AddFilter(CodecsInfo* info, IBaseFilter** ppBF);
+
     HRESULT Core_AddFilter(IBaseFilter* pBF, LPCWSTR pName);
     HRESULT Core_RenderFilter(IBaseFilter* pBF);
     HRESULT Core_RenderPin(IPin* pPinOut);
