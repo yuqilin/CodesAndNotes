@@ -359,13 +359,21 @@ HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CIn
 HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
 {
     CheckPointer(info, E_POINTER);
+    CheckPointer(ppBF, E_POINTER);
 
     HRESULT hr = E_FAIL;
 
     CComPtr<IBaseFilter> pBF;
+
+    // PlayerAsyncReader
     if (info->clsid == __uuidof(PlayerAsyncReader))
     {
-        pBF = new PlayerAsyncReader();
+        pBF = new PlayerAsyncReader(&hr);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        *ppBF = pBF.Detach();
     }
 
     return hr;

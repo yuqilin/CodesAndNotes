@@ -10,7 +10,7 @@ public:
 
     virtual HRESULT Open(LPCTSTR pUrl) { return E_NOTIMPL; }
     virtual void Close();
-    MEMORY_DATA* GetFileHeader() { return &m_Header; }
+    MEMORY_DATA* GetHeader() { return &m_Header; }
 
 
     // CAsyncStream

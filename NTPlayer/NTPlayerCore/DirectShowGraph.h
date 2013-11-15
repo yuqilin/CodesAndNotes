@@ -6,7 +6,7 @@
 class DirectShowGraph : public BaseGraph
 {
 public:
-    DirectShowGraph(HRESULT& hr);
+    DirectShowGraph(PlayerCore* pPlayer, HRESULT& hr);
     ~DirectShowGraph();
 
     // IPlayControl

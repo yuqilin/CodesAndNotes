@@ -6,8 +6,9 @@
 #define sClsid_VsFilter         _T("{93A22E7A-5091-45EF-BA61-6DA26156A5D0}")
 #define sClsid_AudioSwitcher    _T("{18C16B08-6497-420E-AD14-22D21C2CEAB7}")
 
-DirectShowGraph::DirectShowGraph(HRESULT& hr)
-: m_vrmerit(MERIT64_PREFERRED)
+DirectShowGraph::DirectShowGraph(PlayerCore* pPlayer, HRESULT& hr)
+: BaseGraph(pPlayer)
+, m_vrmerit(MERIT64_PREFERRED)
 , m_armerit(MERIT64_PREFERRED)
 {
     hr = m_pIGraphBuilder.CoCreateInstance(CLSID_FilterGraph);
@@ -15,7 +16,7 @@ DirectShowGraph::DirectShowGraph(HRESULT& hr)
 
 DirectShowGraph::~DirectShowGraph()
 {
-
+    CloseMedia();
 }
 
 HRESULT DirectShowGraph::OpenMedia(MediaInfo* media_info)
@@ -34,7 +35,9 @@ HRESULT DirectShowGraph::OpenMedia(MediaInfo* media_info)
 HRESULT DirectShowGraph::CloseMedia()
 {
     HRESULT res = S_OK;
-    SAFE_DELETE(m_pMediaInfo);
+    
+    Stop();
+
     return res;
 }
 
@@ -587,6 +590,15 @@ HRESULT DirectShowGraph::Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** pp
     if (FAILED(hr = Core_AddFilter(info, &pBF)))
     {
         return hr;
+    }
+
+    if (info->clsid == __uuidof(PlayerAsyncReader))
+    {
+        PlayerAsyncReader* pReader = dynamic_cast<PlayerAsyncReader*>(pBF);
+        if (pReader)
+        {
+            pReader->SetAsyncStream((CAsyncStream*)m_pPlayer->GetStream());
+        }
     }
 
     if (FAILED(hr = Core_FileSourceFilterLoad(pBF, m_SourceFilterLoadSubtype)))

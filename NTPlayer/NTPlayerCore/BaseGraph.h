@@ -11,14 +11,17 @@ class BaseGraph
     , public IAudioControl
 {
 public:
-    BaseGraph() : m_pMediaInfo(NULL) {}
+    BaseGraph(PlayerCore* pPlayer)
+        : m_pPlayer(pPlayer)
+        , m_pMediaInfo(NULL)
+    {}
     virtual ~BaseGraph() {}
 
 protected:
-    virtual HRESULT PrepareRenderFile() { return S_OK; }
 
 protected:
     MediaInfo* m_pMediaInfo;
+    PlayerCore* m_pPlayer;
 };
 
 #endif

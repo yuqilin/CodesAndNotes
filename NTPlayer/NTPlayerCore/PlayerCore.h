@@ -59,6 +59,10 @@ public:
         return instance_;
     }
 
+    PlayerBaseStream* GetStream() {
+        return m_pStream;
+    }
+
 //     static void SetLogCallback(player_log_callback log) {
 //         log_ = log;
 //     }

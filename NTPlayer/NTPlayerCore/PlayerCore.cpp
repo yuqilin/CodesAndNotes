@@ -351,18 +351,14 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
     }
 
     // Create Graph
-    m_PlayerGraph = new DirectShowGraph(hr);
+    m_PlayerGraph = new DirectShowGraph(this, hr);
     if (FAILED(hr) || !m_PlayerGraph)
     {
         player_log(kLogLevelTrace, _T("Create DirectShowGraph FAIL, hr = 0x%08x"), hr);
         return hr;
     }
 
-    if (m_PlayerGraph)
-    {
-        hr = m_PlayerGraph->OpenMedia(m_MediaInfo);
-    }
-
+    hr = m_PlayerGraph->OpenMedia(m_MediaInfo);
     if (SUCCEEDED(hr))
     {
         // open succeeded
