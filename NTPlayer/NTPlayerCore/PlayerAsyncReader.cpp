@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "PlayerAsyncReader.h"
 
-PlayerAsyncReader::PlayerAsyncReader(CAsyncStream* pStream, HRESULT* phr)
-: CAsyncReader(NAME("PlayerAsyncReader"), NULL, pStream, phr, __uuidof(this))
-, m_pStream(pStream)
+PlayerAsyncReader::PlayerAsyncReader(HRESULT* phr)
+: CAsyncReader(NAME("PlayerAsyncReader"), NULL, NULL, phr, __uuidof(this))
+, m_pStream(NULL)
 {
 
 }

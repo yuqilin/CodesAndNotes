@@ -1,13 +1,14 @@
 #include "stdafx.h"
+#include <mpconfig.h>
+#include <evr.h>
 #include "rapidxml/rapidxml.hpp"
 #include "PlayerCodecs.h"
 #include "PlayerCore.h"
 #include "../SubPic/ISubPic.h"
-#include "../VideoRenderers/AllocatorCommon7.h"
-#include "../VideoRenderers/AllocatorCommon.h"
-#include <mpconfig.h>
-#include <evr.h>
+#include "../filters/renderer/VideoRenderers/AllocatorCommon7.h"
+#include "../filters/renderer/VideoRenderers/AllocatorCommon.h"
 #include "ffdshow.h"
+#include "PlayerAsyncReader.h"
 
 //////////////////////////////////////////////////////////////////////////
 struct CodecsCategoryAll
@@ -26,13 +27,6 @@ struct CodecsPathFlagAll
 {
     CodecsPathFlag flag;
     const char* name;
-};
-
-typedef HRESULT (*pfnCodecsInnerCreate)(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
-struct CodecsInner
-{
-    GUID clsid;
-    pfnCodecsInnerCreate pfnCreate; 
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,10 +58,6 @@ static CodecsPathFlagAll s_CodecsPathFlagAll[] = {
     { kCodecsPathFlagInner,     "inner" },
 };
 
-static CodecsInner s_CodecsInner[] = {
-    { __uuidof(PlayerAsyncReader), PlayerCodecsInner::Create<PlayerAsyncReader> },
-    
-};
 // static int s_CodecsCategoryAllCount = _countof(s_CodecsCategoryAll);
 // static int s_CodecsTypeAllCount = _countof(s_CodecsTypeAll);
 // static int s_CodecsPathFlagAllCount = _countof(s_CodecsPathFlagAll);
@@ -365,8 +355,9 @@ HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info, IBaseFilter** ppBF, CI
 
     CComPtr<IBaseFilter> pBF;
 
+    GUID clsid = GUIDFromCString(info->clsid);
     // PlayerAsyncReader
-    if (info->clsid == __uuidof(PlayerAsyncReader))
+    if (clsid == __uuidof(PlayerAsyncReader))
     {
         pBF = new PlayerAsyncReader(&hr);
     }
@@ -391,8 +382,8 @@ HRESULT PlayerCodecs::ParseCodecsInfoConfig(const char* config)
     }
     catch(rapidxml::parse_error& error)
     {
-        //CString strError(error.what());
-        //g_utility.Log(_T("RapidXml got parse error:%s"), strError);
+        CString strError(error.what());
+        player_log(kLogLevelError, _T("RapidXml got parse error:%s"), strError);
         return E_FAIL;
     }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PlayerBaseStream.h"
+
 class SHP2PService;
 
 class PlayerQvodStream : public PlayerBaseStream

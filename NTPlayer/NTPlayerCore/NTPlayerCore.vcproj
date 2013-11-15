@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib "
+				AdditionalDependencies="dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)lib;$(SolutionDir)lib\$(ConfigurationName)\"
 				GenerateDebugInformation="true"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib "
+				AdditionalDependencies="dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)lib;$(SolutionDir)lib\$(ConfigurationName)\"
 				GenerateDebugInformation="true"

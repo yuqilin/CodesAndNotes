@@ -1,7 +1,5 @@
 #pragma once
 
-class PlayerBaseStream;
-
 //////////////////////////////////////////////////////////////////////////
 typedef enum tagMediaProtocol {
     kProtocolUnknown,
@@ -19,35 +17,17 @@ typedef enum tagMediaProtocol {
 MediaProtocol ProtocolFromString(LPCTSTR pcszProtocol);
 
 
-//////////////////////////////////////////////////////////////////////////
-struct MEMORY_DATA
-{
-    int	    size;
-    BYTE *	data;
-
-    MEMORY_DATA() {
-        size = 0;
-        data = NULL;
-    }
-
-    ~MEMORY_DATA() {
-        Reset();
-    }
-
-    void Reset() {
-        SAFE_DELETE(data);
-        size = 0;
-    }
-};
-
 class MediaInfo
 {
 public:
     MediaInfo(LPCTSTR lpUrl, HRESULT& hr);
     ~MediaInfo();
 
-    inline LPCTSTR GetUrl() {
+    PCTSTR GetUrl() {
         return m_pUrl;
+    }
+    LPCTSTR GetProtocol() {
+        return m_pProtocol;
     }
     LPCTSTR GetExtension() {
         return m_pExtension;
@@ -55,21 +35,24 @@ public:
     LPCTSTR GetTitle() {
         return m_pTitle;
     }
-    LPCTSTR GetProtocol() {
-        return m_pProtocol;
-    }
-    MediaProtocol GetProtocol() {
-        return m_Protocol;
-    }
-    MEMORY_DATA* GetHeader() {
-        return &m_Header;
-    }
 
-    void SetStream(PlayerBaseStream* stream) {
-        m_pStream = stream;
+    HRESULT SetTitle(LPCTSTR pTitle) {
+        SAFE_DELETE(m_pTitle);
+        int len = _tcslen(pTitle) + 1;
+        if (len > 0)
+        {
+            m_pTitle = new TCHAR[len];
+            if (m_pTitle == NULL)
+                return E_OUTOFMEMORY;
+            _tcscpy_s(m_pTitle, len, pTitle);
+            return S_OK;
+        }
+        else
+            return E_INVALIDARG;
     }
-    void SetSize(UINT64 nSize) {
-        m_nSize = nSize;
+    
+    void SetSize(ULONGLONG llSize) {
+        m_llSize = llSize;
     }
 
 protected:
@@ -81,10 +64,6 @@ protected:
     TCHAR *			m_pExtension;
     TCHAR *         m_pTitle;
     TCHAR *         m_pProtocol;
-    MediaProtocol   m_Protocol;
-
-    PlayerBaseStream*	    m_pStream;
-    UINT64          m_nSize;
-    MEMORY_DATA     m_Header;
+    ULONGLONG       m_llSize;
 };
 

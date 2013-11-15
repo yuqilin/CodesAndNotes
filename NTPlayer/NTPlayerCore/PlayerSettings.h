@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../VideoRenderers/RenderersSettings.h"
+#include "../filters/renderer/VideoRenderers/RenderersSettings.h"
 
 enum {
     kVideoRenderDefault = 0,

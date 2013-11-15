@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PlayerCore.h"
 #include "PlayerSettings.h"
-#include "../VideoRenderers/RenderersSettings.h"
+#include "../filters/renderer/VideoRenderers/RenderersSettings.h"
 
 //////////////////////////////////////////////////////////////////////////
 bool g_bNoDuration = false;

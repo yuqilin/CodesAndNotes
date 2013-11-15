@@ -28,7 +28,7 @@
 #include "../DSUtil/DSUtil.h"
 
 #include "resource.h"
-
+#include <assert.h>
 
 #define ENABLE_SHOW_DEBUG
 #include "ShowDebug.h"

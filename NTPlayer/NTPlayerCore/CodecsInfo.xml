@@ -139,6 +139,57 @@
   <!------ Source Filters ------>
   <codecs
     enable="1" priority="10"
+    name="PlayerAsyncReader"
+    pathflag="inner"
+    category="dsfilter"
+    type="src"
+    clsid="{2E03B28F-EA09-464e-9EDA-52FF59C13E13}" >
+    <!--rmvb-->
+    <checkbyte value="0,4,,2E524D46|{57428EC6-C2B2-44A2-AA9C-28F0B6A5C48E}" />
+    <!--mkv-->
+    <checkbyte value="0,4,,1A45DFA3|{1AC0BEBD-4D2B-45AD-BCEB-F2C41C5E3788}" />
+    <!--avi-->
+    <checkbyte value="0,4,,52494646,8,4,,41564919|{E436EB88-524F-11CE-9F53-0020AF0BA770}" />
+    <checkbyte value="0,4,,52494646,8,4,,41564920|{E436EB88-524F-11CE-9F53-0020AF0BA770}" />
+    <checkbyte value="0,4,,52494646,8,4,,41564958|{E436EB88-524F-11CE-9F53-0020AF0BA770}" />
+    <checkbyte value="0,4,,52494646,8,4,,414D5620|{E436EB88-524F-11CE-9F53-0020AF0BA770}" />
+    <!--wmv-->
+    <!--checkbyte value="0,16,,3026B2758E66CF11A6D900AA0062CE6C|{6B6D0801-9ADA-11D0-A520-00A0D10129C0}" /-->
+
+    <!--mov/mp4 -->
+    <checkbyte value="4,4,,66747970|{08E22ADA-B715-45ED-9D20-7B87750301D4}" />
+    <checkbyte value="4,4,,6d6f6f76|{08E22ADA-B715-45ED-9D20-7B87750301D4}" />
+    <checkbyte value="4,4,,6d646174|{08E22ADA-B715-45ED-9D20-7B87750301D4}" />
+    <checkbyte value="4,4,,736b6970|{08E22ADA-B715-45ED-9D20-7B87750301D4}" />
+    <checkbyte value="4,12,ffffffff00000000ffffffff,77696465000000006d646174|{08E22ADA-B715-45ED-9D20-7B87750301D4}" />
+    <checkbyte value="3,3,,000001|{08E22ADA-B715-45ED-9D20-7B87750301D4}" />
+    <checkbyte value="4,4,,706e6f74|{08E22ADA-B715-45ED-9D20-7B87750301D4}" />
+
+    <!--mpeg-->
+    <checkbyte value="0,2,,FFFB|{ABCDEF00-0000-0000-0000-000000000001}" />
+    <checkbyte value="0,2,,FFFD|{e436eb87-524f-11ce-9f53-0020af0ba770}" />
+    <checkbyte value="0,2,,FFF9|{ABCDEF00-0000-0000-0000-000000000003}" />
+    <checkbyte value="0,2,,FFFA|{ABCDEF00-0000-0000-0000-000000000004}" />
+    <checkbyte value="0,10,FFFFFF00000080808080,49443300000000000000|{e436eb87-524f-11ce-9f53-0020af0ba770}" />
+    <checkbyte value="0,16,FFFFFFFFF100010001800001FFFFFFFF,000001BA2100010001800001000001BB|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
+    <checkbyte value="0,5,FFFFFFFFC0,000001BA40|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
+    <checkbyte value="0,1,,47,188,1,,47,376,1,,47|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
+    <checkbyte value="4,1,,47,196,1,,47,388,1,,47|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
+    <checkbyte value="0,4,,54467263,1660,1,,47|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
+    <checkbyte value="0,8,fffffc00ffe00000,4156000055000000|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
+
+    <!--flv-->
+    <checkbyte value="0,4,ffffff00,43575300|{53465753-4AF8-4015-861A-7528E4FF435F}" />
+    <checkbyte value="0,4,ffffff00,46575300|{53465753-4AF8-4015-861A-7528E4FF435F}" />
+    <checkbyte value="0,4,ffffff00,464C5600|{53465753-4AF8-4015-861A-7528E4FF435F}" />
+    <checkbyte value="0,4,,464C5601|{53465753-4AF8-4015-861A-7528E4FF435F}" />
+
+    <protocol value="file"/>
+    <protocol value="qvod"/>
+  </codecs>
+  
+  <codecs
+    enable="1" priority="10"
     name="File Source (Async.)"
     pathflag="reg"
     category="dsfilter"
@@ -185,7 +236,6 @@
     <checkbyte value="0,4,,464C5601|{53465753-4AF8-4015-861A-7528E4FF435F}" />
 
     <protocol value="file"/>
-    <protocol value="http"/>    
   </codecs>
 
   <codecs

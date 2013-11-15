@@ -31,6 +31,7 @@
 // #endif
 
 #include <atlcoll.h>
+#include <atlstr.h>
 
 #define __AFX_H__
 #include "streams.h"
@@ -39,6 +40,6 @@
 #include <dvdmedia.h>
 #include <mpconfig.h>
 
-#include "../DSUtil/DSUtil.h"
+#include "DSUtil.h"
 
 #define CHECK_HR(exp) { if (FAILED(hr = exp)) return hr; }

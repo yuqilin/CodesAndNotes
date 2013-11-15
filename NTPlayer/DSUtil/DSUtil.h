@@ -225,3 +225,25 @@ inline int GCD(int a, int b)
 
 extern void GetProtocolFromURL(const TCHAR * pcszURL, TCHAR * pszProtocol);
 extern void GetFileExtnameFromURL(const TCHAR * pcszURL, TCHAR * pszExtname);
+
+
+//////////////////////////////////////////////////////////////////////////
+struct MEMORY_DATA
+{
+    int	    size;
+    BYTE *	data;
+
+    MEMORY_DATA() {
+        size = 0;
+        data = NULL;
+    }
+
+    ~MEMORY_DATA() {
+        Reset();
+    }
+
+    void Reset() {
+        SAFE_DELETE(data);
+        size = 0;
+    }
+};

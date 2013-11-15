@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <assert.h>
 #include "PlayerCore.h"
+#include "PlayerThread.h"
 #include "SingletonHolder.h"
 #include "DirectShowGraph.h"
 #include "PlayerFileStream.h"
@@ -26,6 +27,7 @@ PlayerCore::PlayerCore()
 , state_(kPlayerStateNothingSpecial)
 , m_PlayerThread(NULL)
 , m_MediaInfo(NULL)
+, m_hVideoWnd(NULL)
 {
 
 }
@@ -334,7 +336,7 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
     }
 
     // Create Stream
-    MediaProtocol protocol = m_MediaInfo->GetProtocol();
+    MediaProtocol protocol = ProtocolFromString(m_MediaInfo->GetProtocol());
     if (protocol == kProtocolFile)
     {
         m_pStream = new PlayerFileStream;
@@ -452,6 +454,28 @@ void PlayerCore::SetPlayerState(PlayerState state)
     FastMutex::ScopedLock lock(state_mutex_); 
     state_ = state;
     player_log(kLogLevelTrace, _T("PlayerCore::SetPlayerState = %s"), PlayerStateString(state));
+}
+
+HRESULT PlayerCore::SetVideoWindow(HWND hWnd)
+{
+    m_hVideoWnd = hWnd;
+
+    return S_OK;
+}
+
+HRESULT PlayerCore::SetVideoPosition(int )
+{
+    return E_NOTIMPL;
+}
+
+HRESULT PlayerCore::GetVideoSize(int* w, int* h)
+{
+    return E_NOTIMPL;
+}
+
+HRESULT PlayerCore::SetColorControl(int brightness, int contrast, int hue, int staturation)
+{
+    return E_NOTIMPL;
 }
 
 //////////////////////////////////////////////////////////////////////////

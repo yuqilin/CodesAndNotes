@@ -22,7 +22,7 @@
 #include "stdafx.h"
 #include <InitGuid.h>
 #include "AllocatorCommon7.h"
-#include "../DSUtil/DSUtil.h"
+#include "DSUtil.h"
 
 #include "DX7AllocatorPresenter.h"
 #include "VMR7AllocatorPresenter.h"

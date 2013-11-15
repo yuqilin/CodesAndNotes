@@ -42,7 +42,7 @@ HRESULT PlayerQvodStream::Open(LPCTSTR lpUrl)
         }
         else
         {
-            player_log(kLogLevelError, "SHP2PService Open got error");
+            player_log(kLogLevelError, _T("SHP2PService Open got error"));
         }
     }
     
@@ -80,7 +80,7 @@ HRESULT PlayerQvodStream::Read(PBYTE pbBuffer,
     if (m_shp2p)
     {
         DWORD dwBytesRead = 0;
-        if (0 == m_shp2p->Read(m_llPosition, pbBuffer, dwBytesToRead, dwBytesRead))
+        if (0 == m_shp2p->Read((unsigned long)m_llPosition, pbBuffer, dwBytesToRead, dwBytesRead))
         {
             if (pdwBytesRead)
                 *pdwBytesRead = dwBytesRead;
@@ -99,8 +99,8 @@ HRESULT PlayerQvodStream::Read(PBYTE pbBuffer,
 
 LONGLONG PlayerQvodStream::Size(LONGLONG *pSizeAvailable)
 {
-    if (*pSizeAvailable)
-        pSizeAvailable = m_llSize;
+    if (pSizeAvailable)
+        *pSizeAvailable = m_llSize;
     return m_llSize;
 }
 
@@ -109,7 +109,7 @@ int PlayerQvodStream::MessageNotify(const void* pUser, int msg, void* wParam, vo
     PlayerQvodStream* pThis = (PlayerQvodStream*)pUser;
     if (!pThis)
     {
-        player_log(_T("PlayerQvodStream::MessageNotify, null pUser"));
+        player_log(kLogLevelError, _T("PlayerQvodStream::MessageNotify, null pUser"));
         return -1;
     }
 

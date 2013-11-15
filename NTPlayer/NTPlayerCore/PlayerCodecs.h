@@ -53,23 +53,23 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-template<class T>
-class PlayerCodecsInner
-{
-public:
-    HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
-    {
-        CheckPointer(ppBF, E_POINTER);
-
-        HRESULT hr = S_OK;
-        CComPtr<IBaseFilter> pBF = new T(&hr);
-        if (FAILED(hr))
-        {
-            return hr;
-        }
-
-        *ppBF = pBF.Detach();
-
-        return hr;
-    }
-};
+//template<class T>
+//class PlayerCodecsInner
+//{
+//public:
+//    HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+//    {
+//        CheckPointer(ppBF, E_POINTER);
+//
+//        HRESULT hr = S_OK;
+//        CComPtr<IBaseFilter> pBF = new T(&hr);
+//        if (FAILED(hr))
+//        {
+//            return hr;
+//        }
+//
+//        *ppBF = pBF.Detach();
+//
+//        return hr;
+//    }
+//};

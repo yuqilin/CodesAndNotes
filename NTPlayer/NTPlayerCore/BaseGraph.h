@@ -5,6 +5,8 @@
 
 class MediaInfo;
 
+class PlayerCore;
+
 class BaseGraph
     : public IPlayControl
     , public IVideoControl
@@ -14,14 +16,14 @@ public:
     BaseGraph(PlayerCore* pPlayer)
         : m_pPlayer(pPlayer)
         , m_pMediaInfo(NULL)
+        , m_hVideoWnd(NULL)
     {}
     virtual ~BaseGraph() {}
 
 protected:
-
-protected:
     MediaInfo* m_pMediaInfo;
     PlayerCore* m_pPlayer;
+    HWND    m_hVideoWnd;
 };
 
 #endif

@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include <atlpath.h>
-#include "PlayerCore.h"
 #include "DirectShowGraph.h"
+#include "PlayerCore.h"
+#include "PlayerBaseStream.h"
+#include "PlayerAsyncReader.h"
+
 
 #define sClsid_VsFilter         _T("{93A22E7A-5091-45EF-BA61-6DA26156A5D0}")
 #define sClsid_AudioSwitcher    _T("{18C16B08-6497-420E-AD14-22D21C2CEAB7}")
@@ -426,7 +429,7 @@ BOOL DirectShowGraph::Core_CheckBytes(CodecsInfo* info)
     while (pos)
     {
         CheckByteItem& item = info->checkbytes.GetNext(pos);
-        if (!CheckBytes(m_pMediaInfo->GetHeader(), item.checkbyte))
+        if (!CheckBytes(m_pPlayer->GetStream()->GetHeader(), item.checkbyte))
             continue;
         m_SourceFilterLoadSubtype = item.subtype;
         player_log(kLogLevelTrace, _T("Core_CheckBytes matched"));
@@ -501,26 +504,21 @@ HRESULT DirectShowGraph::Core_EnumSourceFilters(CodecsListEx& fl)
     return S_OK;
 }
 
-HRESULT DirectShowGraph::Core_AddFilter(CodecsInfo* info, IBaseFilter** ppBF)
+HRESULT DirectShowGraph::Core_AddFilter(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
 {
     HRESULT hr = E_FAIL;
     CComPtr<IBaseFilter> pBF;
-    CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
     hr = PlayerCore::GetPlayerCodecs().CreateCodecsObject(info, &pBF, pUnks);
-
     if (FAILED(hr))
     {
         return hr;
     }
     if (FAILED(hr = Core_AddFilter(pBF, info->name)))
     {
-        pUnks.RemoveAll();
         return hr;
     }
 
     *ppBF = pBF.Detach();
-
-    m_pUnks.AddTailList(&pUnks);
 
     return S_OK;
 }
@@ -587,17 +585,23 @@ HRESULT DirectShowGraph::Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** pp
     HRESULT hr = E_FAIL;
 
     CComPtr<IBaseFilter> pBF;
-    if (FAILED(hr = Core_AddFilter(info, &pBF)))
+    CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
+    if (FAILED(hr = Core_AddFilter(info, &pBF, pUnks)))
     {
         return hr;
     }
 
-    if (info->clsid == __uuidof(PlayerAsyncReader))
+    GUID clsid = GUIDFromCString(info->clsid);
+    if (clsid == __uuidof(PlayerAsyncReader))
     {
-        PlayerAsyncReader* pReader = dynamic_cast<PlayerAsyncReader*>(pBF);
+        PlayerAsyncReader* pReader = dynamic_cast<PlayerAsyncReader*>(pBF.p);
         if (pReader)
         {
-            pReader->SetAsyncStream((CAsyncStream*)m_pPlayer->GetStream());
+            HRESULT hrs = pReader->SetAsyncStream((CAsyncStream*)m_pPlayer->GetStream());
+            if (FAILED(hrs))
+            {
+
+            }
         }
     }
 
@@ -607,6 +611,8 @@ HRESULT DirectShowGraph::Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** pp
     }
 
     *ppBF = pBF.Detach();
+
+    m_pUnks.AddTailList(&pUnks);
 
     return S_OK;
 }
@@ -745,8 +751,11 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
             player_log(kLogLevelTrace, _T("Connecting '%s'"), info->name);
 
             CComPtr<IBaseFilter> pBF;
-            if (FAILED(hr = Core_AddFilter(info, &pBF)))
+            CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
+
+            if (FAILED(hr = Core_AddFilter(info, &pBF, pUnks)))
             {
+                pUnks.RemoveAll();
                 pBF.Release();
                 continue;
             }

@@ -6,13 +6,10 @@
 
 MediaInfo::MediaInfo(LPCTSTR lpcszUrl, HRESULT& hr)
 : m_pUrl(NULL)
+, m_pProtocol(NULL)
 , m_pExtension(NULL)
 , m_pTitle(NULL)
-, m_pStream(NULL)
-, m_pProtocol(NULL)
 {
-    memset(&m_Header, 0, sizeof(m_Header));
-
     hr = Create(lpcszUrl);
 }
 
@@ -80,12 +77,6 @@ void MediaInfo::Destroy()
     SAFE_DELETE(m_pProtocol);
     SAFE_DELETE(m_pExtension);
     SAFE_DELETE(m_pTitle);
-
-    if(m_pStream != NULL)
-    {
-        m_pStream->Close();
-        m_pStream = NULL;
-    }
 }
 
 MediaProtocol ProtocolFromString(LPCTSTR pcszProtocol)

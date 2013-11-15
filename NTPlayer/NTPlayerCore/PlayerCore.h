@@ -9,11 +9,15 @@ class MediaInfo;
 
 class PlayerBaseStream;
 
+class PlayerThread;
+
 class BaseGraph;
 
 //////////////////////////////////////////////////////////////////////////
 class PlayerCore
 {
+    friend class PlayerThread;
+    friend class DirectShowGraph;
 public:
     PlayerCore();
     ~PlayerCore();
@@ -59,10 +63,6 @@ public:
         return instance_;
     }
 
-    PlayerBaseStream* GetStream() {
-        return m_pStream;
-    }
-
 //     static void SetLogCallback(player_log_callback log) {
 //         log_ = log;
 //     }
@@ -84,6 +84,13 @@ protected:
 
     void SetPlayerState(PlayerState state);
 
+    PlayerBaseStream* GetStream() {
+        return m_pStream;
+    }
+    HWND GetVideoWindow() {
+        return m_hVideoWnd;
+    }
+
 protected:
     BaseGraph* m_PlayerGraph;
     PlayerBaseStream* m_pStream;
@@ -95,6 +102,8 @@ protected:
 
     PlayerThread* m_PlayerThread;
     MediaInfo* m_MediaInfo;
+
+    HWND m_hVideoWnd;
 
 
 private:

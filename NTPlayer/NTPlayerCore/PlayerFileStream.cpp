@@ -3,8 +3,6 @@
 
 PlayerFileStream::PlayerFileStream()
 : m_hFile(INVALID_HANDLE_VALUE)
-, m_llSize(0)
-, m_llPosition(0)
 {
 }
 
@@ -80,7 +78,7 @@ HRESULT PlayerFileStream::Read(PBYTE pbBuffer,
     return hr;
 }
 
-LONGLONG PlayerFileStream::Size(LONGLONG *pSizeAvailable = NULL)
+LONGLONG PlayerFileStream::Size(LONGLONG *pSizeAvailable)
 {
     LARGE_INTEGER llSize;
     if (GetFileSizeEx(m_hFile, &llSize))
