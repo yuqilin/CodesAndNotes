@@ -1,11 +1,9 @@
 #include "stdafx.h"
 #include "PlayerAsyncReader.h"
 
-PlayerAsyncReader::PlayerAsyncReader(HRESULT* phr)
-: CAsyncReader(NAME("PlayerAsyncReader"), NULL, NULL, phr, __uuidof(this))
-, m_pStream(NULL)
+PlayerAsyncReader::PlayerAsyncReader(CAsyncStream* pStream)
+: CAsyncReader(NAME("PlayerAsyncReader"), NULL, pStream, NULL, __uuidof(this))
 {
-
 }
 
 PlayerAsyncReader::~PlayerAsyncReader()
@@ -28,7 +26,10 @@ STDMETHODIMP PlayerAsyncReader::Load(LPCOLESTR pszFileName, const AM_MEDIA_TYPE*
     m_fn = pszFileName;
 
     mt.majortype = MEDIATYPE_Stream;
-    mt.subtype = GUID_NULL;//m_stream.m_subtype;
+    mt.subtype = GUID_NULL;
+
+    if (pmt)
+        mt.subtype = pmt->subtype;
 
     m_mt = mt;
 

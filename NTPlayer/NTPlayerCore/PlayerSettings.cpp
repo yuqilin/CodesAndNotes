@@ -56,7 +56,7 @@ CString PlayerSettings::SelVideoRenderer()
         selVideoRenderer = CLSID_VideoMixingRenderer9;
         break;
     case kVideoRenderEVR:
-    case kVideoRenderEVRCustom:
+    case kVideoRenderEVRCP:
         selVideoRenderer = CLSID_EnhancedVideoRenderer;
         break;
     }

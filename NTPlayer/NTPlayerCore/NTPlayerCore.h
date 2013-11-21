@@ -12,7 +12,26 @@ extern "C"
 {
 #endif
 
-    NTPLAYERCORE_API long ntplayer_init();
+    enum {
+        kPlayerNotifyOpenSucceeded = 1,
+        kPlayerNotifyOpenFailed = 2,
+    };
+
+    typedef enum {
+        kPlayerStateNothingSpecial,
+        kPlayerStateOpening,
+        //kPlayerStateBuffering,
+        kPlayerStatePlaying,
+        kPlayerStatePaused,
+        kPlayerStateStopped,
+        //kPlayerStateEnded,
+        kPlayerStateClosing,
+        kPlayerStateError,
+    } ntplayer_state;
+
+    typedef void (*ntplayer_notify_to_ui)(void* pUser, int msg, void* pParam);
+
+    NTPLAYERCORE_API long ntplayer_init(ntplayer_notify_to_ui notify_func, void* pUser);
     NTPLAYERCORE_API long ntplayer_uninit();
     NTPLAYERCORE_API long ntplayer_get_codecs_info_string(const char** info);
     NTPLAYERCORE_API long ntplayer_open(const char* url);
@@ -23,6 +42,11 @@ extern "C"
     NTPLAYERCORE_API long ntplayer_get_duration(long* duration);    // ms
     NTPLAYERCORE_API long ntplayer_set_play_pos(long pos_to_play);  // ms
     NTPLAYERCORE_API long ntplayer_get_current_play_pos(long* current_play_pos);    // ms
+    NTPLAYERCORE_API long ntplayer_set_video_display(void* video_window, void* display_rect, bool is_full_screen);
+    NTPLAYERCORE_API long ntplayer_update_video_display(void* display_rect, bool is_full_screen);
+    NTPLAYERCORE_API ntplayer_state ntplayer_get_player_state();
+
+
 
 
 

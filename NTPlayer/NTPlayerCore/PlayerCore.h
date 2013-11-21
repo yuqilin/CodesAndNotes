@@ -3,7 +3,9 @@
 #include "Mutex.h"
 #include "PlayerSettings.h"
 #include "PlayerCodecs.h"
+#include "NTPlayerCore.h"
 
+struct VideoSize;
 
 class MediaInfo;
 
@@ -13,16 +15,19 @@ class PlayerThread;
 
 class BaseGraph;
 
+class ViewWindow;
+
 //////////////////////////////////////////////////////////////////////////
 class PlayerCore
 {
     friend class PlayerThread;
     friend class DirectShowGraph;
+    friend class PlayerCodecs;
 public:
     PlayerCore();
     ~PlayerCore();
 
-    HRESULT Create();
+    HRESULT Create(ntplayer_notify_to_ui notify_func, void* pUser);
     HRESULT Destroy();
 
     // play control
@@ -31,17 +36,17 @@ public:
     HRESULT Play();
     HRESULT Pause();
     HRESULT Stop();
-    HRESULT Abort();
-    HRESULT GetPlayState(PlayerState* state);
-    HRESULT GetDuration(long* duration);
-    HRESULT GetCurrentPlayPos(long* current_play_pos);
-    HRESULT SetPlayPos(long pos_to_play);
+    //HRESULT Abort();
+    ntplayer_state GetPlayerState();
+    HRESULT    GetDuration(LONG* pnDuration);
+    HRESULT    GetCurrentPlayPos(LONG* pnCurPlayPos);
+    HRESULT SetPlayPos(LONG nPlayPos);
     //bool    IsPlaying();
 
     // video display
-    HRESULT SetVideoWindow(HWND video_window);
-    HRESULT SetVideoPosition(int );
-    HRESULT GetVideoSize(int* w, int* h);
+    HRESULT SetVideoWindow(HWND hVideoWindow);
+    HRESULT SetVideoPosition(LPRECT lprcDisplay, BOOL bUpdate);
+    HRESULT GetVideoSize(VideoSize* pVideoSize);
     HRESULT SetColorControl(int brightness, int contrast, int hue, int staturation);
 
     // subtitle
@@ -56,17 +61,23 @@ public:
     HRESULT GetVolume(int* volume);
     HRESULT SetVolume(int volume);
 
-    static void SetModuleInstance(void* instance) {
-        instance_ = instance;
-    }
-    static void* GetModuleInstance() {
-        return instance_;
-    }
+
+    /*
+     *	static
+     */
+    static PlayerSettings& GetPlayerSettings();
+    static PlayerCodecs& GetPlayerCodecs();
+
+//     static void SetModuleInstance(void* instance) {
+//         instance_ = instance;
+//     }
+//     static void* GetModuleInstance() {
+//         return instance_;
+//     }
 
 //     static void SetLogCallback(player_log_callback log) {
 //         log_ = log;
 //     }
-// 
 //     static player_log_callback GetLogCallback() {
 //         return log_;
 //     }
@@ -82,38 +93,43 @@ protected:
     HRESULT DoStop();
     HRESULT DoAbort();
 
-    void SetPlayerState(PlayerState state);
+    void SetPlayerState(ntplayer_state state);
 
     PlayerBaseStream* GetStream() {
         return m_pStream;
     }
     HWND GetVideoWindow() {
-        return m_hVideoWnd;
+        return m_hVideoWindow;
+    }
+    const RECT& GetDisplayRect() {
+        return m_rcDisplay;
     }
 
+    void OnOpenResult(HRESULT hr);
+
+//     HRESULT CreateViewWindow();
+//     HRESULT DestroyViewWindow();
+
 protected:
-    BaseGraph* m_PlayerGraph;
-    PlayerBaseStream* m_pStream;
+    PlayerThread*           m_pPlayerThread;
 
-    PlayerState state_;
-    FastMutex   state_mutex_;
+    MediaInfo*              m_pMediaInfo;
+    PlayerBaseStream*       m_pStream;
+    BaseGraph*              m_pPlayerGraph;
 
-    static void* instance_;
+    ntplayer_state          m_State;
+    FastMutex               m_StateMutex;
 
-    PlayerThread* m_PlayerThread;
-    MediaInfo* m_MediaInfo;
+    HWND                    m_hVideoWindow;
+    RECT                    m_rcDisplay;
 
-    HWND m_hVideoWnd;
+    ntplayer_notify_to_ui   m_pfnNotifyUI;
+    void*                   m_pUser;
 
+    LONG                    m_lCurrentPlayPos;
 
 private:
-    bool m_fCreated;
-
-    bool opening_aborted_;
-
-
-public:
-    static PlayerSettings& GetPlayerSettings();
-    static PlayerCodecs& GetPlayerCodecs();
+    BOOL                    m_bCreated;
+    volatile BOOL           m_bOpeningAborted;
 };
 

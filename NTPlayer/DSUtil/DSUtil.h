@@ -87,7 +87,8 @@ extern CStringW GetFriendlyName(CStringW DisplayName);
 extern HRESULT LoadExternalObject(LPCTSTR path, REFCLSID clsid, REFIID iid, void** ppv);
 extern HRESULT LoadExternalFilter(LPCTSTR path, REFCLSID clsid, IBaseFilter** ppBF);
 extern HRESULT LoadExternalPropertyPage(IPersist* pP, REFCLSID clsid, IPropertyPage** ppPP);
-extern void UnloadExternalObjects();
+//extern void UnloadExternalObjects();
+extern bool UnloadUnusedExternalObjects();
 extern CString MakeFullPath(LPCTSTR path);
 extern CString GetMediaTypeName(const GUID& guid);
 extern GUID GUIDFromCString(CString str);
@@ -247,3 +248,6 @@ struct MEMORY_DATA
         size = 0;
     }
 };
+
+//////////////////////////////////////////////////////////////////////////
+extern CString Millisecs2CString(LONG lTime);

@@ -2,7 +2,7 @@
 
 #include "../filters/renderer/VideoRenderers/RenderersSettings.h"
 
-enum {
+typedef enum {
     kVideoRenderDefault = 0,
     kVideoRenderOldRenderer,
     kVideoRenderOverlayMixer,
@@ -14,10 +14,10 @@ enum {
     kVideoRenderNullComp,
     kVideoRenderNullUnComp,
     kVideoRenderEVR,
-    kVideoRenderEVRCustom,
+    kVideoRenderEVRCP,
     kVideoRenderMadVR,
     kVideoRenderSync
-};
+} VideoRenderMode;
 
 class PlayerSettings
 {
@@ -36,7 +36,7 @@ public:
         return &m_Renderers;
     }
 
-    int m_VideoRenderMode;
+    VideoRenderMode m_VideoRenderMode;
     CString m_AudioRendererDisplayName;
     CString m_SelVideoRendererClsid;
 

@@ -279,6 +279,18 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\VideoRendererEVR.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoRendererEVRCP.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ViewWindow.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -287,6 +299,10 @@
 			>
 			<File
 				RelativePath=".\BaseGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BaseVideoRenderer.h"
 				>
 			</File>
 			<File
@@ -327,10 +343,6 @@
 			</File>
 			<File
 				RelativePath=".\PlayerCodecs.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PlayerCommon.h"
 				>
 			</File>
 			<File
@@ -383,6 +395,18 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoRendererEVR.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoRendererEVRCP.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ViewWindow.h"
 				>
 			</File>
 		</Filter>

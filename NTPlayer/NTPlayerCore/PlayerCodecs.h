@@ -25,16 +25,16 @@ public:
 
     CodecsInfo* FindCodecsInfo(const CString& clsid, CodecsType type);
 
-    HRESULT CreateCodecsObject(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
+    HRESULT CreateCodecsObject(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam = NULL);
 
 protected:
     HRESULT ParseCodecsInfoConfig(const char* config);
     HRESULT SetCodecsPriority();
 
-    HRESULT CreateRegCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
-    HRESULT CreateVideoRenderer(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
-    HRESULT CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
-    HRESULT CreateInnerCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
+    HRESULT CreateRegCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam);
+    HRESULT CreateVideoRenderer(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam);
+    HRESULT CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam);
+    HRESULT CreateInnerCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam);
 
 private:
     HRESULT SetCodecsInfo(CodecsInfo* info, const char* key, const char* value);
@@ -49,27 +49,26 @@ protected:
     CodecsInfoList m_source;
     CodecsInfoList m_transform;
     bool m_loaded;
-    HWND m_hVideoWindow;
+    //HWND m_hVideoWindow;
 };
 
 //////////////////////////////////////////////////////////////////////////
-//template<class T>
-//class PlayerCodecsInner
-//{
-//public:
-//    HRESULT Create(IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
-//    {
-//        CheckPointer(ppBF, E_POINTER);
-//
-//        HRESULT hr = S_OK;
-//        CComPtr<IBaseFilter> pBF = new T(&hr);
-//        if (FAILED(hr))
-//        {
-//            return hr;
-//        }
-//
-//        *ppBF = pBF.Detach();
-//
-//        return hr;
-//    }
-//};
+template<class T>
+class PlayerInnerFilter
+{
+public:
+   static HRESULT Create(IBaseFilter** ppBF)
+   {
+       CheckPointer(ppBF, E_POINTER);
+
+       HRESULT hr = S_OK;
+       T* pBF = new T(&hr);
+       if (pBF == NULL)
+           return E_OUTOFMEMORY;
+       if (FAILED(hr))
+           return hr;
+       pBF->AddRef();
+       *ppBF = pBF;
+       return hr;
+   }
+};

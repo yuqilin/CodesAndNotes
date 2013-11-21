@@ -35,7 +35,7 @@
 
   <!------ Video/Audio Renderers ------>
   <codecs
-    enable="0" priority="10"
+    enable="0" priority="5"
     name="Player NullRenderer"
     pathflag="inner"
     category="dsfilter"
@@ -78,19 +78,20 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
+
   <!--EVRCP-->
-  <!--codecs
-    name="flyfoxLocalPlayer EVRCP"
-    pathflag="file"
-    path="evrcp.dll"
+  <codecs
+    enable="1" priority="11"
+    name="NTPlayer EVRCP"
+    pathflag="inner"
     category="dsfilter"
-    type="videorenderer"
-    merit="0x00200000"
-    clsid="{9707fc9c-807b-41e3-98a8-75176f95a062}" >
-  </codecs-->
+    type="vrender"
+    clsid="{7612b889-e070-4bcc-b808-91cb794174ab}" >
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
+  </codecs>
 
   <codecs
-    enable="1" priority="10"
+    enable="1" priority="7"
     name="Video Render Default"
     pathflag="reg"
     category="dsfilter"
@@ -101,21 +102,13 @@
   
   <!--Old Renderer-->
   <codecs
-    enable="1" priority="9"
-    name="Video Renderer"
+    enable="1" priority="6"
+    name="Video Renderer (Old)"
     pathflag="reg"
     category="dsfilter"
     type="vrender"
     clsid="{70E102B0-5556-11CE-97C0-00AA0055595A}" >
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00AA00389B71}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30323449-0000-0010-8000-00AA00389B71}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00AA00389B71}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00AA00389B71}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{773C9AC0-3274-11D0-B724-00AA006C1A01}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7E-524F-11CE-9F53-0020AF0BA770}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7D-524F-11CE-9F53-0020AF0BA770}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7B-524F-11CE-9F53-0020AF0BA770}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7C-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
   <!--Audio Renderer-->

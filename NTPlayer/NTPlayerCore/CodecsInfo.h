@@ -50,8 +50,14 @@ struct PathFlagItem
 
  struct CheckByteItem
  {
+     bool matched;
      CString checkbyte;
      CString subtype;
+
+     CheckByteItem()
+     {
+         matched = false;
+     }
  };
 
 struct MediaTypeItem

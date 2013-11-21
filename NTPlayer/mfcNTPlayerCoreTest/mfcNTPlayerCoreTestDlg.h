@@ -37,6 +37,18 @@ public:
     afx_msg void OnDestroy();
     afx_msg void OnBnClickedBtnOpen();
     afx_msg void OnBnClickedBtnPlay();
+    afx_msg void OnBnClickedBtnPause();
+    afx_msg void OnBnClickedBtnStop();
+    afx_msg void OnBnClickedBtnClose();
+
+public:
+    static void OnNtPlayerNotify(void* pUser, int msg, void* pParam);
+
+protected:
+    void OnOpenSucceeded();
+    void OnOpenFailed();
+public:
+    afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 std::string	wcs2mbs(int nCodePage, const wchar_t* wcs);

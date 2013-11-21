@@ -1,7 +1,11 @@
 #pragma once
 
+#include "Mutex.h"
 #include "BaseGraph.h"
 #include "CodecsInfo.h"
+#include "PlayerSettings.h"
+
+class BaseVideoRenderer;
 
 class DirectShowGraph : public BaseGraph
 {
@@ -16,7 +20,6 @@ public:
     HRESULT Pause();
     HRESULT Stop();
     HRESULT Abort();
-    HRESULT GetPlayState(PlayerState* state);
     HRESULT GetDuration(long* duration);
     HRESULT GetCurrentPlayPos(long* current_play_pos);
     HRESULT SetPlayPos(long pos_to_play);
@@ -24,8 +27,8 @@ public:
 
     // IVideoControl
     HRESULT SetVideoWindow(void* video_window);
-    HRESULT SetVideoPosition(int );
-    HRESULT GetVideoSize(int* w, int* h);
+    HRESULT SetVideoPosition(LPRECT lpRect);
+    HRESULT GetVideoSize(VideoSize* pVideoSize);
     HRESULT SetColorControl(int brightness, int contrast, int hue, int staturation);
     HRESULT LoadExternalSubtitle(const char* subtitle_path);
     HRESULT GrabCurrentVideoFrame(const char* save_file_name);
@@ -37,12 +40,12 @@ public:
     HRESULT SetVolume(int volume);
 
 protected:
-    virtual HRESULT PrepareRenderFile();
+    //virtual HRESULT PrepareRenderFile();
 
     HRESULT RenderFile(LPCWSTR lpwcsUrl);
     HRESULT EnumSourceFilters(LPCWSTR lpcwstrFileName, CodecsList& fl);
     HRESULT AddSourceFilter(CodecsInfo* info, LPCWSTR lpcwstrFileName, LPCWSTR lpcwstrFilterName, IBaseFilter** ppBF);
-    HRESULT AddFilter(IBaseFilter* pFilter, LPCWSTR pName);
+    //HRESULT AddFilter(IBaseFilter* pFilter, LPCWSTR pName);
     HRESULT ConnectFilter(IBaseFilter* pBF, IPin* pPinIn);
     HRESULT ConnectFilter(IPin* pPinOut, IBaseFilter* pBF);
     HRESULT Connect(IPin* pPinOut, IPin* pPinIn);
@@ -68,30 +71,53 @@ protected:
     BOOL Core_CheckBytes(CodecsInfo* info);
     BOOL Core_CheckExtension(CodecsInfo* info);
     BOOL Core_OnSpecialParse(CodecsInfo** info);
+
     HRESULT Core_OnRenderPrepare();
     HRESULT Core_Render();
+    HRESULT Core_OnRenderComplete();
+
     HRESULT Core_EnumSourceFilters(CodecsListEx& fl);
     HRESULT Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** ppBF);
     HRESULT Core_FileSourceFilterLoad(IBaseFilter* pBF, LPCTSTR pSubtype);
-    HRESULT Core_AddFilter(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
+    HRESULT Core_AddFilter(CodecsInfo* info,
+                           IBaseFilter** ppBF,
+                           CInterfaceList<IUnknown, &IID_IUnknown>& pUnks);
 
-    HRESULT Core_AddFilter(IBaseFilter* pBF, LPCWSTR pName);
+    HRESULT AddFilter(IBaseFilter* pBF, LPCWSTR pName);
     HRESULT Core_RenderFilter(IBaseFilter* pBF);
     HRESULT Core_RenderPin(IPin* pPinOut);
     HRESULT Core_ConnectFilterDirect(IPin* pPinOut, IBaseFilter* pBF, const AM_MEDIA_TYPE* pmt);
-    HRESULT Core_OnRenderComplete();
+
+    BOOL Core_CanAddFilter(IPin* pPinOut, CodecsInfo* info);
+
+    HRESULT FindInterface(REFIID iid, void** ppv, BOOL bRemove);
+
+    HRESULT OnCreateFilterPrepare(CodecsInfo* pInfo, void** pParam);
+    HRESULT OnCreateFilterCompelete(CodecsInfo* pInfo, IBaseFilter* pBF);
+    HRESULT OnRenderFilterEnd(CodecsInfo* pInfo, IBaseFilter* pBF);
+
+    HRESULT RemoveAllFilter();
 
 
 protected:
-    CComPtr<IGraphBuilder> m_pIGraphBuilder;
-    CInterfaceList<IUnknown, &IID_IUnknown> m_pUnks;
+    FastMutex m_GraphMutex;
     CCritSec m_Lock;
-    UINT64 m_vrmerit;
-    UINT64 m_armerit;
+
+    CComPtr<IGraphBuilder> m_pIGraphBuilder;
+    CComQIPtr<IMediaControl> m_pIMediaControl;
+    CComQIPtr<IMediaEventEx> m_pIMediaEventEx;
+    CComQIPtr<IVideoWindow> m_pIVideoWindow;
+    CComQIPtr<IBasicVideo> m_pIBasicVideo;
+    CComQIPtr<IBasicAudio> m_pIBasicAudio;
+    CComQIPtr<IMediaSeeking> m_pIMediaSeeking;
+
+    CInterfaceList<IUnknown, &IID_IUnknown> m_pUnks;
 
     CComPtr<IBaseFilter> m_pVSFilter;
     CComPtr<IBaseFilter> m_pAudioSwitcher;
 
-    CString m_SourceFilterLoadSubtype;
+    BaseVideoRenderer* m_pVideoRenderer;
+
+    volatile BOOL m_bAborted;
 };
 

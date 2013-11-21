@@ -17,13 +17,13 @@
 #include <tchar.h>
 
 #include <atlstr.h>
+#include <atltypes.h>
 #include <atlcoll.h>
 
 #define __AFX_H__
 #include "streams.h"
 #undef __AFX_H__
 
-#include "PlayerCommon.h"
 #include "PlayerLog.h"
 #include "../DSUtil/DSUtil.h"
 

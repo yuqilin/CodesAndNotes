@@ -27,6 +27,18 @@ BOOL PlayerThread::Terminate(DWORD dwExitCode)
     return bRet;
 }
 
+BOOL PlayerThread::IsRunning()
+{
+    BOOL bIsRunning = FALSE;
+    HANDLE hThread = GetThreadHandle();
+    if (hThread)
+    {
+        DWORD dwExitCode = 0;
+        bIsRunning = (GetExitCodeThread(hThread, &dwExitCode) && dwExitCode == STILL_ACTIVE);
+    }
+    return bIsRunning;
+}
+
 
 LRESULT PlayerThread::ThreadMessageProc(
     UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent)
@@ -68,7 +80,8 @@ LRESULT PlayerThread::OnOpen(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent 
     if (m_pPlayer)
     {
         CAutoPtr<CString> strUrl((CString*)lpParam);
-        m_pPlayer->DoOpen(strUrl);
+        HRESULT hr = m_pPlayer->DoOpen(strUrl);
+        m_pPlayer->OnOpenResult(hr);
     }
     return 0;
 }
@@ -76,6 +89,15 @@ LRESULT PlayerThread::OnOpen(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent 
 LRESULT PlayerThread::OnClose(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent)
 {
     player_log(kLogLevelTrace, _T("PlayerThread::OnClose"));
+
+    if (m_pPlayer)
+    {
+        m_pPlayer->DoClose();
+    }
+    if (pEvent)
+    {
+        pEvent->Set();
+    }
 
     return 0;
 }
@@ -94,12 +116,20 @@ LRESULT PlayerThread::OnPlay(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent 
 LRESULT PlayerThread::OnPause(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent)
 {
     player_log(kLogLevelTrace, _T("PlayerThread::OnPause"));
+    if (m_pPlayer)
+    {
+        m_pPlayer->DoPause();
+    }
     return 0;
 }
 
 LRESULT PlayerThread::OnStop(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent)
 {
     player_log(kLogLevelTrace, _T("PlayerThread::OnStop"));
+    if (m_pPlayer)
+    {
+        m_pPlayer->DoStop();
+    }
     return 0;
 }
 

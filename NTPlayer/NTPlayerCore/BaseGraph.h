@@ -16,14 +16,14 @@ public:
     BaseGraph(PlayerCore* pPlayer)
         : m_pPlayer(pPlayer)
         , m_pMediaInfo(NULL)
-        , m_hVideoWnd(NULL)
+        , m_hVideoWindow(NULL)
     {}
     virtual ~BaseGraph() {}
 
 protected:
     MediaInfo* m_pMediaInfo;
     PlayerCore* m_pPlayer;
-    HWND    m_hVideoWnd;
+    HWND    m_hVideoWindow;
 };
 
 #endif

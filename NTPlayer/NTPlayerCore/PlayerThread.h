@@ -25,6 +25,8 @@ public:
 
     BOOL Terminate(DWORD dwExitCode);
 
+    BOOL IsRunning();
+
 protected:
     LRESULT OnOpen(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent);
     LRESULT OnClose(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent);

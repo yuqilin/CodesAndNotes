@@ -9,6 +9,7 @@ MediaInfo::MediaInfo(LPCTSTR lpcszUrl, HRESULT& hr)
 , m_pProtocol(NULL)
 , m_pExtension(NULL)
 , m_pTitle(NULL)
+, m_llSize(0)
 {
     hr = Create(lpcszUrl);
 }
@@ -36,7 +37,7 @@ HRESULT MediaInfo::Create(LPCTSTR pcszUrl)
     if(m_pUrl == NULL || m_pProtocol == NULL || m_pExtension == NULL)
         return E_OUTOFMEMORY;
 
-    _tcscpy_s(m_pUrl, nUrlLength+1, pcszUrl);
+    _tcscpy_s(m_pUrl, nUrlLength, pcszUrl);
     GetFileExtnameFromURL(m_pUrl, m_pExtension);
     player_log(kLogLevelTrace, _T("Media Extname = %s"), m_pExtension);
 

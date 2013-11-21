@@ -197,6 +197,13 @@ public:
     CAsyncIo(CAsyncStream *pStream);
     ~CAsyncIo();
 
+    //
+    HRESULT SetAsyncStream(CAsyncStream* pStream) {
+        CheckPointer(pStream, E_POINTER);
+        m_pStream = pStream;
+        return S_OK;
+    }
+
     // open the file
     HRESULT Open(LPCTSTR pName);
 

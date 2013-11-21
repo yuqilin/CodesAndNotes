@@ -1403,56 +1403,61 @@ CStringW GetFriendlyName(CStringW DisplayName)
 	return FriendlyName;
 }
 
-typedef struct
-{
-	CString path;
-	HINSTANCE hInst;
-	CLSID clsid;
-} ExternalObject;
+//////////////////////////////////////////////////////////////////////////
+typedef HRESULT(__stdcall* fDllCanUnloadNow)(void);
 
-static CAtlList<ExternalObject> s_extobjs;
+struct ExternalObject {
+    CString path;
+    HINSTANCE hInst;
+    CLSID clsid;
+    fDllCanUnloadNow fpDllCanUnloadNow;
+    bool bUnloadOnNextCheck;
+};
+
+static CAtlList<ExternalObject> s_extObjs;
+static CCritSec s_csExtObjs;
 
 HRESULT LoadExternalObject(LPCTSTR path, REFCLSID clsid, REFIID iid, void** ppv)
 {
 	CheckPointer(ppv, E_POINTER);
+
+    CAutoLock lock(&s_csExtObjs);
 
 	CString fullpath(path);// = MakeFullPath(path);
 
 	HINSTANCE hInst = NULL;
 	bool fFound = false;
 
-	POSITION pos = s_extobjs.GetHeadPosition();
-	while(pos)
-	{
-		ExternalObject& eo = s_extobjs.GetNext(pos);
-		if(!eo.path.CompareNoCase(fullpath))
-		{
-			hInst = eo.hInst;
-			fFound = true;
-			break;
-		}
-	}
+    POSITION pos = s_extObjs.GetHeadPosition();
+    while (pos) {
+        ExternalObject& eo = s_extObjs.GetNext(pos);
+        if (!eo.path.CompareNoCase(fullpath)) {
+            hInst = eo.hInst;
+            fFound = true;
+            eo.bUnloadOnNextCheck = false;
+            break;
+        }
+    }
 
 	HRESULT hr = E_FAIL;
 
-    if (hInst == NULL)
-    {
-        hInst = (HINSTANCE)::LoadLibraryEx(path, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
-        if(hInst == NULL)
+    if (!hInst) {
+        hInst = LoadLibraryEx(fullpath, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
+        if(!hInst)
         {
             player_log(0,  _T("LoadLibraryEx failed, LastError = %d"), ::GetLastError()); 
             hr = TYPE_E_CANTLOADLIBRARY;
         }
     }
 
-	if(hInst != NULL)
+	if(hInst)
 	{
 		typedef HRESULT (__stdcall * PDllGetClassObject)(REFCLSID rclsid, REFIID riid, LPVOID* ppv);
 		PDllGetClassObject pfnDllGetClassObject = (PDllGetClassObject)GetProcAddress(hInst, "DllGetClassObject");
 
         if (pfnDllGetClassObject == NULL)
         {
-            player_log(kLogLevelError, _T("LoadExternalObject,GetProcAddress of 'DllGetClassObject' failed")); 
+            player_log(kLogLevelError, _T("LoadExternalObject, GetProcAddress of 'DllGetClassObject' failed")); 
             hr = CO_E_ERRORINDLL;
         }
         else
@@ -1463,6 +1468,10 @@ HRESULT LoadExternalObject(LPCTSTR path, REFCLSID clsid, REFIID iid, void** ppv)
             {
                 hr = pCF->CreateInstance(NULL, iid, ppv);
             }
+            else
+            {
+                player_log(kLogLevelError, _T("LoadExternalObject, IClassFactory CreateInstance failed, hr = 0x%08x"), hr); 
+            }
         }
 	}
 
@@ -1472,14 +1481,15 @@ HRESULT LoadExternalObject(LPCTSTR path, REFCLSID clsid, REFIID iid, void** ppv)
 		return hr;
 	}
 
-	if(hInst && !fFound)
-	{
-		ExternalObject eo;
-		eo.path = fullpath;
-		eo.hInst = hInst;
-		eo.clsid = clsid;
-		s_extobjs.AddTail(eo);
-	}
+    if (hInst && !fFound) {
+        ExternalObject eo;
+        eo.path = fullpath;
+        eo.hInst = hInst;
+        eo.clsid = clsid;
+        eo.fpDllCanUnloadNow = (fDllCanUnloadNow)GetProcAddress(hInst, "DllCanUnloadNow");
+        eo.bUnloadOnNextCheck = false;
+        s_extObjs.AddTail(eo);
+    }
 
 	return hr;
 }
@@ -1491,13 +1501,15 @@ HRESULT LoadExternalFilter(LPCTSTR path, REFCLSID clsid, IBaseFilter** ppBF)
 
 HRESULT LoadExternalPropertyPage(IPersist* pP, REFCLSID clsid, IPropertyPage** ppPP)
 {
+    CAutoLock lock(&s_csExtObjs);
+
 	CLSID clsid2 = GUID_NULL;
 	if(FAILED(pP->GetClassID(&clsid2))) return E_FAIL;
 
-	POSITION pos = s_extobjs.GetHeadPosition();
+	POSITION pos = s_extObjs.GetHeadPosition();
 	while(pos)
 	{
-		ExternalObject& eo = s_extobjs.GetNext(pos);
+		ExternalObject& eo = s_extObjs.GetNext(pos);
 		if(eo.clsid == clsid2)
 		{
 			return LoadExternalObject(eo.path, clsid, __uuidof(IPropertyPage), (void**)ppPP);
@@ -1507,15 +1519,31 @@ HRESULT LoadExternalPropertyPage(IPersist* pP, REFCLSID clsid, IPropertyPage** p
 	return E_FAIL;
 }
 
-void UnloadExternalObjects()
+bool UnloadUnusedExternalObjects()
 {
-	POSITION pos = s_extobjs.GetHeadPosition();
-	while(pos)
-	{
-		ExternalObject& eo = s_extobjs.GetNext(pos);
-		FreeLibrary(eo.hInst);
-	}
-	s_extobjs.RemoveAll();
+    CAutoLock lock(&s_csExtObjs);
+
+    POSITION pos = s_extObjs.GetHeadPosition(), currentPos;
+    while (pos) {
+        currentPos = pos;
+        ExternalObject& eo = s_extObjs.GetNext(pos);
+
+        if (eo.fpDllCanUnloadNow && eo.fpDllCanUnloadNow() == S_OK) {
+            // Before actually unloading it, we require that the library reports
+            // that it can be unloaded safely twice in a row with a 60s delay
+            // between the two checks.
+            if (eo.bUnloadOnNextCheck) {
+                FreeLibrary(eo.hInst);
+                s_extObjs.RemoveAt(currentPos);
+            } else {
+                eo.bUnloadOnNextCheck = true;
+            }
+        } else {
+            eo.bUnloadOnNextCheck = false;
+        }
+    }
+
+    return s_extObjs.IsEmpty();
 }
 
 CString MakeFullPath(LPCTSTR path)
@@ -2612,3 +2640,51 @@ void GetFileExtnameFromURL(const TCHAR * pcszURL, TCHAR * pszExtname)
     // Free URL buffer
     delete pURL;
 }
+
+CString Millisecs2CString(LONG lTime)
+{
+    CString strTime;
+    int ms = lTime % 1000;
+    lTime /= 1000;
+    int s = lTime%60;
+    lTime /= 60;
+    int m = lTime%60;
+    lTime /= 60;
+    int h = lTime;
+    strTime.Format(_T("%d:%02d:%02d.%03d"), h, m, s, ms);
+    return strTime;
+}
+
+
+/*
+CString Millisecs2CString(LONG lTime)
+{
+    TCHAR strTime[50] = {0};
+
+    LONGLONG llDiv;
+    if (lTime < 0) {
+        lTime = -lTime;
+        (void)StringCchCopy(strTime, NUMELMS(strTime), TEXT("-"));
+    }
+    llDiv = (LONGLONG)24 * 3600 * 1000;
+    if (lTime >= llDiv) {
+        (void)StringCchPrintf(strTime + lstrlen(strTime), NUMELMS(strTime) - lstrlen(strTime), TEXT("%d days "), (LONG)(lTime / llDiv));
+        lTime = lTime % llDiv;
+    }
+    llDiv = (LONGLONG)3600 * 1000;
+    if (lTime >= llDiv) {
+        (void)StringCchPrintf(strTime + lstrlen(strTime), NUMELMS(strTime) - lstrlen(strTime), TEXT("%d hrs "), (LONG)(lTime / llDiv));
+        lTime = lTime % llDiv;
+    }
+    llDiv = (LONGLONG)60 * 1000;
+    if (lTime >= llDiv) {
+        (void)StringCchPrintf(strTime + lstrlen(strTime), NUMELMS(strTime) - lstrlen(strTime), TEXT("%d mins "), (LONG)(lTime / llDiv));
+        lTime = lTime % llDiv;
+    }
+    (void)StringCchPrintf(strTime + lstrlen(strTime), NUMELMS(strTime) - lstrlen(strTime), TEXT("%d.%3.3d sec"),
+        (LONG)lTime / 1000,
+        (LONG)(lTime % 1000));
+
+    return CString(strTime);
+}
+//*/

@@ -10,6 +10,7 @@
 #define new DEBUG_NEW
 #endif
 
+#define TIMER_ID_GET_CURRENT_PLAY_POS   1
 
 // CAboutDlg dialog used for App About
 
@@ -68,9 +69,14 @@ BEGIN_MESSAGE_MAP(CmfcNTPlayerCoreTestDlg, CDialog)
     ON_WM_DESTROY()
     ON_BN_CLICKED(IDC_BTN_OPEN, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnOpen)
     ON_BN_CLICKED(IDC_BTN_PLAY, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnPlay)
+    ON_BN_CLICKED(IDC_BTN_PAUSE, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnPause)
+    ON_BN_CLICKED(IDC_BTN_STOP, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnStop)
+    ON_BN_CLICKED(IDC_BTN_CLOSE, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnClose)
+    ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 BEGIN_EASYSIZE_MAP(CmfcNTPlayerCoreTestDlg)
+    //EASYSIZE(IDC_VIDEO_DISPLAY, ES_BORDER, ES_BORDER, ES_BORDER, IDC_BTN_PAUSE, ES_HCENTER)
     EASYSIZE(IDC_BTN_PAUSE, ES_BORDER, ES_KEEPSIZE, ES_BORDER, ES_BORDER, ES_HCENTER)
     EASYSIZE(IDC_BTN_PLAY, IDC_BTN_PAUSE, ES_KEEPSIZE, IDC_BTN_PAUSE, ES_BORDER, 0)
     EASYSIZE(IDC_BTN_OPEN, IDC_BTN_PLAY, ES_KEEPSIZE, IDC_BTN_PLAY, ES_BORDER, 0)
@@ -112,13 +118,13 @@ BOOL CmfcNTPlayerCoreTestDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-
     INIT_EASYSIZE;
 
-    CRect rect(0, 0, 600, 400);
+    CRect rect(0, 0, 600, 450);
     MoveWindow(rect);
 
-    ntplayer_init();
+
+    ntplayer_init(OnNtPlayerNotify, this);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -176,12 +182,22 @@ void CmfcNTPlayerCoreTestDlg::OnSize(UINT nType, int cx, int cy)
 {
     CDialog::OnSize(nType, cx, cy);
     UPDATE_EASYSIZE;
+
+    RECT rcControl, rcDisplay;
+    GetClientRect(&rcDisplay);
+    GetDlgItem(IDC_BTN_OPEN)->GetClientRect(&rcControl);
+    GetDlgItem(IDC_BTN_OPEN)->MapWindowPoints(this, &rcControl);
+
+    rcDisplay.bottom = rcControl.top - 2;
+    GetDlgItem(IDC_VIDEO_DISPLAY)->MoveWindow(&rcDisplay);
+
+    ntplayer_update_video_display(&rcDisplay, false);
 }
 
 void CmfcNTPlayerCoreTestDlg::OnSizing(UINT fwSide, LPRECT pRect)
 {
     CDialog::OnSizing(fwSide, pRect);
-    EASYSIZE_MINSIZE(400, 350, fwSide, pRect);
+    EASYSIZE_MINSIZE(600, 450, fwSide, pRect);
 }
 void CmfcNTPlayerCoreTestDlg::OnDestroy()
 {
@@ -189,20 +205,24 @@ void CmfcNTPlayerCoreTestDlg::OnDestroy()
 
     // TODO: Add your message handler code here
 
+    KillTimer(TIMER_ID_GET_CURRENT_PLAY_POS);
+
     ntplayer_uninit();
 }
 
 void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnOpen()
 {
     // TODO: Add your control notification handler code here
+    RECT rcDisplay;
+    GetDlgItem(IDC_VIDEO_DISPLAY)->GetClientRect(&rcDisplay);
+    ntplayer_set_video_display(GetDlgItem(IDC_VIDEO_DISPLAY)->GetSafeHwnd(), &rcDisplay, false);
+
     CFileDialog dlg(TRUE);
     if (IDOK == dlg.DoModal())
     {
         CString strFileName = dlg.GetPathName();
         ntplayer_open(wcs2mbs(CP_UTF8, strFileName).c_str());
     }
-
-
 }
 
 std::string	wcs2mbs(int nCodePage, const wchar_t* wcs)
@@ -239,4 +259,64 @@ void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnPlay()
 {
     // TODO: Add your control notification handler code here
     ntplayer_play();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnPause()
+{
+    // TODO: Add your control notification handler code here
+    ntplayer_pause();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnStop()
+{
+    // TODO: Add your control notification handler code here
+    ntplayer_stop();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnClose()
+{
+    // TODO: Add your control notification handler code here
+    KillTimer(TIMER_ID_GET_CURRENT_PLAY_POS);
+    ntplayer_close();
+}
+
+
+void CmfcNTPlayerCoreTestDlg::OnNtPlayerNotify(void* pUser, int msg, void* pParam)
+{
+    CmfcNTPlayerCoreTestDlg* pThis = (CmfcNTPlayerCoreTestDlg*)pUser;
+    switch (msg)
+    {
+    case kPlayerNotifyOpenSucceeded:
+        pThis->OnOpenSucceeded();
+        break;
+    case kPlayerNotifyOpenFailed:
+        pThis->OnOpenFailed();
+        break;
+    }
+}
+
+void CmfcNTPlayerCoreTestDlg::OnOpenSucceeded()
+{
+    SetTimer(TIMER_ID_GET_CURRENT_PLAY_POS, 1000, NULL);
+    ntplayer_play();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnOpenFailed()
+{
+    MessageBox(_T("Open File Failed"));
+}
+void CmfcNTPlayerCoreTestDlg::OnTimer(UINT_PTR nIDEvent)
+{
+    // TODO: Add your message handler code here and/or call default
+    switch (nIDEvent)
+    {
+    case TIMER_ID_GET_CURRENT_PLAY_POS:
+        {
+            long cur_play_pos = 0;
+            ntplayer_get_current_play_pos(&cur_play_pos);
+        }
+        break;
+    }
+
+    CDialog::OnTimer(nIDEvent);
 }

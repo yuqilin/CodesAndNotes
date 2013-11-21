@@ -1,14 +1,12 @@
 #include "stdafx.h"
-#include <mpconfig.h>
-#include <evr.h>
 #include "rapidxml/rapidxml.hpp"
 #include "PlayerCodecs.h"
 #include "PlayerCore.h"
-#include "../SubPic/ISubPic.h"
 #include "../filters/renderer/VideoRenderers/AllocatorCommon7.h"
 #include "../filters/renderer/VideoRenderers/AllocatorCommon.h"
 #include "ffdshow.h"
 #include "PlayerAsyncReader.h"
+#include "VideoRendererEVRCP.h"
 
 //////////////////////////////////////////////////////////////////////////
 struct CodecsCategoryAll
@@ -155,45 +153,48 @@ void PlayerCodecs::FreeCodecs()
     m_loaded = false;
 }
 
-HRESULT PlayerCodecs::CreateCodecsObject(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+HRESULT PlayerCodecs::CreateCodecsObject(CodecsInfo* info,
+                                         IBaseFilter** ppBF,
+                                         CInterfaceList<IUnknown, &IID_IUnknown>& pUnks,
+                                         void* pParam)
 {
     CheckPointer(info, E_POINTER);
 
-    player_log(kLogLevelTrace, _T("PlayerCodecs::CreateCodecsObject, create filter '%s'"), info->name);
-
     HRESULT hr = E_FAIL;
 
-    if (info->pathflag == kCodecsPathFlagReg)
+    if (info->type == kCodecsTypeVideoRenderer)
     {
-        hr = CreateRegCodecs(info, ppBF, pUnks);
+        hr = CreateVideoRenderer(info, ppBF, pUnks, pParam);
+        return hr;
+    }
+    else if (info->pathflag == kCodecsPathFlagReg)
+    {
+        hr = CreateRegCodecs(info, ppBF, pUnks, pParam);
     }
     else if (info->pathflag == kCodecsPathFlagFile)
     {
-        hr = CreateFileCodecs(info, ppBF, pUnks);
+        hr = CreateFileCodecs(info, ppBF, pUnks, pParam);
     }
     else if (info->pathflag == kCodecsPathFlagInner)
     {
-        hr = CreateInnerCodecs(info, ppBF, pUnks);
+        hr = CreateInnerCodecs(info, ppBF, pUnks, pParam);
     }
 
     if (SUCCEEDED(hr))
     {
         player_log(kLogLevelTrace, _T("PlayerCodecs::CreateCodecsObject, create filter '%s' succeeded"), info->name);
     }
+    else
+    {
+        player_log(kLogLevelTrace, _T("PlayerCodecs::CreateCodecsObject, create filter '%s' failed, hr = 0x%08x"), info->name, hr);
+    }
 
     return hr;
 }
 
-HRESULT PlayerCodecs::CreateRegCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+HRESULT PlayerCodecs::CreateRegCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam)
 {
     HRESULT hr = E_FAIL;
-
-    // video render
-    if (info->type == kCodecsTypeVideoRenderer)
-    {
-        hr = CreateVideoRenderer(info, ppBF, pUnks);
-        return hr;
-    }
 
     // audio render
 
@@ -234,64 +235,29 @@ HRESULT PlayerCodecs::CreateRegCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInt
     return hr;
 }
 
-HRESULT PlayerCodecs::CreateVideoRenderer(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+HRESULT PlayerCodecs::CreateVideoRenderer(CodecsInfo* info,
+                                          IBaseFilter** ppBF,
+                                          CInterfaceList<IUnknown, &IID_IUnknown>& pUnks,
+                                          void* pParam)
 {
     HRESULT hr = E_FAIL;
 
-    CComPtr<ISubPicAllocatorPresenter> pCAP;
-
     GUID clsid = GUIDFromCString(info->clsid);
-    if (clsid == CLSID_VMR7AllocatorPresenter ||
-        clsid == CLSID_VMR9AllocatorPresenter ||
-        clsid == CLSID_EVRAllocatorPresenter)
+    if (clsid == CLSID_EVRAllocatorPresenter)
     {
-        bool bFullscreen = false;//(AfxGetApp()->m_pMainWnd != NULL) && (((CMainFrame*)AfxGetApp()->m_pMainWnd)->IsD3DFullScreenMode());
-        if (SUCCEEDED(CreateAP7(clsid, m_hVideoWindow, &pCAP)) ||
-            SUCCEEDED(CreateAP9(clsid, m_hVideoWindow, bFullscreen, &pCAP)) ||
-            SUCCEEDED(CreateEVR(clsid, m_hVideoWindow, bFullscreen, &pCAP)))
-        {
-            CComPtr<IUnknown> pRenderer;
-            if (SUCCEEDED(hr = pCAP->CreateRenderer(&pRenderer)))
-            {
-                *ppBF = CComQIPtr<IBaseFilter>(pRenderer).Detach();
-                pUnks.AddTail(pCAP);
-                if (CComQIPtr<ISubPicAllocatorPresenter2> pCAP2 = pCAP)
-                {
-                    pUnks.AddTail(pCAP2);
-                }
-            }
-        }
+        VideoRendererEVRCP* pVR = (VideoRendererEVRCP*)pParam;
+        hr = pVR->CreateRenderer(ppBF);
     }
     else
     {
         CComPtr<IBaseFilter> pBF;
         if (SUCCEEDED(hr = pBF.CoCreateInstance(clsid)))
         {
-            if (clsid == CLSID_EnhancedVideoRenderer)
-            {
-                CComQIPtr<IEVRFilterConfig> pConfig = pBF;
-                HRESULT hrConfig = pConfig->SetNumberOfStreams(3);
-                if (FAILED(hrConfig))
-                {
-                    player_log(kLogLevelError, _T("IEVRFilterConfig->SetNumberOfStreams(3) FAIL"));
-                }
-            }
-
-            BeginEnumPins(pBF, pEP, pPin)
-            {
-                if (CComQIPtr<IMixerPinConfig, &IID_IMixerPinConfig> pMPC = pPin)
-                {
-                    pUnks.AddTail(pMPC);
-                    break;
-                }
-            }
-            EndEnumPins;
-
             *ppBF = pBF.Detach();
         }
         else
         {
-            
+            player_log(kLogLevelError, _T("CoCreateInstance for %s failed, hr = 0x%08x"), info->clsid, hr);
         }
     }
 
@@ -303,7 +269,7 @@ HRESULT PlayerCodecs::CreateVideoRenderer(CodecsInfo* info, IBaseFilter** ppBF, 
     return hr;
 }
 
-HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam)
 {
     HRESULT hr = E_FAIL;
 
@@ -346,7 +312,10 @@ HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CIn
     return hr;
 }
 
-HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info,
+                                        IBaseFilter** ppBF,
+                                        CInterfaceList<IUnknown, &IID_IUnknown>& pUnks,
+                                        void* pParam)
 {
     CheckPointer(info, E_POINTER);
     CheckPointer(ppBF, E_POINTER);
@@ -359,7 +328,13 @@ HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info, IBaseFilter** ppBF, CI
     // PlayerAsyncReader
     if (clsid == __uuidof(PlayerAsyncReader))
     {
-        pBF = new PlayerAsyncReader(&hr);
+        CAsyncStream* pStream = (CAsyncStream*)pParam;
+        if (pStream == NULL)
+            return E_INVALIDARG;
+        pBF = new PlayerAsyncReader(pStream);
+        if (pBF)
+            hr = S_OK;
+        //hr = PlayerInnerFilter<PlayerAsyncReader>::Create(&pBF);
     }
 
     if (SUCCEEDED(hr))

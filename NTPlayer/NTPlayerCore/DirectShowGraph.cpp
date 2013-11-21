@@ -4,17 +4,24 @@
 #include "PlayerCore.h"
 #include "PlayerBaseStream.h"
 #include "PlayerAsyncReader.h"
+#include "VideoRendererEVR.h"
+#include "VideoRendererEVRCP.h"
+#include "../filters/renderer/VideoRenderers/AllocatorCommon.h"
 
+
+#define _100NS_UNITS_TO_MILLISECONDS(refTime) \
+    ((LONG)(refTime / 10000))
 
 #define sClsid_VsFilter         _T("{93A22E7A-5091-45EF-BA61-6DA26156A5D0}")
 #define sClsid_AudioSwitcher    _T("{18C16B08-6497-420E-AD14-22D21C2CEAB7}")
 
 DirectShowGraph::DirectShowGraph(PlayerCore* pPlayer, HRESULT& hr)
 : BaseGraph(pPlayer)
-, m_vrmerit(MERIT64_PREFERRED)
-, m_armerit(MERIT64_PREFERRED)
+, m_pVideoRenderer(NULL)
+, m_bAborted(FALSE)
 {
     hr = m_pIGraphBuilder.CoCreateInstance(CLSID_FilterGraph);
+    //hr = LoadExternalObject(_T("C:\\Windows\\System32\\quartz.dll"), CLSID_FilterGraph, IID_IGraphBuilder, (void**)&m_pIGraphBuilder);
 }
 
 DirectShowGraph::~DirectShowGraph()
@@ -22,72 +29,156 @@ DirectShowGraph::~DirectShowGraph()
     CloseMedia();
 }
 
-HRESULT DirectShowGraph::OpenMedia(MediaInfo* media_info)
+HRESULT DirectShowGraph::OpenMedia(MediaInfo* pMediaInfo)
 {
-    CheckPointer(media_info, E_POINTER);
+    CheckPointer(pMediaInfo, E_POINTER);
 
-    HRESULT hr = S_OK;
+    m_pMediaInfo = pMediaInfo;
 
-    m_pMediaInfo = media_info;
+    if (m_bAborted)
+    {
+        player_log(kLogLevelTrace, _T("DirectShowGraph::OpenMedia, open aborted before Core_OnRenderPrepare"));
+        return E_ABORT;
+    }
+
+    HRESULT hr = Core_OnRenderPrepare();
+
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    if (m_bAborted)
+    {
+        player_log(kLogLevelTrace, _T("DirectShowGraph::OpenMedia, open aborted before Core_Render"));
+        return E_ABORT;
+    }
 
     hr = Core_Render();
+
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    if (m_bAborted)
+    {
+        player_log(kLogLevelTrace, _T("DirectShowGraph::OpenMedia, open aborted before Core_OnRenderComplete"));
+        return E_ABORT;
+    }
+
+    hr = Core_OnRenderComplete();
 
     return hr;
 }
 
 HRESULT DirectShowGraph::CloseMedia()
 {
-    HRESULT res = S_OK;
+    HRESULT hr = S_OK;
     
     Stop();
 
-    return res;
+    SAFE_DELETE(m_pVideoRenderer);
+
+    m_bAborted = FALSE;
+
+    RemoveAllFilter();
+
+    return hr;
 }
 
 HRESULT DirectShowGraph::Play()
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    if (m_pIMediaControl)
+    {
+        hr = m_pIMediaControl->Run();
+    }
+
+    return hr;
 }
+
 HRESULT DirectShowGraph::Pause()
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    if (m_pIMediaControl)
+    {
+        hr = m_pIMediaControl->Pause();
+    }
+
+    return hr;
 }
 
 HRESULT DirectShowGraph::Stop()
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    if (m_pIMediaControl)
+    {
+        hr = m_pIMediaControl->Stop();
+    }
+
+    return hr;
 }
 
 HRESULT DirectShowGraph::Abort()
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    m_bAborted = TRUE;
+
+    return hr;
 }
 
-HRESULT DirectShowGraph::GetPlayState(PlayerState* state)
+HRESULT DirectShowGraph::GetDuration(long* pnDuration)
 {
-    HRESULT res = S_OK;
-    return res;
-}
-HRESULT DirectShowGraph::GetDuration(long* duration)
-{
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    if (m_pMediaInfo && pnDuration)
+    {
+        *pnDuration = m_pMediaInfo->GetDuration();
+    }
+
+    return hr;
 }
 
-HRESULT DirectShowGraph::GetCurrentPlayPos(long* current_play_pos)
+HRESULT DirectShowGraph::GetCurrentPlayPos(long* pnCurPlayPos)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = E_FAIL;
+
+    if (m_GraphMutex.tryLock())
+    {
+        if (m_pIMediaSeeking)
+        {
+            LONGLONG llCurrent = 0, llStop = 0;
+            hr = m_pIMediaSeeking->GetPositions(&llCurrent, &llStop);
+            if (SUCCEEDED(hr))
+            {
+                if (pnCurPlayPos)
+                    *pnCurPlayPos = _100NS_UNITS_TO_MILLISECONDS(llCurrent);
+//                 player_log(kLogLevelTrace, _T("DirectShowGraph::GetCurrentPlayPos, llCurrent = %I64d(%s)"),
+//                     llCurrent, Millisecs2CString(_100NS_UNITS_TO_MILLISECONDS(llCurrent)));
+            }
+            else
+            {
+                player_log(kLogLevelTrace, _T("DirectShowGraph::GetCurrentPlayPos, GetPositions failed hr = 0x%08x"), hr);
+            }
+        }
+    }
+    else
+    {
+        player_log(kLogLevelTrace, _T("DirectShowGraph::GetCurrentPlayPos, graph is busy"));
+    }
+
+    return hr;
 }
 
 HRESULT DirectShowGraph::SetPlayPos(long pos_to_play)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+    return hr;
 }
 
 bool DirectShowGraph::IsPlaying()
@@ -99,137 +190,84 @@ bool DirectShowGraph::IsPlaying()
 // IVideoControl
 HRESULT DirectShowGraph::SetVideoWindow(void* video_window)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    if (m_pVideoRenderer)
+    {
+        hr = m_pVideoRenderer->SetVideoWindow((HWND)video_window);
+    }
+
+    return hr;
 }
 
-HRESULT DirectShowGraph::SetVideoPosition(int )
+HRESULT DirectShowGraph::SetVideoPosition(LPRECT lpRect)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    if (m_pVideoRenderer)
+    {
+        hr = m_pVideoRenderer->SetVideoPosition(lpRect);
+    }
+
+    return hr;
 }
 
-HRESULT DirectShowGraph::GetVideoSize(int* w, int* h)
+HRESULT DirectShowGraph::GetVideoSize(VideoSize* pVideoSize)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+
+    if (m_pVideoRenderer)
+    {
+        hr = m_pVideoRenderer->GetVideoSize(pVideoSize);
+        if (SUCCEEDED(hr))
+        {
+            m_pMediaInfo->SetVideoSize(pVideoSize);
+        }
+    }
+
+    return hr;
 }
 
 HRESULT DirectShowGraph::SetColorControl(int brightness, int contrast, int hue, int staturation)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+    return hr;
 }
 
 HRESULT DirectShowGraph::LoadExternalSubtitle(const char* subtitle_path)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+    return hr;
 }
 
 HRESULT DirectShowGraph::GrabCurrentVideoFrame(const char* save_file_name)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+    return hr;
 }
 
 // IAudioControl
 HRESULT DirectShowGraph::GetMute(bool* mute)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+    return hr;
 }
 
 HRESULT DirectShowGraph::SetMute(bool mute)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+    return hr;
 }
 
 HRESULT DirectShowGraph::GetVolume(int* volume)
 {
-    HRESULT res = S_OK;
-    return res;
+    HRESULT hr = S_OK;
+    return hr;
 }
 
 HRESULT DirectShowGraph::SetVolume(int volume)
 {
-    HRESULT res = S_OK;
-    return res;
-}
-
-HRESULT DirectShowGraph::PrepareRenderFile()
-{
     HRESULT hr = S_OK;
-
-    GUID selVideoRenderer = CLSID_VideoRendererDefault;
-
-    PlayerSettings& s = PlayerCore::GetPlayerSettings();
-    switch (s.m_VideoRenderMode)
-    {
-    case kVideoRenderOldRenderer:
-        selVideoRenderer = CLSID_VideoRenderer;
-        break;
-    case kVideoRenderOverlayMixer:
-        selVideoRenderer = CLSID_OverlayMixer;
-        break;
-    case kVideoRenderVMR7Windowed:
-    case kVideoRenderVMR7Renderless:
-        selVideoRenderer = CLSID_VideoMixingRenderer;
-        break;
-    case kVideoRenderVMR9Windowed:
-    case kVideoRenderVMR9Renderless:
-        selVideoRenderer = CLSID_VideoMixingRenderer9;
-        break;
-//     case VIDRNDT_DS_VMR7RENDERLESS:
-//         selVideoRenderer = CLSID_VMR7AllocatorPresenter;
-//         break;
-//     case VIDRNDT_DS_VMR9RENDERLESS:
-//         selVideoRenderer = CLSID_VMR9AllocatorPresenter;
-//         break;
-    case kVideoRenderEVR:
-    case kVideoRenderEVRCustom:
-        selVideoRenderer = CLSID_EnhancedVideoRenderer;
-        break;
-//     case kVideoRenderEVRCustom:
-//         selVideoRenderer = CLSID_EVRAllocatorPresenter;
-//         break;
-//     case kVideoRenderDXR:
-//         selVideoRenderer = CLSID_DXRAllocatorPresenter;
-//         break;
-//     case kVideoRenderMadVR:
-//         selVideoRenderer = CLSID_madVRAllocatorPresenter;
-//         break;
-//     case kVideoRenderSync:
-//         selVideoRenderer = CLSID_SyncAllocatorPresenter;
-//         break;
-//     case kVideoRenderNullComp:
-//         break;
-//     case kVideoRenderNullUnComp:
-//         break;
-    }
-
-    PlayerCodecs& codecs = PlayerCore::GetPlayerCodecs();
-
-    CodecsInfo* info = codecs.FindCodecsInfo(CStringFromGUID(selVideoRenderer), kCodecsTypeVideoRenderer);
-    if (info)
-    {
-        info->merit += 0x10;
-    }
-
-    if (s.m_AudioRendererDisplayName.GetLength() > 0)
-    {
-        // TODO: find codecs if not exists, then add it
-        CodecsInfo* sel = new CodecsInfo;
-        sel->enable = true;
-        sel->priority = 0x10;
-        sel->name = s.m_AudioRendererDisplayName;
-        sel->type = kCodecsTypeAudioRenderer;
-        sel->merit = MERIT64_PREFERRED + sel->priority;
-        codecs.GetTransforms().AddTail(sel);
-    }
-
-    
     return hr;
 }
 
@@ -317,20 +355,18 @@ HRESULT DirectShowGraph::RenderFile(LPCWSTR lpwcsUrl)
 HRESULT DirectShowGraph::Core_Render()
 {
     player_log(kLogLevelTrace, _T("DirectShowGraph::Core_Render"));
-
-    LPCTSTR pUrl = m_pMediaInfo->GetUrl();
-
-    HRESULT hr = Core_OnRenderPrepare();
-
-    if (FAILED(hr))
-    {
-        return hr;
-    }
     
+    HRESULT hr = E_FAIL;
     CodecsListEx fl;
     if (FAILED(hr = Core_EnumSourceFilters(fl)))
     {
         return hr;
+    }
+
+    if (m_bAborted)
+    {
+        player_log(kLogLevelTrace, _T("DirectShowGraph::Core_Render, open aborted before EnumSourceFilters"));
+        return E_ABORT;
     }
 
     hr = VFW_E_CANNOT_RENDER;
@@ -344,6 +380,12 @@ HRESULT DirectShowGraph::Core_Render()
         CComPtr<IBaseFilter> pBF;
         if (SUCCEEDED(hr = Core_AddSourceFilter(info, &pBF)))
         {
+            if (m_bAborted)
+            {
+                player_log(kLogLevelTrace, _T("DirectShowGraph::Core_Render, open aborted before Core_RenderFilter"));
+                return E_ABORT;
+            }
+
             if (SUCCEEDED(hr = Core_RenderFilter(pBF)))
             {
                 return hr;
@@ -365,15 +407,8 @@ HRESULT DirectShowGraph::Core_OnRenderPrepare()
         if (pInfo)
         {
             CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
-            HRESULT hrVsfilte = E_FAIL;
-            if (SUCCEEDED(hrVsfilte = PlayerCore::GetPlayerCodecs().CreateCodecsObject(pInfo, &m_pVSFilter, pUnks)))
-            {
-                if (SUCCEEDED(hrVsfilte = AddFilter(m_pVSFilter, pInfo->name)))
-                {
-                    player_log(kLogLevelTrace, _T("Preload VsFilter OK"));
-                }
-            }
-            if (FAILED(hrVsfilte))
+            HRESULT hrVsfilter = Core_AddFilter(pInfo, &m_pVSFilter, pUnks);
+            if (FAILED(hrVsfilter))
             {
                 player_log(kLogLevelTrace, _T("Preload VsFilter FAIL"));
             }
@@ -382,14 +417,7 @@ HRESULT DirectShowGraph::Core_OnRenderPrepare()
         if (pInfo)
         {
             CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
-            HRESULT hrAudioSwitcher = E_FAIL;
-            if (SUCCEEDED(hrAudioSwitcher = PlayerCore::GetPlayerCodecs().CreateCodecsObject(pInfo, &m_pAudioSwitcher, pUnks)))
-            {
-                if (SUCCEEDED(hrAudioSwitcher = AddFilter(m_pAudioSwitcher, pInfo->name)))
-                {
-                    player_log(kLogLevelTrace, _T("Preload AudioSwitcher OK"));
-                }
-            }
+            HRESULT hrAudioSwitcher = Core_AddFilter(pInfo, &m_pAudioSwitcher, pUnks);
             if (FAILED(hrAudioSwitcher))
             {
                 player_log(kLogLevelTrace, _T("Preload AudioSwitcher FAIL"));
@@ -402,7 +430,75 @@ HRESULT DirectShowGraph::Core_OnRenderPrepare()
 
 HRESULT DirectShowGraph::Core_OnRenderComplete()
 {
-    return S_OK;
+    player_log(kLogLevelTrace, _T("DirectShowGraph::Core_OnRenderComplete, Used filter list:"));
+
+    HRESULT hr = S_OK;
+    CLSID clsid;
+    int nCount = 0;
+
+    CLSID clsidVideoRenderer;
+
+    BeginEnumFilters(m_pIGraphBuilder, pEF, pBF)
+    {
+        nCount++;
+        hr = pBF->GetClassID(&clsid);
+        if(SUCCEEDED(hr))
+        {
+            player_log(kLogLevelTrace, _T("Filter %d, %s, %s"), nCount, GetFilterName(pBF), CStringFromGUID(clsid));
+        }
+    }
+    EndEnumFilters;
+    //DumpGraph(m_pIGraphBuilder, 0);
+
+    m_pIMediaControl = m_pIGraphBuilder;
+    m_pIMediaEventEx = m_pIGraphBuilder;
+    m_pIVideoWindow = m_pIGraphBuilder;
+    m_pIBasicVideo = m_pIGraphBuilder;
+    m_pIBasicAudio = m_pIGraphBuilder;
+    m_pIMediaSeeking = m_pIGraphBuilder;
+
+    //hr = m_pIGraphBuilder->QueryInterface(IID_PPV_ARGS(&m_pIVideoWindow));
+
+    if (!m_pIMediaControl ||
+        !m_pIMediaEventEx ||
+        !m_pIVideoWindow ||
+        !m_pIBasicVideo ||
+        !m_pIBasicAudio ||
+        !m_pIMediaSeeking)
+    {
+        return E_NOINTERFACE;
+    }
+
+    HWND hVideoWnd = m_pPlayer->GetVideoWindow();
+    RECT rcDisplay = m_pPlayer->GetDisplayRect();
+
+    if (m_pVideoRenderer)
+    {
+        hr = m_pVideoRenderer->SetVideoWindow(hVideoWnd);
+
+        hr = m_pVideoRenderer->SetVideoPosition(&rcDisplay);
+
+        VideoSize video_size;
+        hr = m_pVideoRenderer->GetVideoSize(&video_size);
+        if (SUCCEEDED(hr))
+        {
+            m_pMediaInfo->SetVideoSize(&video_size);
+        }
+    }
+
+    hr = m_pIMediaSeeking->SetTimeFormat(&TIME_FORMAT_MEDIA_TIME);
+
+    LONGLONG llDuration = 0;
+    hr = m_pIMediaSeeking->GetDuration(&llDuration);
+    if (SUCCEEDED(hr))
+    {
+        LONG lDuration = _100NS_UNITS_TO_MILLISECONDS(llDuration);
+        player_log(kLogLevelTrace, _T("DirectShowGraph::Core_OnRenderComplete, GetDuration = %d(%s)"),
+            lDuration, Millisecs2CString(lDuration));
+        m_pMediaInfo->SetDuration(lDuration);
+    }
+
+    return hr;
 }
 
 //*/
@@ -429,10 +525,11 @@ BOOL DirectShowGraph::Core_CheckBytes(CodecsInfo* info)
     while (pos)
     {
         CheckByteItem& item = info->checkbytes.GetNext(pos);
+        item.matched = false;
         if (!CheckBytes(m_pPlayer->GetStream()->GetHeader(), item.checkbyte))
             continue;
-        m_SourceFilterLoadSubtype = item.subtype;
-        player_log(kLogLevelTrace, _T("Core_CheckBytes matched"));
+        item.matched = true;
+        player_log(kLogLevelTrace, _T("Core_CheckBytes, '%s' matched, subtype = %s"), info->name, item.subtype);
         return TRUE;
     }
     return FALSE;
@@ -482,7 +579,7 @@ HRESULT DirectShowGraph::Core_EnumSourceFilters(CodecsListEx& fl)
         if (Core_CheckBytes(info) && !info->checkbytes.IsEmpty())
         {
             bCheckbytes = true;
-            fl.Insert(info, 0, 1);
+            fl.Insert(info, 0, 0);
         }
         else if (Core_CheckExtension(info))
         {
@@ -504,16 +601,47 @@ HRESULT DirectShowGraph::Core_EnumSourceFilters(CodecsListEx& fl)
     return S_OK;
 }
 
-HRESULT DirectShowGraph::Core_AddFilter(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
+BOOL DirectShowGraph::Core_CanAddFilter(IPin* pPinOut, CodecsInfo* info)
+{
+    GUID clsid = GUIDFromCString(info->clsid);
+    for (CComPtr<IBaseFilter> pBFUS = GetFilterFromPin(pPinOut); pBFUS; pBFUS = GetUpStreamFilter(pBFUS))
+    {
+        if (/*clsid != CLSID_Proxy && */GetCLSID(pBFUS) == clsid)
+        {
+            player_log(kLogLevelTrace, _T("Core_CanAddFilter, can NOT add filter '%s'"), info->name);
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+HRESULT DirectShowGraph::Core_AddFilter(CodecsInfo* info,
+                                        IBaseFilter** ppBF,
+                                        CInterfaceList<IUnknown, &IID_IUnknown>& pUnks)
 {
     HRESULT hr = E_FAIL;
-    CComPtr<IBaseFilter> pBF;
-    hr = PlayerCore::GetPlayerCodecs().CreateCodecsObject(info, &pBF, pUnks);
+
+    void* pParam = NULL;
+    hr = OnCreateFilterPrepare(info, &pParam);
     if (FAILED(hr))
     {
         return hr;
     }
-    if (FAILED(hr = Core_AddFilter(pBF, info->name)))
+
+    CComPtr<IBaseFilter> pBF;
+    hr = PlayerCore::GetPlayerCodecs().CreateCodecsObject(info, &pBF, pUnks, pParam);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    hr = OnCreateFilterCompelete(info, pBF);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    if (FAILED(hr = AddFilter(pBF, info->name)))
     {
         return hr;
     }
@@ -523,7 +651,7 @@ HRESULT DirectShowGraph::Core_AddFilter(CodecsInfo* info, IBaseFilter** ppBF, CI
     return S_OK;
 }
 
-HRESULT DirectShowGraph::Core_AddFilter(IBaseFilter* pBF, LPCWSTR pName)
+HRESULT DirectShowGraph::AddFilter(IBaseFilter* pBF, LPCWSTR pName)
 {
     HRESULT hr = E_FAIL;
     if (FAILED(hr = m_pIGraphBuilder->AddFilter(pBF, pName)))
@@ -591,21 +719,18 @@ HRESULT DirectShowGraph::Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** pp
         return hr;
     }
 
-    GUID clsid = GUIDFromCString(info->clsid);
-    if (clsid == __uuidof(PlayerAsyncReader))
+    CString strSubtype;
+    POSITION pos = info->checkbytes.GetHeadPosition();
+    while (pos)
     {
-        PlayerAsyncReader* pReader = dynamic_cast<PlayerAsyncReader*>(pBF.p);
-        if (pReader)
+        CheckByteItem& chkbytes = info->checkbytes.GetNext(pos);
+        if (chkbytes.matched)
         {
-            HRESULT hrs = pReader->SetAsyncStream((CAsyncStream*)m_pPlayer->GetStream());
-            if (FAILED(hrs))
-            {
-
-            }
+            strSubtype = chkbytes.subtype;
+            break;
         }
     }
-
-    if (FAILED(hr = Core_FileSourceFilterLoad(pBF, m_SourceFilterLoadSubtype)))
+    if (FAILED(hr = Core_FileSourceFilterLoad(pBF, strSubtype)))
     {
         return hr;
     }
@@ -663,7 +788,7 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
 
     // 1. Try filters in the graph
     {
-        player_log(kLogLevelTrace, _T("Trying filters in the graph"));
+        player_log(kLogLevelTrace, _T("Core_RenderPin, Trying filters in the graph"));
 
         CInterfaceList<IBaseFilter> pBFs;
 
@@ -712,7 +837,7 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
 
     // 2. Look up filters in the <codecs>
     {
-        player_log(kLogLevelTrace, _T("Trying filters in <codecs>"));
+        player_log(kLogLevelTrace, _T("Core_RenderPin, Trying filters in <codecs>"));
 
         CodecsListEx fl;
         CAtlArray<GUID> types;
@@ -750,9 +875,13 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
             CodecsInfo* info = fl.GetNext(pos);
             player_log(kLogLevelTrace, _T("Connecting '%s'"), info->name);
 
+            if (!Core_CanAddFilter(pPinOut, info))
+            {
+                continue;
+            }
+
             CComPtr<IBaseFilter> pBF;
             CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
-
             if (FAILED(hr = Core_AddFilter(info, &pBF, pUnks)))
             {
                 pUnks.RemoveAll();
@@ -770,13 +899,22 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
                 {
                     fDeadEnd = false;
                 }
+//                 else // ???
+//                 {
+//                     player_log(kLogLevelTrace, _T("Render routine reach to stream end, '%s'"), info->name);
+//                     return hr;
+//                 }
 
                 player_log(kLogLevelTrace, _T("==> Continue to render '%s'"), info->name);
+                //Sleep(3000);
                 hr = Core_RenderFilter(pBF);
 
                 if (SUCCEEDED(hr))
                 {
                     m_pUnks.AddTailList(&pUnks);
+
+                    hr = OnRenderFilterEnd(info, pBF);
+
                     return hr;
                 }                
             }
@@ -983,27 +1121,27 @@ HRESULT DirectShowGraph::RemoveFilter(IBaseFilter* pFilter)
     return m_pIGraphBuilder->RemoveFilter(pFilter);
 }
 
-HRESULT DirectShowGraph::AddFilter(IBaseFilter* pFilter, LPCWSTR pName)
-{
-    if (!m_pIGraphBuilder) {
-        return E_UNEXPECTED;
-    }
-
-    CAutoLock cAutoLock(&m_Lock);
-
-    HRESULT hr;
-
-    if (FAILED(hr = m_pIGraphBuilder->AddFilter(pFilter, pName))) {
-        player_log(kLogLevelTrace, _T("DirectShowGraph::AddFilter, IGraphBuilder AddFilter %s failed, hr = 0x%08X"), 
-            pName, hr);
-        return hr;
-    }
-
-    player_log(kLogLevelTrace, _T("DirectShowGraph::AddFilter, %s added succeeded"), 
-        pName);
-
-    return hr;
-}
+// HRESULT DirectShowGraph::AddFilter(IBaseFilter* pFilter, LPCWSTR pName)
+// {
+//     if (!m_pIGraphBuilder) {
+//         return E_UNEXPECTED;
+//     }
+// 
+//     CAutoLock cAutoLock(&m_Lock);
+// 
+//     HRESULT hr;
+// 
+//     if (FAILED(hr = m_pIGraphBuilder->AddFilter(pFilter, pName))) {
+//         player_log(kLogLevelTrace, _T("DirectShowGraph::AddFilter, IGraphBuilder AddFilter %s failed, hr = 0x%08X"), 
+//             pName, hr);
+//         return hr;
+//     }
+// 
+//     player_log(kLogLevelTrace, _T("DirectShowGraph::AddFilter, %s added succeeded"), 
+//         pName);
+// 
+//     return hr;
+// }
 
 HRESULT DirectShowGraph::ConnectFilter(IBaseFilter* pBF, IPin* pPinIn)
 {
@@ -1367,18 +1505,21 @@ HRESULT DirectShowGraph::ConnectDirect(IPin* pPinOut, IPin* pPinIn, const AM_MED
 
     CAutoLock cAutoLock(&m_Lock);
 
-    // CComPtr<IBaseFilter> pBF = GetFilterFromPin(pPinIn);
-    // CLSID clsid = GetCLSID(pBF);
+    CComPtr<IBaseFilter> pBF = GetFilterFromPin(pPinIn);
+    CLSID clsid = GetCLSID(pBF);
 
     // TODO: GetUpStreamFilter goes up on the first input pin only
-    //     for (CComPtr<IBaseFilter> pBFUS = GetFilterFromPin(pPinOut); pBFUS; pBFUS = GetUpStreamFilter(pBFUS)) {
-    //         if (pBFUS == pBF) {
-    //             return VFW_E_CIRCULAR_GRAPH;
-    //         }
-    //         if (clsid != CLSID_Proxy && GetCLSID(pBFUS) == clsid) {
-    //             return VFW_E_CANNOT_CONNECT;
-    //         }
-    //     }
+    for (CComPtr<IBaseFilter> pBFUS = GetFilterFromPin(pPinOut); pBFUS; pBFUS = GetUpStreamFilter(pBFUS))
+    {
+        if (pBFUS == pBF)
+        {
+            return VFW_E_CIRCULAR_GRAPH;
+        }
+        if (/*clsid != CLSID_Proxy &&*/ GetCLSID(pBFUS) == clsid)
+        {
+            return VFW_E_CANNOT_CONNECT;
+        }
+    }
 
     return m_pIGraphBuilder->ConnectDirect(pPinOut, pPinIn, pmt);
 }
@@ -1591,5 +1732,113 @@ HRESULT DirectShowGraph::FindFilterByClsid(LPCTSTR pClsid, IBaseFilter** ppBF)
         *ppBF = NULL;
     }
     
+    return hr;
+}
+
+HRESULT DirectShowGraph::FindInterface(REFIID iid, void** ppv, BOOL bRemove)
+{
+    CheckPointer(ppv, E_POINTER);
+
+    for (POSITION pos = m_pUnks.GetHeadPosition(); pos; m_pUnks.GetNext(pos))
+    {
+        if (SUCCEEDED(m_pUnks.GetAt(pos)->QueryInterface(iid, ppv)))
+        {
+            if (bRemove)
+            {
+                m_pUnks.RemoveAt(pos);
+            }
+            return S_OK;
+        }
+    }
+    return E_NOINTERFACE;
+}
+
+HRESULT DirectShowGraph::OnCreateFilterPrepare(CodecsInfo* pInfo, void** pParam)
+{
+    GUID clsid = GUIDFromCString(pInfo->clsid);
+    
+    if (clsid == __uuidof(PlayerAsyncReader))
+    {
+        *pParam = (void*)m_pPlayer->GetStream();
+    }
+
+//     if (pInfo->type == kCodecsTypeVideoRenderer)
+//     {
+//         *pParam = (void*)m_pPlayer;
+//     }
+
+    if (clsid == CLSID_EVRAllocatorPresenter)
+    {
+        HWND hVideoWindow = m_pPlayer->GetVideoWindow();
+        bool bFullScreen = false;
+        HRESULT hr;
+        m_pVideoRenderer = new VideoRendererEVRCP(hr, hVideoWindow, bFullScreen);
+
+        *pParam = m_pVideoRenderer;
+    }
+    
+    return S_OK;
+}
+
+HRESULT DirectShowGraph::OnCreateFilterCompelete(CodecsInfo* pInfo, IBaseFilter* pBF)
+{
+    HRESULT hr = S_OK;
+
+//     if (CComQIPtr<IEVRFilterConfig> pConfig = pBF)
+//     {
+//         HRESULT hrConfig = pConfig->SetNumberOfStreams(3);
+//         if (FAILED(hrConfig))
+//         {
+//             player_log(kLogLevelError, _T("IEVRFilterConfig->SetNumberOfStreams(3) FAIL, hr = 0x%08x"), hrConfig);
+//         }
+//     }
+
+    return hr;
+}
+
+HRESULT DirectShowGraph::OnRenderFilterEnd(CodecsInfo* pInfo, IBaseFilter* pBF)
+{
+    HRESULT hr = S_OK;
+
+    if (pInfo->type == kCodecsTypeVideoRenderer)
+    {
+        GUID clsid = GUIDFromCString(pInfo->clsid);
+
+        //SAFE_DELETE(m_pVideoRenderer);
+
+        if (clsid == CLSID_EnhancedVideoRenderer)
+        {
+            m_pVideoRenderer = new VideoRendererEVR(hr, pBF);
+        }
+//         else if (clsid == CLSID_EVRAllocatorPresenter)
+//         {
+//             HWND hVideoWindow = m_pPlayer->GetVideoWindow();
+//             bool bFullScreen = false;
+//             m_pVideoRenderer = new VideoRendererEVRCP(hr, hVideoWindow, bFullScreen, pBF);
+//         }
+//         else if (clsid == CLSID_VideoMixingRenderer9)
+//         {
+//             m_pVideoRenderer = new VideoRendererVMR9(pBF, &hr);
+//         }
+//         else if (clsid == CLSID_VideoMixingRenderer)
+//         {
+//             m_pVideoRenderer = new VideoRendererVMR7(pBF, &hr);
+//         }
+    }
+
+    return hr;
+}
+
+HRESULT DirectShowGraph::RemoveAllFilter()
+{
+    HRESULT hr = S_OK;
+
+    BeginEnumFilters(m_pIGraphBuilder, pEF, pBF)
+    {
+        HRESULT hrRemove = RemoveFilter(pBF);
+        pEF->Reset();
+    }
+    EndEnumFilters;
+
     return hr;
 }
