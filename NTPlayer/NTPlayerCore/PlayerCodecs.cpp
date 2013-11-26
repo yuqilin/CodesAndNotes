@@ -6,7 +6,7 @@
 #include "../filters/renderer/VideoRenderers/AllocatorCommon.h"
 #include "ffdshow.h"
 #include "PlayerAsyncReader.h"
-#include "VideoRendererEVRCP.h"
+#include "BaseVideoRenderer.h"
 
 //////////////////////////////////////////////////////////////////////////
 struct CodecsCategoryAll
@@ -243,23 +243,30 @@ HRESULT PlayerCodecs::CreateVideoRenderer(CodecsInfo* info,
     HRESULT hr = E_FAIL;
 
     GUID clsid = GUIDFromCString(info->clsid);
-    if (clsid == CLSID_EVRAllocatorPresenter)
+
+    ///*
+    if (clsid == CLSID_EnhancedVideoRenderer ||
+        clsid == CLSID_EVRAllocatorPresenter)
     {
-        VideoRendererEVRCP* pVR = (VideoRendererEVRCP*)pParam;
-        hr = pVR->CreateRenderer(ppBF);
-    }
-    else
-    {
-        CComPtr<IBaseFilter> pBF;
-        if (SUCCEEDED(hr = pBF.CoCreateInstance(clsid)))
+        BaseVideoRenderer* pVR = (BaseVideoRenderer*)pParam;
+        if (pVR)
         {
-            *ppBF = pBF.Detach();
-        }
-        else
-        {
-            player_log(kLogLevelError, _T("CoCreateInstance for %s failed, hr = 0x%08x"), info->clsid, hr);
+            hr = pVR->CreateRenderer(ppBF);
         }
     }
+//     else
+//     {
+//         CComPtr<IBaseFilter> pBF;
+//         if (SUCCEEDED(hr = pBF.CoCreateInstance(clsid)))
+//         {
+//             *ppBF = pBF.Detach();
+//         }
+//         else
+//         {
+//             player_log(kLogLevelError, _T("CoCreateInstance for %s failed, hr = 0x%08x"), info->clsid, hr);
+//         }
+//     }
+    //*/
 
     if (!*ppBF)
     {
@@ -335,6 +342,13 @@ HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info,
         if (pBF)
             hr = S_OK;
         //hr = PlayerInnerFilter<PlayerAsyncReader>::Create(&pBF);
+    }
+    else if (clsid == __uuidof(CNullTextRenderer))
+    {
+        HRESULT hr2 = S_OK;
+        pBF = new CNullTextRenderer(NULL, &hr2);
+        if (pBF && SUCCEEDED(hr2))
+            hr = S_OK;
     }
 
     if (SUCCEEDED(hr))

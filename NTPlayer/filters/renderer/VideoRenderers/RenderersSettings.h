@@ -70,6 +70,7 @@ class CRenderersSettings
 {
 
 public:
+    CRenderersSettings() { SetDefault(); }
     bool fResetDevice;
 
     class CAdvRendererSettings
@@ -128,6 +129,7 @@ public:
 
     CString     D3D9RenderDevice;
     void        UpdateData(bool fSave);
+    void        SetDefault();
 };
 
 class CRenderersData

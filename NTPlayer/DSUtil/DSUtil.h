@@ -28,8 +28,11 @@
 #include "vd.h"
 #include "text.h"
 #include "SysVersion.h"
+//#include "StdioFile.h"
 
 extern HINSTANCE g_hInstance;
+
+#define LCID_NOSUBTITLES -1
 
 bool LoadResource(UINT resid, CStringA& str, LPCTSTR restype);
 extern std::wstring mbs2wcs(int nCodePage, const char* mbs);
@@ -52,7 +55,7 @@ extern void NukeDownstream(IPin* pPin, IFilterGraph* pFG);
 extern IBaseFilter* FindFilter(LPCWSTR clsid, IFilterGraph* pFG);
 extern IBaseFilter* FindFilter(const CLSID& clsid, IFilterGraph* pFG);
 extern CStringW GetFilterName(IBaseFilter* pBF);
-extern CStringW GetPinName(IPin* pPin);
+extern CAtlStringW GetPinName(IPin* pPin);
 extern IFilterGraph* GetGraphFromFilter(IBaseFilter* pBF);
 extern IBaseFilter* GetFilterFromPin(IPin* pPin);
 extern IPin* AppendFilter(IPin* pPin, CString DisplayName, IGraphBuilder* pGB);
@@ -94,13 +97,8 @@ extern CString GetMediaTypeName(const GUID& guid);
 extern GUID GUIDFromCString(CString str);
 extern HRESULT GUIDFromCString(CString str, GUID& guid);
 extern CString CStringFromGUID(const GUID& guid);
-extern CStringW UTF8To16(LPCSTR utf8);
+extern CAtlStringW UTF8To16(LPCSTR utf8);
 extern CStringA UTF16To8(LPCWSTR utf16);
-extern CString ISO6391ToLanguage(LPCSTR code);
-extern CString ISO6392ToLanguage(LPCSTR code);
-extern CString ISO6391To6392(LPCSTR code);
-extern CString ISO6392To6391(LPCSTR code);
-extern CString LanguageToISO6392(LPCTSTR lang);
 extern int MakeAACInitData(BYTE* pData, int profile, int freq, int channels);
 //extern BOOL CFileGetStatus(LPCTSTR lpszFileName, CFileStatus& status);
 extern bool DeleteRegKey(LPCTSTR pszKey, LPCTSTR pszSubkey);
@@ -114,6 +112,22 @@ extern LPCTSTR GetDXVAMode(const GUID* guidDecoder);
 
 
 extern void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName);
+
+extern CString ReftimeToString(const REFERENCE_TIME& rtVal);
+
+extern COLORREF YCrCbToRGB_Rec601(BYTE Y, BYTE Cr, BYTE Cb);
+extern COLORREF YCrCbToRGB_Rec709(BYTE Y, BYTE Cr, BYTE Cb);
+extern DWORD YCrCbToRGB_Rec601(BYTE A, BYTE Y, BYTE Cr, BYTE Cb);
+extern DWORD YCrCbToRGB_Rec709(BYTE A, BYTE Y, BYTE Cr, BYTE Cb);
+
+
+extern CString ISO6391ToLanguage(LPCSTR code);
+extern CAtlString ISO6392ToLanguage(LPCSTR code);
+extern CString ISO6391To6392(LPCSTR code);
+extern CString ISO6392To6391(LPCSTR code);
+extern CString LanguageToISO6392(LPCTSTR lang);
+extern LCID ISO6391ToLcid(LPCSTR code);
+extern LCID ISO6392ToLcid(LPCSTR code);
 
 typedef enum {
     PICT_NONE,
@@ -251,3 +265,14 @@ struct MEMORY_DATA
 
 //////////////////////////////////////////////////////////////////////////
 extern CString Millisecs2CString(LONG lTime);
+
+//////////////////////////////////////////////////////////////////////////
+template <class T>
+void SafeRelease(T **ppT)
+{
+    if (*ppT)
+    {
+        (*ppT)->Release();
+        *ppT = NULL;
+    }
+}

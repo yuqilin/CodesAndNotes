@@ -9,9 +9,6 @@
 #include "PlayerQvodStream.h"
 
 //////////////////////////////////////////////////////////////////////////
-static SingletonHolder<PlayerSettings> s_settings;
-static SingletonHolder<PlayerCodecs> s_codecs;
-
 const TCHAR* PlayerStateString(ntplayer_state state);
 
 static DWORD s_dwStart = 0;
@@ -633,11 +630,13 @@ HRESULT PlayerCore::SetColorControl(int brightness, int contrast, int hue, int s
 //////////////////////////////////////////////////////////////////////////
 PlayerSettings& PlayerCore::GetPlayerSettings()
 {
+    static SingletonHolder<PlayerSettings> s_settings;
     return *s_settings.get();
 }
 
 PlayerCodecs& PlayerCore::GetPlayerCodecs()
 {
+    static SingletonHolder<PlayerCodecs> s_codecs;
     return *s_codecs.get();
 }
 

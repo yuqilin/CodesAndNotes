@@ -7,7 +7,9 @@
 #include "VideoRendererEVR.h"
 #include "VideoRendererEVRCP.h"
 #include "../filters/renderer/VideoRenderers/AllocatorCommon.h"
-
+#include "TextPassThruFilter.h"
+#include "moreuuids.h"
+#include "../Subtitles/subtitles.h"
 
 #define _100NS_UNITS_TO_MILLISECONDS(refTime) \
     ((LONG)(refTime / 10000))
@@ -67,6 +69,12 @@ HRESULT DirectShowGraph::OpenMedia(MediaInfo* pMediaInfo)
         return E_ABORT;
     }
 
+    if (m_pCAP)
+    {
+        AddTextPassThruFilter();
+    }
+
+
     hr = Core_OnRenderComplete();
 
     return hr;
@@ -95,6 +103,11 @@ HRESULT DirectShowGraph::Play()
     {
         hr = m_pIMediaControl->Run();
     }
+
+//     if (m_pVideoRenderer)
+//     {
+//         m_pVideoRenderer->RepaintVideo();
+//     }
 
     return hr;
 }
@@ -207,6 +220,18 @@ HRESULT DirectShowGraph::SetVideoPosition(LPRECT lpRect)
     if (m_pVideoRenderer)
     {
         hr = m_pVideoRenderer->SetVideoPosition(lpRect);
+    }
+
+    return hr;
+}
+
+HRESULT DirectShowGraph::RepaintVideo()
+{
+    HRESULT hr = S_OK;
+
+    if (m_pVideoRenderer)
+    {
+        hr = m_pVideoRenderer->RepaintVideo();
     }
 
     return hr;
@@ -401,28 +426,28 @@ HRESULT DirectShowGraph::Core_Render()
 
 HRESULT DirectShowGraph::Core_OnRenderPrepare()
 {
-    // OnPreloadFilters
+    // OnPreAddFilter
     {
-        CodecsInfo* pInfo = PlayerCore::GetPlayerCodecs().FindCodecsInfo(sClsid_VsFilter, kCodecsTypeVideoEffect);
-        if (pInfo)
-        {
-            CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
-            HRESULT hrVsfilter = Core_AddFilter(pInfo, &m_pVSFilter, pUnks);
-            if (FAILED(hrVsfilter))
-            {
-                player_log(kLogLevelTrace, _T("Preload VsFilter FAIL"));
-            }
-        }
-        pInfo = PlayerCore::GetPlayerCodecs().FindCodecsInfo(sClsid_AudioSwitcher, kCodecsTypeAudioEffect);
-        if (pInfo)
-        {
-            CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
-            HRESULT hrAudioSwitcher = Core_AddFilter(pInfo, &m_pAudioSwitcher, pUnks);
-            if (FAILED(hrAudioSwitcher))
-            {
-                player_log(kLogLevelTrace, _T("Preload AudioSwitcher FAIL"));
-            }
-        }
+//         CodecsInfo* pInfo = PlayerCore::GetPlayerCodecs().FindCodecsInfo(sClsid_VsFilter, kCodecsTypeVideoEffect);
+//         if (pInfo)
+//         {
+//             CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
+//             HRESULT hrVsfilter = Core_AddFilter(pInfo, &m_pVSFilter, pUnks);
+//             if (FAILED(hrVsfilter))
+//             {
+//                 player_log(kLogLevelTrace, _T("PreAdd VsFilter FAIL"));
+//             }
+//         }
+//         pInfo = PlayerCore::GetPlayerCodecs().FindCodecsInfo(sClsid_AudioSwitcher, kCodecsTypeAudioEffect);
+//         if (pInfo)
+//         {
+//             CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
+//             HRESULT hrAudioSwitcher = Core_AddFilter(pInfo, &m_pAudioSwitcher, pUnks);
+//             if (FAILED(hrAudioSwitcher))
+//             {
+//                 player_log(kLogLevelTrace, _T("PreAdd AudioSwitcher FAIL"));
+//             }
+//         }
     }
 
     return S_OK;
@@ -430,13 +455,25 @@ HRESULT DirectShowGraph::Core_OnRenderPrepare()
 
 HRESULT DirectShowGraph::Core_OnRenderComplete()
 {
+    if (m_pVideoRenderer)
+    {
+        VideoRenderMode mode = m_pVideoRenderer->GetVideoRenderMode();
+        if (mode == kVideoRenderEVRCP ||
+            mode == kVideoRenderVMR9Renderless ||
+            mode == kVideoRenderVMR7Renderless)
+        {
+            
+        }
+    }
+
+
     player_log(kLogLevelTrace, _T("DirectShowGraph::Core_OnRenderComplete, Used filter list:"));
 
     HRESULT hr = S_OK;
     CLSID clsid;
     int nCount = 0;
 
-    CLSID clsidVideoRenderer;
+    //CLSID clsidVideoRenderer;
 
     BeginEnumFilters(m_pIGraphBuilder, pEF, pBF)
     {
@@ -449,6 +486,12 @@ HRESULT DirectShowGraph::Core_OnRenderComplete()
     }
     EndEnumFilters;
     //DumpGraph(m_pIGraphBuilder, 0);
+
+    DWORD substm = SetupSubtitleStreams();
+    player_log(kLogLevelTrace, _T("DirectShowGraph::Core_OnRenderComplete, SetupSubtitleStreams = %d"), substm);
+    if (substm) {
+        SetSubtitle(substm - 1);
+    }
 
     m_pIMediaControl = m_pIGraphBuilder;
     m_pIMediaEventEx = m_pIGraphBuilder;
@@ -809,18 +852,24 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
             IBaseFilter* pBF = pBFs.GetNext(pos);
 
             CString strFilterName = GetFilterName(pBF);
-            player_log(kLogLevelTrace, _T("Trying connect to %s"), strFilterName);
 
             if (SUCCEEDED(hr = Core_ConnectFilterDirect(pPinOut, pBF, NULL)))
             {
-                player_log(kLogLevelTrace, _T("Core_ConnectFilterDirect OK"));
+                player_log(kLogLevelTrace, _T("Trying connect to '%s' OK"), strFilterName);
 
                 if (!IsStreamEnd(pBF))
                 {
                     fDeadEnd = false;
                 }
 
-                player_log(kLogLevelTrace, _T("==> Continue to render '%s'"), strFilterName);
+                if (fDeadEnd)
+                {
+                    player_log(kLogLevelTrace, _T("==> Reach to stream end '%s'"), strFilterName);
+                }
+                else
+                {
+                    player_log(kLogLevelTrace, _T("==> Continue to render '%s'"), strFilterName);
+                }
                 if (SUCCEEDED(hr = Core_RenderFilter(pBF)))
                 {
                     return hr;
@@ -828,7 +877,7 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
             }
             else
             {
-                player_log(kLogLevelTrace, _T("Core_ConnectFilterDirect FAIL"));
+                player_log(kLogLevelTrace, _T("Trying connect to '%s' FAIL"), strFilterName);
             }
 
             EXECUTE_ASSERT(Disconnect(pPinOut));
@@ -837,11 +886,18 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
 
     // 2. Look up filters in the <codecs>
     {
+        const PlayerSettings& s = PlayerCore::GetPlayerSettings();
         player_log(kLogLevelTrace, _T("Core_RenderPin, Trying filters in <codecs>"));
 
         CodecsListEx fl;
         CAtlArray<GUID> types;
         ExtractMediaTypes(pPinOut, types);
+
+        player_log(kLogLevelTrace, _T("PinOut media types:"));
+        for (int i = 0, len = types.GetCount() & ~1; i < len; i+=2)
+        {
+            player_log(kLogLevelTrace, _T("major = %s, sub = %s"), CStringFromGUID(types[i]), CStringFromGUID(types[i+1]));
+        }
 
         CodecsInfoList& transforms = PlayerCore::GetPlayerCodecs().GetTransforms();
         POSITION pos = transforms.GetHeadPosition();
@@ -851,11 +907,16 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
             CodecsInfo* info = transforms.GetNext(pos);
             if (info->enable && info->CheckTypes(types, false))
             {
-                if (info->clsid.CompareNoCase(sClsid_VsFilter) == 0 ||
-                    info->clsid.CompareNoCase(sClsid_AudioSwitcher) == 0)
-                {
-                    continue;
-                }
+//                 if (info->clsid.CompareNoCase(sClsid_VsFilter) == 0 &&
+//                     !s.m_fVsfilterEnabled)
+//                 {
+//                     continue;
+//                 }
+//                 if (info->clsid.CompareNoCase(sClsid_AudioSwitcher) == 0 &&
+//                     !s.m_fAudioSwitcherEnabled)
+//                 {
+//                     continue;
+//                 }
 
                 if (info->type == kCodecsTypeVideoRenderer)
                 {
@@ -899,13 +960,16 @@ HRESULT DirectShowGraph::Core_RenderPin(IPin* pPinOut)
                 {
                     fDeadEnd = false;
                 }
-//                 else // ???
-//                 {
-//                     player_log(kLogLevelTrace, _T("Render routine reach to stream end, '%s'"), info->name);
-//                     return hr;
-//                 }
 
-                player_log(kLogLevelTrace, _T("==> Continue to render '%s'"), info->name);
+                if (fDeadEnd)
+                {
+                    player_log(kLogLevelTrace, _T("==> Reach to stream end '%s'"), info->name);
+                }
+                else
+                {
+                    player_log(kLogLevelTrace, _T("==> Continue to render '%s'"), info->name);
+                }
+
                 //Sleep(3000);
                 hr = Core_RenderFilter(pBF);
 
@@ -1360,16 +1424,19 @@ HRESULT DirectShowGraph::Connect(IPin* pPinOut, IPin* pPinIn, bool bContinueRend
 
             // Checks if vsfilter/audioswitcher is already in the graph to avoid two instances at the same time
             {
+                
                 if (info->clsid.CompareNoCase(sClsid_VsFilter) == 0 &&
-                    SUCCEEDED(FindFilterByClsid(sClsid_VsFilter, NULL)))
+                    (!PlayerCore::GetPlayerSettings().m_fVsfilterEnabled ||
+                    SUCCEEDED(FindFilterByClsid(sClsid_VsFilter, NULL))))
                 {
-                    player_log(kLogLevelTrace, _T("VsFilter already in graph, skip it"));
+                    player_log(kLogLevelTrace, _T("VsFilter skipped"));
                     continue;
                 }
                 if (info->clsid.CompareNoCase(sClsid_AudioSwitcher) == 0 &&
-                    SUCCEEDED(FindFilterByClsid(sClsid_AudioSwitcher, NULL)))
+                    (!PlayerCore::GetPlayerSettings().m_fAudioSwitcherEnabled ||
+                    SUCCEEDED(FindFilterByClsid(sClsid_AudioSwitcher, NULL))))
                 {
-                    player_log(kLogLevelTrace, _T("AudioSwitcher already in graph, skip it"));
+                    player_log(kLogLevelTrace, _T("AudioSwitcher skipped"));
                     continue;
                 }
             }
@@ -1774,7 +1841,20 @@ HRESULT DirectShowGraph::OnCreateFilterPrepare(CodecsInfo* pInfo, void** pParam)
         HRESULT hr;
         m_pVideoRenderer = new VideoRendererEVRCP(hr, hVideoWindow, bFullScreen);
 
-        *pParam = m_pVideoRenderer;
+        if (SUCCEEDED(hr))
+        {
+            *pParam = m_pVideoRenderer;
+        }
+    }
+
+    if (clsid == CLSID_EnhancedVideoRenderer)
+    {
+        HRESULT hr;
+        m_pVideoRenderer = new VideoRendererEVR(hr);
+        if (SUCCEEDED(hr))
+        {
+            *pParam = m_pVideoRenderer;
+        }
     }
     
     return S_OK;
@@ -1793,6 +1873,11 @@ HRESULT DirectShowGraph::OnCreateFilterCompelete(CodecsInfo* pInfo, IBaseFilter*
 //         }
 //     }
 
+    if (CComQIPtr<ISubPicAllocatorPresenter> pCAP = pBF)
+    {
+        m_pCAP = pCAP;
+    }
+
     return hr;
 }
 
@@ -1806,10 +1891,10 @@ HRESULT DirectShowGraph::OnRenderFilterEnd(CodecsInfo* pInfo, IBaseFilter* pBF)
 
         //SAFE_DELETE(m_pVideoRenderer);
 
-        if (clsid == CLSID_EnhancedVideoRenderer)
-        {
-            m_pVideoRenderer = new VideoRendererEVR(hr, pBF);
-        }
+//         if (clsid == CLSID_EnhancedVideoRenderer)
+//         {
+//             m_pVideoRenderer = new VideoRendererEVR(hr, pBF);
+//         }
 //         else if (clsid == CLSID_EVRAllocatorPresenter)
 //         {
 //             HWND hVideoWindow = m_pPlayer->GetVideoWindow();
@@ -1841,4 +1926,418 @@ HRESULT DirectShowGraph::RemoveAllFilter()
     EndEnumFilters;
 
     return hr;
+}
+
+void DirectShowGraph::AddTextPassThruFilter()
+{
+    BeginEnumFilters(m_pIGraphBuilder, pEF, pBF) {
+        if (!IsSplitter(pBF)) {
+            continue;
+        }
+
+        BeginEnumPins(pBF, pEP, pPin) {
+            CComPtr<IPin> pPinTo;
+            AM_MEDIA_TYPE mt;
+            if (FAILED(pPin->ConnectedTo(&pPinTo)) || !pPinTo
+                || FAILED(pPin->ConnectionMediaType(&mt))
+                || mt.majortype != MEDIATYPE_Text && mt.majortype != MEDIATYPE_Subtitle) {
+                    continue;
+            }
+
+            InsertTextPassThruFilter(pBF, pPin, pPinTo);
+        }
+        EndEnumPins;
+    }
+    EndEnumFilters;
+}
+
+HRESULT DirectShowGraph::InsertTextPassThruFilter(IBaseFilter* pBF, IPin* pPin, IPin* pPinTo)
+{
+    HRESULT hr;
+    CComQIPtr<IBaseFilter> pTPTF = new CTextPassThruFilter(this);
+    CStringW name;
+    name.Format(L"TextPassThru%p", pTPTF);
+    if (FAILED(hr = m_pIGraphBuilder->AddFilter(pTPTF, name))) {
+        return hr;
+    }
+
+    hr = pPinTo->Disconnect();
+    hr = pPin->Disconnect();
+
+    if (FAILED(hr = m_pIGraphBuilder->ConnectDirect(pPin, GetFirstPin(pTPTF, PINDIR_INPUT), NULL))
+        || FAILED(hr = m_pIGraphBuilder->ConnectDirect(GetFirstPin(pTPTF, PINDIR_OUTPUT), pPinTo, NULL)))
+    {
+            hr = m_pIGraphBuilder->ConnectDirect(pPin, pPinTo, NULL);
+    }
+    else 
+    {
+        SubtitleInput subInput(CComQIPtr<ISubStream>(pTPTF), pBF);
+        m_pSubStreams.AddTail(subInput);
+    }
+    return hr;
+}
+
+void DirectShowGraph::ReplaceSubtitle(const ISubStream* pSubStreamOld, ISubStream* pSubStreamNew)
+{
+    POSITION pos = m_pSubStreams.GetHeadPosition();
+    while (pos) {
+        POSITION cur = pos;
+        if (pSubStreamOld == m_pSubStreams.GetNext(pos).subStream) {
+            m_pSubStreams.GetAt(cur).subStream = pSubStreamNew;
+            if (m_pCurrentSubStream == pSubStreamOld) {
+                SetSubtitle(pSubStreamNew);
+            }
+            break;
+        }
+    }
+}
+
+bool DirectShowGraph::SetSubtitle(int i, bool bIsOffset /*= false*/, bool bDisplayMessage /*= false*/, bool bApplyDefStyle /*= false*/)
+{
+    if (!m_pCAP) {
+        return false;
+    }
+
+    SubtitleInput* pSubInput = GetSubtitleInput(i, bIsOffset);
+    bool success = false;
+
+    if (pSubInput) {
+        WCHAR* pName = NULL;
+        if (CComQIPtr<IAMStreamSelect> pSSF = pSubInput->sourceFilter) {
+            DWORD dwFlags;
+            if (FAILED(pSSF->Info(i, NULL, &dwFlags, NULL, NULL, &pName, NULL, NULL))) {
+                dwFlags = 0;
+                pName = NULL;
+            }
+            // Enable the track only if it isn't already the only selected track in the group
+            if (!(dwFlags & AMSTREAMSELECTINFO_EXCLUSIVE)) {
+                pSSF->Enable(i, AMSTREAMSELECTENABLE_ENABLE);
+            }
+            i = 0;
+        }
+        {
+            // m_csSubLock shouldn't be locked when using IAMStreamSelect::Enable
+            CAutoLock cAutoLock(&m_csSubLock);
+            pSubInput->subStream->SetStream(i);
+            SetSubtitle(pSubInput->subStream, bApplyDefStyle);
+        }
+
+        if (bDisplayMessage) {
+            if (pName || SUCCEEDED(pSubInput->subStream->GetStreamInfo(0, &pName, NULL))) {
+//                 CString strMessage;
+//                 strMessage.Format(IDS_SUBTITLE_STREAM, pName);
+//                 m_OSD.DisplayMessage(OSD_TOPLEFT, strMessage);
+            }
+        }
+        if (pName) {
+            CoTaskMemFree(pName);
+        }
+
+        success = true;
+    }
+
+    return success;
+}
+
+void DirectShowGraph::SetSubtitle(ISubStream* pSubStream, bool bApplyDefStyle /*= false*/)
+{
+    PlayerSettings& s = PlayerCore::GetPlayerSettings();
+
+    if (pSubStream)
+    {
+        bool found = false;
+        POSITION pos = m_pSubStreams.GetHeadPosition();
+        while (pos)
+        {
+            if (pSubStream == m_pSubStreams.GetNext(pos).subStream)
+            {
+                found = true;
+                break;
+            }
+        }
+        // We are trying to set a subtitles stream that isn't in the list so we abort here.
+        if (!found)
+        {
+            return;
+        }
+
+        CLSID clsid;
+        pSubStream->GetClassID(&clsid);
+
+        SetSubStreamStyle(clsid, pSubStream, bApplyDefStyle);
+    }
+
+    m_pCurrentSubStream = pSubStream;
+
+    if (m_pCAP && s.m_fEnableSubtitles) {
+        m_pCAP->SetSubPicProvider(CComQIPtr<ISubPicProvider>(pSubStream));
+        //m_wndSubresyncBar.SetSubtitle(pSubStream, m_pCAP->GetFPS());
+    }
+}
+
+// Returns the the corresponding subInput or NULL in case of error.
+// i is modified to reflect the locale index of track
+SubtitleInput* DirectShowGraph::GetSubtitleInput(int& i, bool bIsOffset /*= false*/)
+{
+    // Only 1, 0 and -1 are supported offsets
+    if ((bIsOffset && (i < -1 || i > 1)) || (!bIsOffset && i < 0)) {
+        return NULL;
+    }
+
+    POSITION pos = m_pSubStreams.GetHeadPosition();
+    SubtitleInput* pSubInput = NULL, *pSubInputPrec = NULL;
+    int iLocalIdx = -1, iLocalIdxPrec = -1;
+    bool bNextTrack = false;
+
+    while (pos && !pSubInput) {
+        SubtitleInput& subInput = m_pSubStreams.GetNext(pos);
+
+        if (CComQIPtr<IAMStreamSelect> pSSF = subInput.sourceFilter) {
+            DWORD cStreams;
+            if (FAILED(pSSF->Count(&cStreams))) {
+                continue;
+            }
+
+            for (int j = 0, cnt = (int)cStreams; j < cnt; j++) {
+                DWORD dwFlags, dwGroup;
+
+                if (FAILED(pSSF->Info(j, NULL, &dwFlags, NULL, &dwGroup, NULL, NULL, NULL))) {
+                    continue;
+                }
+
+                if (dwGroup != 2) {
+                    continue;
+                }
+
+                if (bIsOffset) {
+                    if (bNextTrack) { // We detected previously that the next subtitles track is the one we want to select
+                        pSubInput = &subInput;
+                        iLocalIdx = j;
+                        break;
+                    } else if (subInput.subStream == m_pCurrentSubStream
+                        && dwFlags & (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE)) {
+                            if (i == 0) {
+                                pSubInput = &subInput;
+                                iLocalIdx = j;
+                                break;
+                            } else if (i > 0) {
+                                bNextTrack = true; // We want to the select the next subtitles track
+                            } else {
+                                // We want the previous subtitles track and we know which one it is
+                                if (pSubInputPrec) {
+                                    pSubInput = pSubInputPrec;
+                                    iLocalIdx = iLocalIdxPrec;
+                                    break;
+                                }
+                            }
+                    }
+
+                    pSubInputPrec = &subInput;
+                    iLocalIdxPrec = j;
+                } else {
+                    if (i == 0) {
+                        pSubInput = &subInput;
+                        iLocalIdx = j;
+                        break;
+                    }
+
+                    i--;
+                }
+            }
+        } else {
+            if (bIsOffset) {
+                if (bNextTrack) { // We detected previously that the next subtitles track is the one we want to select
+                    pSubInput = &subInput;
+                    iLocalIdx = 0;
+                    break;
+                } else if (subInput.subStream == m_pCurrentSubStream) {
+                    iLocalIdx = subInput.subStream->GetStream() + i;
+                    if (iLocalIdx >= 0 && iLocalIdx < subInput.subStream->GetStreamCount()) {
+                        // The subtitles track we want to select is part of this substream
+                        pSubInput = &subInput;
+                    } else if (i > 0) { // We want to the select the next subtitles track
+                        bNextTrack = true;
+                    } else {
+                        // We want the previous subtitles track and we know which one it is
+                        if (pSubInputPrec) {
+                            pSubInput = pSubInputPrec;
+                            iLocalIdx = iLocalIdxPrec;
+                        }
+                    }
+                } else {
+                    pSubInputPrec = &subInput;
+                    iLocalIdxPrec = subInput.subStream->GetStreamCount() - 1;
+                }
+            } else {
+                if (i < subInput.subStream->GetStreamCount()) {
+                    pSubInput = &subInput;
+                    iLocalIdx = i;
+                } else {
+                    i -= subInput.subStream->GetStreamCount();
+                }
+            }
+        }
+
+        // Handle special cases
+        if (!pos && !pSubInput && bIsOffset) {
+            if (bNextTrack) { // The last subtitles track was selected and we want the next one
+                // Let's restart the loop to select the first subtitles track
+                pos = m_pSubStreams.GetHeadPosition();
+            } else if (i < 0) { // The first subtitles track was selected and we want the previous one
+                pSubInput = pSubInputPrec; // We select the last track
+                iLocalIdx = iLocalIdxPrec;
+            }
+        }
+    }
+
+    i = iLocalIdx;
+
+    return pSubInput;
+}
+
+void DirectShowGraph::InvalidateSubtitle(DWORD_PTR nSubtitleId, REFERENCE_TIME rtInvalidate)
+{
+    if (m_pCAP) {
+        if (nSubtitleId == -1 || nSubtitleId == (DWORD_PTR)m_pCurrentSubStream) {
+            m_pCAP->Invalidate(rtInvalidate);
+        }
+    }
+}
+
+DWORD DirectShowGraph::SetupSubtitleStreams()
+{
+    const PlayerSettings& s = PlayerCore::GetPlayerSettings();
+
+    size_t cStreams = m_pSubStreams.GetCount();
+    if (cStreams > 0)
+    {
+        bool externalPriority = false;
+        CAtlArray<CString> langs;
+        int tPos = 0;
+        CString lang = s.strSubtitlesLanguageOrder.Tokenize(_T(",; "), tPos);
+        while (tPos != -1)
+        {
+            langs.Add(lang.MakeLower());
+            lang = s.strSubtitlesLanguageOrder.Tokenize(_T(",; "), tPos);
+        }
+
+        DWORD selected = 0;
+        DWORD i = 0;
+        int  maxrating = 0;
+        POSITION pos = m_pSubStreams.GetHeadPosition();
+        while (pos)
+        {
+//             if (m_posFirstExtSub == pos) {
+//                 externalPriority = s.fPrioritizeExternalSubtitles;
+//             }
+            SubtitleInput& subInput = m_pSubStreams.GetNext(pos);
+            CComPtr<ISubStream> pSubStream = subInput.subStream;
+            CComQIPtr<IAMStreamSelect> pSSF = subInput.sourceFilter;
+
+//             bool bAllowOverridingSplitterChoice = s.bAllowOverridingExternalSplitterChoice;
+//             CLSID clsid;
+//             if (!bAllowOverridingSplitterChoice && pSSF && SUCCEEDED(subInput.sourceFilter->GetClassID(&clsid))) {
+//                 // We always allow overriding the splitter choice for our splitters that
+//                 // support the IAMStreamSelect interface and thus would have been ignored.
+//                 bAllowOverridingSplitterChoice = !!(clsid == __uuidof(CMpegSplitterFilter));
+//             }
+
+            int count = 0;
+            if (pSSF)
+            {
+                DWORD cStreams;
+                if (SUCCEEDED(pSSF->Count(&cStreams)))
+                {
+                    count = (int)cStreams;
+                }
+            }
+            else
+            {
+                count = pSubStream->GetStreamCount();
+            }
+
+            for (int j = 0; j < count; j++)
+            {
+                WCHAR* pName;
+                HRESULT hr;
+                if (pSSF)
+                {
+                    DWORD dwFlags, dwGroup = 2;
+                    hr = pSSF->Info(j, NULL, &dwFlags, NULL, &dwGroup, &pName, NULL, NULL);
+                    if (dwGroup != 2) {
+                        CoTaskMemFree(pName);
+                        continue;
+                    }
+//                     else if (!bAllowOverridingSplitterChoice && !(dwFlags & (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE)))
+//                     {
+//                         // If we aren't allowed to modify the splitter choice and the current
+//                         // track isn't already selected at splitter level we need to skip it.
+//                         CoTaskMemFree(pName);
+//                         i++;
+//                         continue;
+//                     }
+                }
+                else
+                {
+                    hr = pSubStream->GetStreamInfo(j, &pName, NULL);
+                }
+                CString name(pName);
+                CoTaskMemFree(pName);
+                name.Trim();
+                name.MakeLower();
+
+                int rating = 0;
+                for (size_t k = 0; k < langs.GetCount(); k++)
+                {
+                    int num = _tstoi(langs[k]) - 1;
+                    if (num >= 0)
+                    { // this is track number
+                        if (i != num)
+                        {
+                            continue;  // not matched
+                        }
+                    }
+                    else
+                    { // this is lang string
+                        int len = langs[k].GetLength();
+                        if (name.Left(len) != langs[k] && name.Find(_T("[") + langs[k]) < 0)
+                        {
+                            continue; // not matched
+                        }
+                    }
+                    rating = 16 * int(langs.GetCount() - k);
+                    break;
+                }
+                if (externalPriority)
+                {
+                    rating += 8;
+                }
+                if (s.bPreferDefaultForcedSubtitles)
+                {
+                    if (name.Find(_T("[default,forced]")) != -1) // for LAV Splitter
+                    {
+                        rating += 4 + 2;
+                    }
+                    if (name.Find(_T("[forced]")) != -1)
+                    {
+                        rating += 4;
+                    }
+                    if (name.Find(_T("[default]")) != -1)
+                    {
+                        rating += 2;
+                    }
+                }
+
+                if (rating > maxrating || !selected)
+                {
+                    maxrating = rating;
+                    selected = i + 1;
+                }
+                i++;
+            }
+        }
+        return selected;
+    }
+
+    return 0;
 }

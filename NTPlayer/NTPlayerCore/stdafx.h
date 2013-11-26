@@ -16,6 +16,7 @@
 // TODO: reference additional headers your program requires here
 #include <tchar.h>
 
+#include <atlbase.h>
 #include <atlstr.h>
 #include <atltypes.h>
 #include <atlcoll.h>
@@ -34,3 +35,5 @@
 #include "ShowDebug.h"
 
 extern HINSTANCE g_hInstance;
+
+////#include <vld/include/vld.h>

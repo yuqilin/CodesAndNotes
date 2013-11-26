@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CmfcNTPlayerCoreTestDlg, CDialog)
     ON_BN_CLICKED(IDC_BTN_STOP, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnStop)
     ON_BN_CLICKED(IDC_BTN_CLOSE, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnClose)
     ON_WM_TIMER()
+    ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
 BEGIN_EASYSIZE_MAP(CmfcNTPlayerCoreTestDlg)
@@ -213,16 +214,13 @@ void CmfcNTPlayerCoreTestDlg::OnDestroy()
 void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnOpen()
 {
     // TODO: Add your control notification handler code here
-    RECT rcDisplay;
-    GetDlgItem(IDC_VIDEO_DISPLAY)->GetClientRect(&rcDisplay);
-    ntplayer_set_video_display(GetDlgItem(IDC_VIDEO_DISPLAY)->GetSafeHwnd(), &rcDisplay, false);
-
     CFileDialog dlg(TRUE);
     if (IDOK == dlg.DoModal())
     {
-        CString strFileName = dlg.GetPathName();
-        ntplayer_open(wcs2mbs(CP_UTF8, strFileName).c_str());
+        m_strFileName = dlg.GetPathName();
     }
+
+    OnOpenFileToPlay();
 }
 
 std::string	wcs2mbs(int nCodePage, const wchar_t* wcs)
@@ -278,6 +276,7 @@ void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnClose()
     // TODO: Add your control notification handler code here
     KillTimer(TIMER_ID_GET_CURRENT_PLAY_POS);
     ntplayer_close();
+    GetDlgItem(IDC_VIDEO_DISPLAY)->Invalidate();
 }
 
 
@@ -319,4 +318,29 @@ void CmfcNTPlayerCoreTestDlg::OnTimer(UINT_PTR nIDEvent)
     }
 
     CDialog::OnTimer(nIDEvent);
+}
+
+void CmfcNTPlayerCoreTestDlg::OnDropFiles(HDROP hDropInfo)
+{
+    // TODO: Add your message handler code here and/or call default
+
+    TCHAR szFile[MAX_PATH];
+    UINT uNumberOfDrags = DragQueryFile((HDROP)hDropInfo, 0xFFFFFFFF, szFile, MAX_PATH);
+    if (DragQueryFile((HDROP)hDropInfo, 0, szFile, MAX_PATH))
+    {
+        m_strFileName = szFile;
+    }
+
+    OnOpenFileToPlay();
+
+    CDialog::OnDropFiles(hDropInfo);
+}
+
+void CmfcNTPlayerCoreTestDlg::OnOpenFileToPlay()
+{
+    RECT rcDisplay;
+    GetDlgItem(IDC_VIDEO_DISPLAY)->GetClientRect(&rcDisplay);
+    ntplayer_set_video_display(GetDlgItem(IDC_VIDEO_DISPLAY)->GetSafeHwnd(), &rcDisplay, false);
+
+    ntplayer_open(wcs2mbs(CP_UTF8, m_strFileName).c_str());
 }

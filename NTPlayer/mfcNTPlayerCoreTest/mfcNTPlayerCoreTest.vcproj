@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\ntplayercore;"
+				AdditionalIncludeDirectories="..\ntplayercore;..\thirdparty;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -69,7 +69,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(SolutionDir)lib\$(ConfigurationName)\"
+				AdditionalLibraryDirectories="$(SolutionDir)lib\$(ConfigurationName)\;..\thirdparty\vld\lib\win32;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				ImportLibrary="$(SolutionDir)lib\$(ConfigurationName)\$(ProjectName).lib"

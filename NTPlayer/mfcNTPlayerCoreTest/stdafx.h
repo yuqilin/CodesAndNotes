@@ -42,8 +42,6 @@
 #include "easysize.h"
 
 #include "NTPlayerCore.h"
-#pragma comment(lib, "NTPlayerCore.lib")
-
 
 #ifdef _UNICODE
 #if defined _M_IX86

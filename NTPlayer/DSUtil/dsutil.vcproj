@@ -42,12 +42,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\baseclasses;..\include;..\..\wtl\include;"
+				AdditionalIncludeDirectories="..\..\baseclasses;..\include;..\..\wtl\include;..\thirdparty;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -223,11 +223,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\File.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FileVersionInfo.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\FontInstaller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GolombBuffer.cpp"
 				>
 			</File>
 			<File
@@ -263,6 +271,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\StdioFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SysVersion.cpp"
 				>
 			</File>
@@ -292,11 +304,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\File.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FileVersionInfo.h"
 				>
 			</File>
 			<File
 				RelativePath=".\FontInstaller.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GolombBuffer.h"
 				>
 			</File>
 			<File
@@ -313,6 +333,10 @@
 			</File>
 			<File
 				RelativePath="stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StdioFile.h"
 				>
 			</File>
 			<File

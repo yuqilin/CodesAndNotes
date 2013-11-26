@@ -31,6 +31,24 @@ void CRenderersSettings::UpdateData(bool fSave)
     //AfxGetAppSettings().UpdateRenderersData(fSave);
 }
 
+void CRenderersSettings::SetDefault()
+{
+    fResetDevice = !SysVersion::IsVistaOrLater();
+
+    iAPSurfaceUsage = SysVersion::IsVistaOrLater() ? VIDRNDT_AP_TEXTURE3D : VIDRNDT_AP_TEXTURE2D;
+    iDX9Resizer = 1;
+    fVMR9MixerMode = TRUE;
+    fVMR9MixerYUV = FALSE;
+    iEvrBuffers = 5;
+
+    nSPCSize = 10;
+    nSPCMaxRes = 0;
+    fSPCPow2Tex = TRUE;
+    fSPCAllowAnimationWhenBuffering = TRUE;
+
+    D3D9RenderDevice = _T("D3D9RenderDevice");
+}
+
 void CRenderersSettings::CAdvRendererSettings::SetDefault()
 {
     bVMR9AlterativeVSync              = false;

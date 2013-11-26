@@ -252,6 +252,10 @@ void CodecsListEx::Insert(CodecsInfo* info, int group, int exactmatch, int custo
 
 POSITION CodecsListEx::GetHeadPosition()
 {
+    if (m_codecs.GetCount() == 0)
+    {
+        return NULL;
+    }
     if (m_sortedcodecs.IsEmpty())
     {
         CAtlArray<codecs_t> sort;
@@ -297,6 +301,13 @@ int CodecsListEx::codecs_cmp(const void* a, const void* b)
     if (fa->group > fb->group) {
         return +1;
     }
+
+//     if ((int)fa->info->type < (int)fb->info->type) {
+//         return -1;
+//     }
+//     if ((int)fa->info->type > (int)fb->info->type) {
+//         return +1;
+//     }
 
     if (fa->exactmatch && !fb->exactmatch) {
         return -1;

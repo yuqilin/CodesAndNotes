@@ -2,15 +2,27 @@
 #include "MediaInfo.h"
 #include "VideoRendererEVR.h"
 
-VideoRendererEVR::VideoRendererEVR(HRESULT& hr, IBaseFilter* pBF)
- : BaseVideoRenderer(kVideoRenderEVR, pBF)
+VideoRendererEVR::VideoRendererEVR(HRESULT& hr)
+ : BaseVideoRenderer(kVideoRenderEVR)
 {
-    hr = Create(pBF);
+    hr = Create();
 }
 
 VideoRendererEVR::~VideoRendererEVR()
 {
 
+}
+
+HRESULT VideoRendererEVR::CreateRenderer(IBaseFilter** ppBF)
+{
+    CheckPointer(ppBF, E_POINTER);
+
+    *ppBF = m_pIBaseFilter;
+
+    if (*ppBF)
+        (*ppBF)->AddRef();
+
+    return S_OK;
 }
 
 HRESULT VideoRendererEVR::SetVideoWindow(HWND hVideoWindow)
@@ -39,11 +51,20 @@ HRESULT VideoRendererEVR::SetVideoPosition(LPRECT prcDisplay)
     return hr;
 }
 
-HRESULT VideoRendererEVR::Create(IBaseFilter* pBF)
+HRESULT VideoRendererEVR::RepaintVideo()
 {
-    CheckPointer(pBF, E_POINTER);
+    return S_OK;
+}
 
+HRESULT VideoRendererEVR::Create()
+{
     HRESULT hr = S_OK;
+
+    CComPtr<IBaseFilter> pBF;
+    if (SUCCEEDED(hr = pBF.CoCreateInstance(CLSID_EnhancedVideoRenderer)))
+    {
+        m_pIBaseFilter = pBF;
+    }
 
     if (CComQIPtr<IMFGetService, &__uuidof(IMFGetService)> pMFGS = pBF)
     {

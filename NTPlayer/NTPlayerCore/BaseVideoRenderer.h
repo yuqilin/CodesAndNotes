@@ -7,19 +7,22 @@
 class BaseVideoRenderer
 {
 public:
-    BaseVideoRenderer(VideoRenderMode mode, IBaseFilter* pBF) 
+    BaseVideoRenderer(VideoRenderMode mode) 
         : m_VideoRenderMode(mode)
-        , m_pIBaseFilter(pBF)
     {}
 
-    virtual ~BaseVideoRenderer(){}
+    virtual ~BaseVideoRenderer()
+    {}
 
     VideoRenderMode GetVideoRenderMode() {
         return m_VideoRenderMode;
     }
 
+    virtual HRESULT CreateRenderer(IBaseFilter** ppBF) = 0;
+
     virtual HRESULT SetVideoWindow(HWND hVideoWindow) = 0;
     virtual HRESULT SetVideoPosition(LPRECT prcDisplay) = 0;
+    virtual HRESULT RepaintVideo() = 0;
     virtual HRESULT GetVideoSize(VideoSize* pVideoSize) = 0;
 
 protected:

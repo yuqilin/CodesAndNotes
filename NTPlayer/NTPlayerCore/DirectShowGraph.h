@@ -4,11 +4,14 @@
 #include "BaseGraph.h"
 #include "CodecsInfo.h"
 #include "PlayerSettings.h"
+#include "SubtitleInput.h"
 
 class BaseVideoRenderer;
 
 class DirectShowGraph : public BaseGraph
 {
+    friend class CTextPassThruFilter;
+    friend class CTextPassThruInputPin;
 public:
     DirectShowGraph(PlayerCore* pPlayer, HRESULT& hr);
     ~DirectShowGraph();
@@ -28,6 +31,7 @@ public:
     // IVideoControl
     HRESULT SetVideoWindow(void* video_window);
     HRESULT SetVideoPosition(LPRECT lpRect);
+    HRESULT RepaintVideo();
     HRESULT GetVideoSize(VideoSize* pVideoSize);
     HRESULT SetColorControl(int brightness, int contrast, int hue, int staturation);
     HRESULT LoadExternalSubtitle(const char* subtitle_path);
@@ -99,6 +103,16 @@ protected:
     HRESULT RemoveAllFilter();
 
 
+    void AddTextPassThruFilter();
+    HRESULT InsertTextPassThruFilter(IBaseFilter* pBF, IPin* pPin, IPin* pPinTo);
+    void ReplaceSubtitle(const ISubStream* pSubStreamOld, ISubStream* pSubStreamNew);
+    bool SetSubtitle(int i, bool bIsOffset = false, bool bDisplayMessage = false, bool bApplyDefStyle = false);
+    void SetSubtitle(ISubStream* pSubStream, bool bApplyDefStyle = false);
+    SubtitleInput* GetSubtitleInput(int& i, bool bIsOffset = false);
+    void InvalidateSubtitle(DWORD_PTR nSubtitleId, REFERENCE_TIME rtInvalidate);
+
+    DWORD SetupSubtitleStreams();
+
 protected:
     FastMutex m_GraphMutex;
     CCritSec m_Lock;
@@ -119,5 +133,11 @@ protected:
     BaseVideoRenderer* m_pVideoRenderer;
 
     volatile BOOL m_bAborted;
+
+    CComPtr<ISubPicAllocatorPresenter> m_pCAP;
+    CAtlList<SubtitleInput> m_pSubStreams;
+    ISubStream* m_pCurrentSubStream;
+
+    CCritSec m_csSubLock;
 };
 

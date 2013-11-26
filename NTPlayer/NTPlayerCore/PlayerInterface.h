@@ -25,6 +25,7 @@ class IVideoControl
 public:
     virtual HRESULT SetVideoWindow(void* video_window) = 0;
     virtual HRESULT SetVideoPosition(LPRECT lpRect) = 0;
+    virtual HRESULT RepaintVideo() = 0;
     virtual HRESULT GetVideoSize(VideoSize* pVideoSize) = 0;
     virtual HRESULT SetColorControl(int brightness, int contrast, int hue, int staturation) = 0;
     virtual HRESULT LoadExternalSubtitle(const char* subtitle_path) = 0;

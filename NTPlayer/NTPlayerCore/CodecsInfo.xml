@@ -3,7 +3,7 @@
 
   <!------ Video/Audio Effect ------>
   <codecs
-    enable="1" priority="10"
+    enable="0" priority="10"
     name="VsFilter"
     pathflag="file" 
     path="vsfilter.dll"
@@ -20,10 +20,11 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{e436eb7d-524f-11ce-9f53-0020af0ba770}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{20776172-0000-0010-8000-00AA00389B71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{20574152-0000-0010-8000-00AA00389B71}"/>
+    <mediatype major="{73747874-0000-0010-8000-00aa00389b71}" sub="{e436eb8e-524f-11ce-9f53-0020af0ba770}"/>
   </codecs>
 
   <codecs
-    enable="1" priority="10"
+    enable="0" priority="10"
     name="AudioSwitcher"
     pathflag="file"
     path="audioswitcher.ax"
@@ -127,6 +128,18 @@
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000241-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000164-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000249-0000-0010-8000-00aa00389b71}" />
+  </codecs>
+
+  <codecs
+    enable="1" priority="10"
+    name="NullTextRenderer"
+    pathflag="inner"
+    category="dsfilter"
+    type="nullrender"
+    clsid="{655D7613-C26C-4A25-BBBD-3C9C516122CC}" >
+    <mediatype major="{73747874-0000-0010-8000-00AA00389B71}" sub="{00000000-0000-0000-0000-000000000000}" />
+    <mediatype major="{73636d64-0000-0010-8000-00AA00389B71}" sub="{00000000-0000-0000-0000-000000000000}" />
+    <mediatype major="{E487EB08-6B26-4be9-9DD3-993434D313FD}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
   <!------ Source Filters ------>
@@ -1175,7 +1188,7 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{73697664-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{43564450-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{63766470-0000-0010-8000-00aa00389b71}" />
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00aa00389b71}" />
+    <!--mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00aa00389b71}" /-->
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56595559-0000-0010-8000-00aa00389b71}" />
@@ -1570,5 +1583,16 @@
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{1541c5c0-cddf-477d-bc0a-86f8ae7f8354}"/>
   </codecs>
 
+  <codecs
+    enable="1" priority="11"
+    name="Intel(R) Media SDK H.264 Decoder"
+    pathflag="file"
+    path="h264_dec_filter.dll"
+    category="dsfilter"
+    type="vdec"
+    clsid="{CCCE52FD-02CB-482C-AC81-1E55EF1D61EE}" >
+    <mediatype major="{73646976-0000-0010-8000-00AA00389B71}" sub="{34363248-0000-0010-8000-00AA00389B71}"/>
+    <mediatype major="{73646976-0000-0010-8000-00AA00389B71}" sub="{31435641-0000-0010-8000-00AA00389B71}"/>
+  </codecs>
 
 </CodecsInfo>

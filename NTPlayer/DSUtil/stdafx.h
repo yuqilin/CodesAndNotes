@@ -50,3 +50,6 @@
 
 #pragma warning(disable : 4995)
 #pragma warning(disable : 4996)
+
+//#include <vld/include/vld.h>
+#include "../NTPlayerCore/PlayerLog.h"

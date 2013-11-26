@@ -20,7 +20,7 @@ void show_debug_callback(int level, const wchar_t* format, va_list vl)
 //     strLog.FormatV(format, vl);
 //     strText.Format(_T("NTPlayer[%02d:%02d:%02d.%03d][%04X]: %s\r\n"),
 //         st.wHour, st.wMinute, st.wSecond, st.wMilliseconds, ::GetCurrentThreadId(), strLog);
-    static const int kMaxLogLength = 2048;
+    const int kMaxLogLength = 2048;
     TCHAR strLog[kMaxLogLength], strText[kMaxLogLength];
     _vsnwprintf_s(strLog, _countof(strLog), _TRUNCATE, format, vl);
     _snwprintf_s(strText, _countof(strText), _TRUNCATE, _T("NTPlayer[%02d:%02d:%02d.%03d][%04X]: %s\r\n"),

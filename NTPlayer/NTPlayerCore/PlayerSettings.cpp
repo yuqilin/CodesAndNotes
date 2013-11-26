@@ -12,7 +12,9 @@ CRenderersSettings&  GetRenderersSettings();
 
 //////////////////////////////////////////////////////////////////////////
 PlayerSettings::PlayerSettings()
+    : m_VideoRenderMode(kVideoRenderDefault)
 {
+    
 }
 
 PlayerSettings::~PlayerSettings()
@@ -32,6 +34,12 @@ HRESULT PlayerSettings::LoadSettings()
     {
         m_VideoRenderMode = kVideoRenderDefault;
     }
+
+    m_fVsfilterEnabled = m_fAudioSwitcherEnabled = true;
+
+    bPreferDefaultForcedSubtitles = true;
+
+    m_fEnableSubtitles = true;
 
     return S_OK;
 }

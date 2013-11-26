@@ -49,6 +49,11 @@ protected:
     void OnOpenFailed();
 public:
     afx_msg void OnTimer(UINT_PTR nIDEvent);
+    afx_msg void OnDropFiles(HDROP hDropInfo);
+
+protected:
+    CString m_strFileName;
+    void OnOpenFileToPlay();
 };
 
 std::string	wcs2mbs(int nCodePage, const wchar_t* wcs);

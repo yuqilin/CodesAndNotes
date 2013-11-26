@@ -5,6 +5,7 @@
 #define NTPLAYERCORE_API __declspec(dllexport)
 #else
 #define NTPLAYERCORE_API __declspec(dllimport)
+#pragma comment(lib, "ntplayercore.lib")
 #endif
 
 #ifdef __cplusplus

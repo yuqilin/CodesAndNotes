@@ -43,3 +43,5 @@
 #include "DSUtil.h"
 
 #define CHECK_HR(exp) { if (FAILED(hr = exp)) return hr; }
+
+//#include <vld/include/vld.h>

@@ -40,6 +40,15 @@ public:
     CString m_AudioRendererDisplayName;
     CString m_SelVideoRendererClsid;
 
+    bool m_fVsfilterEnabled;
+    bool m_fAudioSwitcherEnabled;
+    
+    bool m_fEnableSubtitles;
+    
+    CStringW strSubtitlesLanguageOrder;
+
+    bool bPreferDefaultForcedSubtitles;
+
 protected:
     CRenderersData m_Renderers;
     CRenderersSettings m_RenderersSettings;

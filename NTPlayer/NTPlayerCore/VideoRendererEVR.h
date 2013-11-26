@@ -10,16 +10,18 @@
 class VideoRendererEVR : public BaseVideoRenderer
 {
 public:
-    VideoRendererEVR(HRESULT& hr,
-                     IBaseFilter* pBF);
+    VideoRendererEVR(HRESULT& hr);
     ~VideoRendererEVR();
 
-    HRESULT SetVideoWindow(HWND hVideoWindow);
-    HRESULT SetVideoPosition(LPRECT prcDisplay);
-    HRESULT GetVideoSize(VideoSize* pVideoSize);
+    virtual HRESULT CreateRenderer(IBaseFilter** ppBF);
+
+    virtual HRESULT SetVideoWindow(HWND hVideoWindow);
+    virtual HRESULT SetVideoPosition(LPRECT prcDisplay);
+    virtual HRESULT RepaintVideo();
+    virtual HRESULT GetVideoSize(VideoSize* pVideoSize);
 
 protected:
-    HRESULT Create(IBaseFilter* pBF);
+    HRESULT Create();
 protected:
     CComPtr<IMFVideoDisplayControl> m_pMFVDC;
     CComPtr<IMFVideoMixerBitmap>    m_pMFMB;
