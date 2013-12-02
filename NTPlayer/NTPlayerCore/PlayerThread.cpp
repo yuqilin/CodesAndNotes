@@ -66,6 +66,10 @@ LRESULT PlayerThread::ThreadMessageProc(
         lResult = OnStop(uMsg, dwFlags, lpParam, pEvent);
         break;
 
+    case kMsgSeek:
+        lResult = OnSeek(uMsg, dwFlags, lpParam, pEvent);
+        break;
+
     case kMsgExit:
         lResult = OnExit(uMsg, dwFlags, lpParam, pEvent);
         break;
@@ -129,6 +133,16 @@ LRESULT PlayerThread::OnStop(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent 
     if (m_pPlayer)
     {
         m_pPlayer->DoStop();
+    }
+    return 0;
+}
+
+LRESULT PlayerThread::OnSeek(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent)
+{
+    player_log(kLogLevelTrace, _T("PlayerThread::OnSeek"));
+    if (m_pPlayer)
+    {
+        m_pPlayer->DoSeek((long)lpParam);
     }
     return 0;
 }

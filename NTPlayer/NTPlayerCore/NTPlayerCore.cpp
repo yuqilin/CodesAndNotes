@@ -49,14 +49,15 @@ NTPLAYERCORE_API long ntplayer_get_codecs_info_string(const char** info)
     return E_UNEXPECTED;
 }
 
-NTPLAYERCORE_API long ntplayer_open(const char* url)
+NTPLAYERCORE_API long ntplayer_open(const char* url, const char* download_save_path)
 {
     std::wstring wurl = mbs2wcs(CP_UTF8, url);
-    player_log(kLogLevelTrace, _T("ntplayer_open, url = %s"), wurl.c_str());
+    std::wstring wsavepath = mbs2wcs(CP_UTF8, download_save_path);
+    player_log(kLogLevelTrace, _T("ntplayer_open, url = %s, download_save_path = %s"), wurl.c_str(), wsavepath.c_str());
 
     if (s_pPlayer != NULL)
     {
-        return s_pPlayer->Open(wurl.c_str());
+        return s_pPlayer->Open(wurl.c_str(), wsavepath.c_str());
     }
     return E_UNEXPECTED;
 }
@@ -107,7 +108,7 @@ NTPLAYERCORE_API long ntplayer_stop()
 
 NTPLAYERCORE_API long ntplayer_get_duration(long* duration)
 {
-    player_log(kLogLevelTrace, _T("ntplayer_get_duration"));
+    //player_log(kLogLevelTrace, _T("ntplayer_get_duration"));
 
     if (s_pPlayer)
     {
@@ -118,7 +119,7 @@ NTPLAYERCORE_API long ntplayer_get_duration(long* duration)
 
 NTPLAYERCORE_API long ntplayer_set_play_pos(long pos_to_play)
 {
-    player_log(kLogLevelTrace, _T("ntplayer_set_play_pos = %d"));
+    player_log(kLogLevelTrace, _T("ntplayer_set_play_pos = %d(%s)"), pos_to_play, Millisecs2CString(pos_to_play));
 
     if (s_pPlayer)
     {

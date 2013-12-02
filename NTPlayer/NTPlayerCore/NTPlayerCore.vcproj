@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
+			OutputDirectory="$(SolutionDir)bin\$(SolutionName)_$(ConfigurationName)\"
+			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			CharacterSet="1"
@@ -62,12 +62,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib Subtitles.lib"
+				AdditionalDependencies="dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib Subtitles.lib detours.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)\&quot;;..\thirdparty\vld\lib\Win32"
+				AdditionalLibraryDirectories="&quot;..\lib&quot;;&quot;$(SolutionDir)bin\lib\$(ConfigurationName)\&quot;;..\thirdparty\vld\lib\Win32"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="$(SolutionDir)lib\$(ConfigurationName)\$(ProjectName).lib"
+				ImportLibrary="$(SolutionDir)bin\lib\$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -94,8 +94,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
+			OutputDirectory="$(SolutionDir)bin\$(SolutionName)_$(ConfigurationName)\"
+			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			CharacterSet="1"
@@ -139,14 +139,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="uafxcw.lib dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib"
+				AdditionalDependencies="uafxcw.lib dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib detours.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(SolutionDir)lib;$(SolutionDir)lib\$(ConfigurationName)\"
+				AdditionalLibraryDirectories="..\lib;$(SolutionDir)bin\lib\$(ConfigurationName)\"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="$(SolutionDir)bin\lib\$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -209,6 +210,14 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\LogFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\mapGUID.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\MediaInfo.cpp"
@@ -325,6 +334,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HookApi.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LogFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\mapGUID.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MediaInfo.h"
 				>
 			</File>
@@ -390,6 +411,10 @@
 			</File>
 			<File
 				RelativePath=".\ShowDebug.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SHP2PService.h"
 				>
 			</File>
 			<File

@@ -68,7 +68,7 @@ static CodecsPathFlag CodecsPathFlagFromText(const char* flag);
 
 //////////////////////////////////////////////////////////////////////////
 PlayerCodecs::PlayerCodecs()
-: m_loaded(false)
+: m_bLoaded(false)
 {
 
 }
@@ -83,14 +83,19 @@ void PlayerCodecs::SetCodecsPath(const char* path)
     std::wstring wpath = mbs2wcs(CP_UTF8, path);
     if (PathIsDirectory(wpath.c_str()) && PathFileExists(wpath.c_str()))
     {
-        m_codecspath = wpath.c_str();
+        m_strCodecsPath = wpath.c_str();
     }
+}
+
+CString PlayerCodecs::GetCodecsPath()
+{
+    return m_strCodecsPath;
 }
 
 
 HRESULT PlayerCodecs::LoadCodecs()
 {
-    if (m_loaded)
+    if (m_bLoaded)
     {
         player_log(kLogLevelTrace, _T("PlayerCodecs::LoadCodecs, already loaded"));
         return S_OK;
@@ -107,20 +112,21 @@ HRESULT PlayerCodecs::LoadCodecs()
 
     if (SUCCEEDED(hr))
     {
-        //SetCodecsPriority();
         player_log(kLogLevelTrace, _T("PlayerCodecs::LoadCodecs, loaded ok"));
-        m_loaded = true;
+        m_bLoaded = true;
     }
 
-    if (m_codecspath.IsEmpty())
+    if (m_strCodecsPath.IsEmpty())
     {
         TCHAR szCodecsPath[MAX_PATH] = {0};
         ::GetModuleFileName(g_hInstance, szCodecsPath, MAX_PATH);
         ::PathRemoveFileSpec(szCodecsPath);
         ::PathAppend(szCodecsPath, _T("codecs"));
 
-        m_codecspath = szCodecsPath;
+        m_strCodecsPath = szCodecsPath;
     }
+
+    //LoadPreloadCodecs();
 
     return hr;
 }
@@ -130,27 +136,55 @@ void PlayerCodecs::FreeCodecs()
     player_log(kLogLevelTrace, _T("PlayerCodecs::FreeCodecs"));
 
     CodecsInfo* info = NULL;
-    POSITION pos = m_source.GetHeadPosition();
+    POSITION pos = m_CodecsList.GetHeadPosition();
     while (pos)
     {
-        info = m_source.GetNext(pos);
+        info = m_CodecsList.GetNext(pos);
         if (info)
         {
             SAFE_DELETE(info);
         }
     }
-    pos = m_transform.GetHeadPosition();
-    while (pos)
+    
+    m_CodecsList.RemoveAll();
+    m_bLoaded = false;
+
+    UnloadExternalObjects();
+}
+
+HRESULT PlayerCodecs::ChangeCurrentDirectory()
+{
+    if (!m_strOldCurrentDirectory.IsEmpty())
+        return S_OK;
+
+    TCHAR szPath[MAX_PATH];
+    DWORD dwResult = ::GetCurrentDirectory(MAX_PATH-1, szPath);
+    if(dwResult > 0)
     {
-        info = m_transform.GetNext(pos);
-        if (info)
-        {
-            SAFE_DELETE(info);
-        }
+        m_strOldCurrentDirectory = szPath;
+        BOOL bOK = ::SetCurrentDirectory(m_strCodecsPath);
+
+        player_log(kLogLevelTrace, _T("Change current directory, %s => %s, result = %d"),
+            m_strOldCurrentDirectory, m_strCodecsPath, bOK);
     }
-    m_source.RemoveAll();
-    m_transform.RemoveAll();
-    m_loaded = false;
+    return S_OK;
+}
+
+HRESULT PlayerCodecs::ResotreCurrentDirectory()
+{
+    if(m_strOldCurrentDirectory.IsEmpty())
+        return S_OK;
+
+    TCHAR szPath[MAX_PATH];
+    DWORD dwResult = ::GetCurrentDirectory(MAX_PATH-1, szPath);
+    BOOL bOK = ::SetCurrentDirectory(m_strOldCurrentDirectory);
+
+    player_log(kLogLevelTrace, _T("Restore current directory, %s => %s, result = %d"),
+        dwResult>0 ? szPath : _T(""), m_strOldCurrentDirectory, bOK);
+
+    m_strOldCurrentDirectory.Empty();
+
+    return S_OK;
 }
 
 HRESULT PlayerCodecs::CreateCodecsObject(CodecsInfo* info,
@@ -286,11 +320,12 @@ HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CIn
         return hr;
     }
 
-    CString codecspath(m_codecspath);
-    ::PathAppend(codecspath.GetBuffer(MAX_PATH), info->path);
-    codecspath.ReleaseBuffer();
+//     CString codecspath(m_strCodecsPath);
+//     ::PathAppend(codecspath.GetBuffer(MAX_PATH), info->path);
+//     codecspath.ReleaseBuffer();
 
-    player_log(kLogLevelTrace, _T("Loading filter, codecspath = %s"), codecspath);
+    CString codecspath = info->path;
+    //player_log(kLogLevelTrace, _T("Loading filter, codecspath = %s"), codecspath);
 
     GUID clsid = GUIDFromCString(info->clsid);
     CString name(info->name);
@@ -313,7 +348,7 @@ HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CIn
 
     if (FAILED(hr))
     {
-        player_log(kLogLevelTrace, _T("Loading filter failed, hr = 0x%08X"), hr);
+        //player_log(kLogLevelTrace, _T("Loading filter failed, hr = 0x%08X"), hr);
     }
 
     return hr;
@@ -405,40 +440,30 @@ HRESULT PlayerCodecs::ParseCodecsInfoConfig(const char* config)
             SetCodecsInfo(info, (void*)subnode);
         }
 
-        if (info->type == kCodecsTypeSourceFilter)
-        {
-            m_source.AddTail(info);
-        }
-        else
-        {
-            m_transform.AddTail(info);
-        }
+        m_CodecsList.AddTail(info);
     }
 
     return hr;
 }
 
-HRESULT PlayerCodecs::SetCodecsPriority()
+HRESULT PlayerCodecs::LoadPreloadCodecs()
 {
-    CodecsInfo* info = NULL;
-    int render_base = 0x100,
-        effect_base = 0x200;
-
-    POSITION pos = m_transform.GetHeadPosition();
+    POSITION pos = m_CodecsList.GetHeadPosition();
     while (pos)
     {
-        info = m_transform.GetNext(pos);
-        if (info->type == kCodecsTypeAudioRenderer ||
-            info->type == kCodecsTypeVideoRenderer)
+        CodecsInfo* pInfo = m_CodecsList.GetNext(pos);
+        if (pInfo && pInfo->preload)
         {
-            info->priority = render_base + info->priority;
-        }
-        else if (info->type == kCodecsTypeAudioEffect ||
-            info->type == kCodecsTypeVideoEffect)
-        {
-            info->priority = effect_base + info->priority;
+            GUID clsid = GUIDFromCString(pInfo->clsid);
+            IBaseFilter* pBF = NULL;
+            HRESULT hrLoad = LoadExternalFilter(pInfo->path, clsid, &pBF);
+            if (FAILED(hrLoad))
+            {
+                player_log(kLogLevelError, _T("PlayerCodecs::LoadPreloadCodecs, LoadExternalFilter failed, hr = 0x%08x"), hrLoad);
+            }
         }
     }
+
     return S_OK;
 }
 
@@ -484,6 +509,10 @@ HRESULT PlayerCodecs::SetCodecsInfo(CodecsInfo* info, const char* key, const cha
     {
         info->catedata = CStringA(val);
     }
+    else if (_stricmp(key, "preload") == 0)
+    {
+        info->preload = !!strtoul(val, NULL, 10);
+    }
     else
     {
         //g_utility.Log(_T("Unknown filter info item:%s"), pcszKey);
@@ -514,7 +543,7 @@ HRESULT PlayerCodecs::SetCodecsInfo(CodecsInfo* info, void* subnode)
             info->protocols.AddTail(strVal);
         }
     }
-    else if (_stricmp(key, "extname") == 0)
+    else if (_stricmp(key, "ext") == 0)
     {
         attr = node->first_attribute("value");
         if (attr)
@@ -592,11 +621,11 @@ CodecsInfo* PlayerCodecs::FindCodecsInfo(const CString& clsid, CodecsType type)
 {
     CodecsInfo* pFound = NULL;
 
-    CodecsInfoList* codecs = NULL;
-    if (type == kCodecsTypeSourceFilter)
-        codecs = &m_source;
-    else
-        codecs = &m_transform;
+    CodecsInfoList* codecs = &m_CodecsList;//NULL;
+//     if (type == kCodecsTypeSourceFilter)
+//         codecs = &m_source;
+//     else
+//         codecs = &m_transform;
 
     POSITION pos = codecs->GetHeadPosition();
     while (pos)
@@ -604,8 +633,7 @@ CodecsInfo* PlayerCodecs::FindCodecsInfo(const CString& clsid, CodecsType type)
         CodecsInfo* info = codecs->GetNext(pos);
         if (info)
         {
-            if (info->type == type &&
-                clsid.CompareNoCase(info->clsid) == 0)
+            if (clsid.CompareNoCase(info->clsid) == 0)
             {
                 pFound = info;
                 break;
@@ -623,7 +651,7 @@ void PlayerCodecs::ConfigFFDShow(void* pffdshowbase, const TCHAR * pcszGUID)
         return;
 
     // Set generic options
-    pffdshow->putParamStr(IDFF_installPath, m_codecspath);
+    pffdshow->putParamStr(IDFF_installPath, m_strCodecsPath);
     pffdshow->putParam(IDFF_isWhitelist, 0);
     pffdshow->putParam(IDFF_trayIcon, 0);
 

@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
+			OutputDirectory="$(SolutionDir)bin\$(SolutionName)_$(ConfigurationName)\"
+			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -99,8 +99,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
+			OutputDirectory="$(SolutionDir)bin\$(SolutionName)_$(ConfigurationName)\"
+			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -199,6 +199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlayerSeekBar.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -230,6 +234,10 @@
 			</File>
 			<File
 				RelativePath=".\mfcNTPlayerCoreTestDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerSeekBar.h"
 				>
 			</File>
 			<File

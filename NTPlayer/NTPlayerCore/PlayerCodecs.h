@@ -9,18 +9,23 @@ public:
     ~PlayerCodecs();
 
     void            SetCodecsPath(const char* path);
+    CString         GetCodecsPath();
+
     HRESULT         LoadCodecs();
     void            FreeCodecs();
 
-    CodecsInfoList& GetSources() {
-        return m_source;
-    }
-    CodecsInfoList& GetTransforms() {
-        return m_transform;
-    }
-//     CodecsInfoList& GetCodecsInfoList() {
-//         return codecs_list_;
+    HRESULT         ChangeCurrentDirectory();
+    HRESULT         ResotreCurrentDirectory();
+
+//     CodecsInfoList& GetSources() {
+//         return m_source;
 //     }
+//     CodecsInfoList& GetTransforms() {
+//         return m_transform;
+//     }
+    CodecsInfoList& GetCodecsInfoList() {
+        return m_CodecsList;
+    }
     void SortCodecsInfoList();
 
     CodecsInfo* FindCodecsInfo(const CString& clsid, CodecsType type);
@@ -29,7 +34,7 @@ public:
 
 protected:
     HRESULT ParseCodecsInfoConfig(const char* config);
-    HRESULT SetCodecsPriority();
+    HRESULT LoadPreloadCodecs();
 
     HRESULT CreateRegCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam);
     HRESULT CreateVideoRenderer(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam);
@@ -44,12 +49,14 @@ private:
     void    ConfigFFDShow(void* pffdshowbase, const TCHAR * pcszGUID);
 
 protected:
-    CString m_codecspath;
-    //CodecsInfoList codecs_list_;
-    CodecsInfoList m_source;
-    CodecsInfoList m_transform;
-    bool m_loaded;
+    CString m_strCodecsPath;
+    CodecsInfoList m_CodecsList;
+    //CodecsInfoList m_source;
+    //CodecsInfoList m_transform;
+    bool m_bLoaded;
     //HWND m_hVideoWindow;
+
+    CString m_strOldCurrentDirectory;
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -10,6 +10,7 @@ MediaInfo::MediaInfo(LPCTSTR lpcszUrl, HRESULT& hr)
 , m_pExtension(NULL)
 , m_pTitle(NULL)
 , m_llSize(0)
+, m_lDuration (0)
 {
     hr = Create(lpcszUrl);
 }
@@ -24,7 +25,7 @@ HRESULT MediaInfo::Create(LPCTSTR pcszUrl)
     CheckPointer(pcszUrl, E_POINTER);
 
     int nUrlLength = _tcslen(pcszUrl)+1;
-    if(nUrlLength < 1 || nUrlLength > MAX_URL_LENGTH)
+    if(nUrlLength <= 1 || nUrlLength > MAX_URL_LENGTH)
         return E_INVALIDARG;
 
     /*

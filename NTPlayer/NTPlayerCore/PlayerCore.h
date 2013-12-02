@@ -18,6 +18,14 @@ class BaseGraph;
 class ViewWindow;
 
 //////////////////////////////////////////////////////////////////////////
+typedef enum MediaLoadState_t {
+    kMediaLoadStateClosed,
+    kMediaLoadStateLoading,
+    kMediaLoadStateLoaded,
+    kMediaLoadStateClosing,
+};
+
+//////////////////////////////////////////////////////////////////////////
 class PlayerCore
 {
     friend class PlayerThread;
@@ -31,7 +39,7 @@ public:
     HRESULT Destroy();
 
     // play control
-    HRESULT Open(const TCHAR* url);
+    HRESULT Open(LPCTSTR pUrl, LPCTSTR pDownloadSavePath = NULL);
     HRESULT Close();
     HRESULT Play();
     HRESULT Pause();
@@ -92,6 +100,7 @@ protected:
     HRESULT DoPause();
     HRESULT DoStop();
     HRESULT DoAbort();
+    HRESULT DoSeek(long pos);
 
     void SetPlayerState(ntplayer_state state);
 
@@ -117,8 +126,8 @@ protected:
     PlayerBaseStream*       m_pStream;
     BaseGraph*              m_pPlayerGraph;
 
-    ntplayer_state          m_State;
-    FastMutex               m_StateMutex;
+    volatile ntplayer_state          m_PlayerState;
+    FastMutex               m_PlayerStateMutex;
 
     HWND                    m_hVideoWindow;
     RECT                    m_rcDisplay;
@@ -127,6 +136,8 @@ protected:
     void*                   m_pUser;
 
     LONG                    m_lCurrentPlayPos;
+
+    CString                 m_strDownloadSavePath;
 
 private:
     BOOL                    m_bCreated;

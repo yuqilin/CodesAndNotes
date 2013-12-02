@@ -47,13 +47,10 @@ protected:
     //virtual HRESULT PrepareRenderFile();
 
     HRESULT RenderFile(LPCWSTR lpwcsUrl);
-    HRESULT EnumSourceFilters(LPCWSTR lpcwstrFileName, CodecsList& fl);
-    HRESULT AddSourceFilter(CodecsInfo* info, LPCWSTR lpcwstrFileName, LPCWSTR lpcwstrFilterName, IBaseFilter** ppBF);
-    //HRESULT AddFilter(IBaseFilter* pFilter, LPCWSTR pName);
     HRESULT ConnectFilter(IBaseFilter* pBF, IPin* pPinIn);
     HRESULT ConnectFilter(IPin* pPinOut, IBaseFilter* pBF);
-    HRESULT Connect(IPin* pPinOut, IPin* pPinIn);
-    HRESULT Connect(IPin* pPinOut, IPin* pPinIn, bool bContinueRender);
+    //HRESULT Connect(IPin* pPinOut, IPin* pPinIn);
+    //HRESULT Connect(IPin* pPinOut, IPin* pPinIn, bool bContinueRender);
     HRESULT ConnectFilterDirect(IPin* pPinOut, IBaseFilter* pBF, const AM_MEDIA_TYPE* pmt);
     HRESULT ConnectDirect(IPin* pPinOut, IPin* pPinIn, const AM_MEDIA_TYPE* pmt);
     HRESULT Disconnect(IPin* ppin);
@@ -93,6 +90,9 @@ protected:
     HRESULT Core_ConnectFilterDirect(IPin* pPinOut, IBaseFilter* pBF, const AM_MEDIA_TYPE* pmt);
 
     BOOL Core_CanAddFilter(IPin* pPinOut, CodecsInfo* info);
+
+    HRESULT LookupFiltersInGraph();
+    HRESULT LookupFiltersInCodecs(IPin* pPinUpper, CodecsListEx& filters);
 
     HRESULT FindInterface(REFIID iid, void** ppv, BOOL bRemove);
 
@@ -139,5 +139,20 @@ protected:
     ISubStream* m_pCurrentSubStream;
 
     CCritSec m_csSubLock;
+
+    //CString m_strPrefix;
+
+// private:
+//     class LogPrefix{
+//         #define kCoreRenderRoutinePrefix      _T("    ")
+//     public:
+//         LogPrefix(DirectShowGraph* graph) : m_graph(graph) {
+//             m_graph->m_strPrefix += kCoreRenderRoutinePrefix;
+//         }
+//         ~LogPrefix() {
+//             m_graph->m_strPrefix.TrimRight(kCoreRenderRoutinePrefix);
+//         }
+//         DirectShowGraph* m_graph;
+//     };
 };
 

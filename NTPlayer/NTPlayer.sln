@@ -36,6 +36,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoRenderers", "filters\r
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Subtitles", "Subtitles\Subtitles.vcproj", "{C1A5067A-F610-4720-942E-F021AA56AC92}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NTPlayer", "NTPlayer\NTPlayer.vcproj", "{EA073758-3156-481F-903C-70DE2B5ACF07}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FA20BA35-A932-4F35-B8CB-E741DC88B0E8} = {FA20BA35-A932-4F35-B8CB-E741DC88B0E8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -112,6 +117,12 @@ Global
 		{C1A5067A-F610-4720-942E-F021AA56AC92}.Release|Win32.ActiveCfg = Release|Win32
 		{C1A5067A-F610-4720-942E-F021AA56AC92}.Release|Win32.Build.0 = Release|Win32
 		{C1A5067A-F610-4720-942E-F021AA56AC92}.Release|x64.ActiveCfg = Release|Win32
+		{EA073758-3156-481F-903C-70DE2B5ACF07}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EA073758-3156-481F-903C-70DE2B5ACF07}.Debug|Win32.Build.0 = Debug|Win32
+		{EA073758-3156-481F-903C-70DE2B5ACF07}.Debug|x64.ActiveCfg = Debug|Win32
+		{EA073758-3156-481F-903C-70DE2B5ACF07}.Release|Win32.ActiveCfg = Release|Win32
+		{EA073758-3156-481F-903C-70DE2B5ACF07}.Release|Win32.Build.0 = Release|Win32
+		{EA073758-3156-481F-903C-70DE2B5ACF07}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

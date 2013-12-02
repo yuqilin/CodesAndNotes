@@ -4,6 +4,7 @@
 
 PlayerQvodStream::PlayerQvodStream()
 : m_shp2p(NULL)
+, m_fLoaded(FALSE)
 {
 }
 
@@ -12,7 +13,7 @@ PlayerQvodStream::~PlayerQvodStream()
     Close();
 }
 
-void PlayerQvodStream::SetSavedPath(LPCTSTR path)
+void PlayerQvodStream::SetDownloadSavePath(LPCTSTR path)
 {
     m_strSavedPath = path;
 }
@@ -23,6 +24,8 @@ HRESULT PlayerQvodStream::Open(LPCTSTR lpUrl)
     HRESULT hr = E_FAIL;
 
     Close();
+
+    m_shp2p = P2PInstance();
 
     if (m_shp2p)
     {
@@ -39,13 +42,16 @@ HRESULT PlayerQvodStream::Open(LPCTSTR lpUrl)
 
                 hr = LoadHeader();
             }
+            else if (m_bAbort)
+            {
+                hr = E_ABORT;
+            }
         }
         else
         {
-            player_log(kLogLevelError, _T("SHP2PService Open got error"));
+            player_log(kLogLevelError, _T("SHP2PService Open got error, ret = %d"), ret);
         }
     }
-    
 
     return hr;
 }
@@ -58,9 +64,15 @@ void PlayerQvodStream::Close()
     __super::Close();
 }
 
+void PlayerQvodStream::Abort()
+{
+    m_bAbort = TRUE;
+    m_evtLoad.Set();
+}
+
 HRESULT PlayerQvodStream::SetPointer(LONGLONG llPos)
 {
-    HRESULT hr = E_FAIL;
+    HRESULT hr = S_OK;
 
     if (llPos >=0 && llPos < m_llSize)
     {
@@ -77,15 +89,33 @@ HRESULT PlayerQvodStream::Read(PBYTE pbBuffer,
 {
     HRESULT hr = E_FAIL;
 
-    if (m_shp2p)
-    {
-        DWORD dwBytesRead = 0;
-        if (0 == m_shp2p->Read((unsigned long)m_llPosition, pbBuffer, dwBytesToRead, dwBytesRead))
+    DWORD dwBytesLeft = dwBytesToRead;
+    BYTE* pBuffer = pbBuffer;
+    unsigned long uReadPos = m_llPosition;
+
+    do {
+        Sleep(10);
+
+        DWORD dwBytesReadOnce = 0;
+        if (m_shp2p && 0 == m_shp2p->Read(uReadPos, pBuffer, dwBytesLeft, dwBytesReadOnce))
         {
-            if (pdwBytesRead)
-                *pdwBytesRead = dwBytesRead;
-            hr = S_OK;
+            dwBytesLeft -= dwBytesReadOnce;
+            pBuffer += dwBytesReadOnce;
+            uReadPos += dwBytesReadOnce;
         }
+        else
+        {
+            player_log(kLogLevelTrace, _T("PlayerQvodStream::Read, m_shp2p->Read FAILED, pos=%d, bytes_to_read=%d, bytes_actual_read=%d"),
+                uReadPos, dwBytesLeft, dwBytesReadOnce);
+        }
+
+    } while (!m_bAbort && dwBytesLeft > 0 /*&& pBuffer-pbBuffer<dwBytesToRead*/);
+
+    if (dwBytesLeft == 0)
+    {
+        if (pdwBytesRead)
+            *pdwBytesRead = dwBytesToRead;
+        hr = S_OK;
     }
 
     if (FAILED(hr))
@@ -93,6 +123,12 @@ HRESULT PlayerQvodStream::Read(PBYTE pbBuffer,
         if (pdwBytesRead)
             *pdwBytesRead = 0;
     }
+
+    if (m_bAbort)
+        hr = E_ABORT;
+
+    player_log(kLogLevelTrace, _T("PlayerQvodStream::Read, pos=%I64d, bytes_to_read=%d, bytes_actual_read=%d, hr=0x%08x"),
+        m_llPosition, dwBytesToRead, dwBytesToRead-dwBytesLeft, hr);
 
     return hr;
 }
@@ -117,11 +153,13 @@ int PlayerQvodStream::MessageNotify(const void* pUser, int msg, void* wParam, vo
     {
     case MESSAGE_MEDIA_INFO:
         {
+            player_log(kLogLevelTrace, _T("PlayerQvodStream::MessageNotify, MESSAGE_MEDIA_INFO"));
+
             FileTorrentInfo_t* fileinfo = (FileTorrentInfo_t*)lParam;
             if (fileinfo)
             {
                 pThis->m_llSize = fileinfo->filelength;
-                pThis->m_fLoaded = true;
+                pThis->m_fLoaded = TRUE;
             }
             if (pThis->m_evtLoad)
             {
@@ -130,13 +168,21 @@ int PlayerQvodStream::MessageNotify(const void* pUser, int msg, void* wParam, vo
         }
         break;
     case MESSAGE_MEDIA_P2P_DATA:
+        player_log(kLogLevelTrace, _T("PlayerQvodStream::MessageNotify, MESSAGE_MEDIA_P2P_DATA"));
+
         break;
     case MESSAGE_MEDIA_CDN_DATA:
+        player_log(kLogLevelTrace, _T("PlayerQvodStream::MessageNotify, MESSAGE_MEDIA_CDN_DATA"));
+
         break;
     case MESSAGE_MEDIA_STAT:
+        player_log(kLogLevelTrace, _T("PlayerQvodStream::MessageNotify, MESSAGE_MEDIA_STAT"));
+
         break;
     case MESSAGE_MEDIA_FINI:
         {
+            player_log(kLogLevelTrace, _T("PlayerQvodStream::MessageNotify, MESSAGE_MEDIA_FINI"));
+
             if (pThis->m_evtLoad)
             {
                 pThis->m_evtLoad.Set();
@@ -145,6 +191,8 @@ int PlayerQvodStream::MessageNotify(const void* pUser, int msg, void* wParam, vo
         break;
     case MESSAGE_MEDIA_NET_ERROR:
         {
+            player_log(kLogLevelTrace, _T("PlayerQvodStream::MessageNotify, MESSAGE_MEDIA_NET_ERROR"));
+
             if (pThis->m_evtLoad)
             {
                 pThis->m_evtLoad.Set();

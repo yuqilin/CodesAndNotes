@@ -10,6 +10,7 @@ public:
 
     virtual HRESULT Open(LPCTSTR pUrl) { return E_NOTIMPL; }
     virtual void Close();
+    virtual void Abort() {  }
     MEMORY_DATA* GetHeader() { return &m_Header; }
 
 
@@ -28,7 +29,7 @@ protected:
     LONGLONG            m_llPosition;
     MEMORY_DATA         m_Header;
     GUID                m_subtype;
-    BOOL                m_bAbort;
+    volatile BOOL       m_bAbort;
     CCritSec			m_csLock;
 
 };

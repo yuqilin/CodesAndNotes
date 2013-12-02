@@ -15,7 +15,8 @@ extern "C"
 
     enum {
         kPlayerNotifyOpenSucceeded = 1,
-        kPlayerNotifyOpenFailed = 2,
+        kPlayerNotifyOpenFailed,
+        kPlayerNotifyPlayerStateChanged,
     };
 
     typedef enum {
@@ -35,7 +36,7 @@ extern "C"
     NTPLAYERCORE_API long ntplayer_init(ntplayer_notify_to_ui notify_func, void* pUser);
     NTPLAYERCORE_API long ntplayer_uninit();
     NTPLAYERCORE_API long ntplayer_get_codecs_info_string(const char** info);
-    NTPLAYERCORE_API long ntplayer_open(const char* url);
+    NTPLAYERCORE_API long ntplayer_open(const char* url, const char* download_save_path = NULL);
     NTPLAYERCORE_API long ntplayer_close();
     NTPLAYERCORE_API long ntplayer_play();
     NTPLAYERCORE_API long ntplayer_pause();

@@ -21,6 +21,7 @@ void PlayerBaseStream::Close()
     m_strUrl.Empty();
     m_llSize = 0;
     m_llPosition = 0;
+    m_bAbort = FALSE;
 }
 
 HRESULT PlayerBaseStream::LoadHeader()
@@ -44,7 +45,7 @@ HRESULT PlayerBaseStream::LoadHeader()
     LONGLONG llPos = 0;
 
     do {
-        Sleep(50);
+        Sleep(10);
         if (SUCCEEDED(hr = SetPointer(llPos)))
         {
             dwBytesRead = 0;
@@ -79,6 +80,9 @@ HRESULT PlayerBaseStream::LoadHeader()
         delete[] pData;
         hr = E_FAIL;
     }
+
+    if (m_bAbort)
+        hr = E_ABORT;
 
     return hr;
 }

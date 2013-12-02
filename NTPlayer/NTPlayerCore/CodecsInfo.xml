@@ -24,28 +24,18 @@
   </codecs>
 
   <codecs
-    enable="0" priority="10"
+    enable="1" priority="10"
     name="AudioSwitcher"
     pathflag="file"
     path="audioswitcher.ax"
     category="dsfilter"
     type="aeffect"
+    preload="1"
     clsid="{18C16B08-6497-420E-AD14-22D21C2CEAB7}" >
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
   <!------ Video/Audio Renderers ------>
-  <codecs
-    enable="0" priority="5"
-    name="Player NullRenderer"
-    pathflag="inner"
-    category="dsfilter"
-    type="nullrender"
-    clsid="{0E79062A-AC5F-4160-BA1E-C02D4297892A}">
-    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}"/>
-    <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}"/>
-  </codecs>
-
   <!--VMR7-->
   <codecs
     enable="1" priority="8"
@@ -54,6 +44,23 @@
     category="dsfilter"
     type="vrender"
     clsid="{B87BEB7B-8D29-423f-AE4D-6582C10175AC}" >
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30323449-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{773C9AC0-3274-11D0-B724-00AA006C1A01}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7E-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7D-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7B-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7C-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0D-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0B-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0C-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0A-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0D-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0B-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0C-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0A-A0C7-11D3-B984-00C04F2E73C5}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
@@ -65,6 +72,15 @@
     category="dsfilter"
     type="vrender"
     clsid="{51B4ABF3-748F-4E3B-A276-C828330E926A}" >
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30323449-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{773C9AC0-3274-11D0-B724-00AA006C1A01}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7E-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7D-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7B-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7C-524F-11CE-9F53-0020AF0BA770}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
@@ -76,6 +92,16 @@
     category="dsfilter"
     type="vrender"
     clsid="{FA10746C-9B63-4B6C-BC49-FC300EA5F256}" >
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30323449-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{773C9AC0-3274-11D0-B724-00AA006C1A01}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7E-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7D-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7B-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7C-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{3231564E-0000-0010-8000-00AA00389B71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
@@ -88,6 +114,16 @@
     category="dsfilter"
     type="vrender"
     clsid="{7612b889-e070-4bcc-b808-91cb794174ab}" >
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30323449-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{773C9AC0-3274-11D0-B724-00AA006C1A01}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7E-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7D-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7B-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7C-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{3231564E-0000-0010-8000-00AA00389B71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
@@ -98,6 +134,23 @@
     category="dsfilter"
     type="vrender"
     clsid="{6BC1CFFA-8FC1-4261-AC22-CFB4CC38DB50}" >
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30323449-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00AA00389B71}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{773C9AC0-3274-11D0-B724-00AA006C1A01}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7E-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7D-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7B-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{E436EB7C-524F-11CE-9F53-0020AF0BA770}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0D-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0B-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0C-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0A-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0D-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0B-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0C-A0C7-11D3-B984-00C04F2E73C5}" />
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{1B81BE0A-A0C7-11D3-B984-00C04F2E73C5}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}"  sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
   
@@ -128,6 +181,7 @@
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000241-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000164-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000249-0000-0010-8000-00aa00389b71}" />
+    <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000000-0000-0000-0000-000000000000}" />
   </codecs>
 
   <codecs
@@ -272,9 +326,9 @@
     <protocol value="file" />
     <checkbyte value="0,16,,3026B2758E66CF11A6D900AA0062CE6C" />
     <checkbyte value="0,10,FFFFFF00000080808080,49443300000000000000" />
-    <extname value="wmv" />
-    <extname value="wma" />
-    <extname value="asf" />
+    <ext value=".wmv" />
+    <ext value=".wma" />
+    <ext value=".asf" />
   </codecs>
 
   <codecs
@@ -313,7 +367,7 @@
     <checkbyte value="0,4,,4F676753" />
     <depend dll="mkx.dll" />
     <depend dll="ogm.dll" />
-    <extname value="ogg" />
+    <ext value=".ogg" />
   </codecs>
 
   <codecs
@@ -368,7 +422,7 @@
     <depend dll="mkx.dll" />
     <depend dll="ts.dll" />
     <!-- Mpeg container -->
-    <extname value="evo" />
+    <ext value=".evo" />
     <checkbyte value="0,1,,47,188,1,,47,376,1,,47|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
     <checkbyte value="4,1,,47,196,1,,47,388,1,,47|{E06D8023-DB46-11CF-B4D1-00805F6CBBEA}" />
   </codecs>
@@ -390,7 +444,7 @@
     <checkbyte value="3,3,,000001"/>
   </codecs>
 
-  <codecs
+  <!--codecs
     enable="1" priority="10"
     name="Matroska Source"
     pathflag="file"
@@ -399,9 +453,9 @@
     type="src"
     clsid="{0A68C3B5-9164-4A54-AFAF-995B2FF0E0D4}" >
     <protocol value="file"/>
-    <extname value="mkv"/>
+    <ext value=".mkv"/>
     <checkbyte value="0,4,,1A45DFA3|{1AC0BEBD-4D2B-45AD-BCEB-F2C41C5E3788}"/>
-  </codecs>
+  </codecs-->
 
   <codecs
     enable="1" priority="10"
@@ -436,15 +490,15 @@
     <checkbyte value="4,8,,667479704D344120" />
     <checkbyte value="0,4,,464f524d,8,4,,41494646" />
     <checkbyte value="0,4,,464f524d,8,4,,41494643" />
-    <extname value="mp3" />
-    <extname value="ape" />
-    <extname value="flac" />
-    <extname value="tta" />
-    <extname value="alac" />
-    <extname value="m4a" />
-    <extname value="aac" />
-    <extname value="wv" />
-    <extname value="wav" />
+    <ext value=".mp3" />
+    <ext value=".ape" />
+    <ext value=".flac" />
+    <ext value=".tta" />
+    <ext value=".alac" />
+    <ext value=".m4a" />
+    <ext value=".aac" />
+    <ext value=".wv" />
+    <ext value=".wav" />
     <depend dll="bass.dll" />
     <depend dll="bass_aac.dll" />
     <depend dll="bass_alac.dll" />
@@ -466,7 +520,7 @@
     clsid="{D367878E-F3B8-4235-A968-F378EF1B9A44}" >
     <protocol value="file" />
     <checkbyte value="0,4,,52494646,8,4,,43445841" />
-    <extname value="dat" />
+    <ext value=".dat" />
   </codecs>
 
   <codecs
@@ -479,7 +533,7 @@
     clsid="{54A35221-2C8D-4a31-A5DF-6D809847E393}" >
     <protocol value="file" />
     <checkbyte value="0,4,,52494646,8,4,,43444441" />
-    <extname value="cda" />
+    <ext value=".cda" />
   </codecs>
 
   <codecs
@@ -492,7 +546,7 @@
     clsid="{E117D42B-839C-498A-95DA-647BC90E2B8F}" >
     <protocol value="file" />
     <checkbyte value="0,4,,706D706D" />
-    <extname value="pmp" />
+    <ext value=".pmp" />
   </codecs>
 
   <!------ Splitters ------>
@@ -515,7 +569,7 @@
     type="splt"
     clsid="{1B544C20-FD0B-11CE-8C63-00AA0044B51E}" >
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{e436eb88-524f-11ce-9f53-0020af0ba770}" />
-    <extname value="avi" />
+    <ext value=".avi" />
   </codecs>
 
   <codecs
@@ -527,7 +581,7 @@
     type="splt"
     clsid="{149D2E01-C32E-4939-80F6-C07B81015A7A}" >
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{1AC0BEBD-4D2B-45AD-BCEB-F2C41C5E3788}"/>
-    <extname value="mkv"/>
+    <ext value=".mkv"/>
   </codecs>
 
   <codecs
@@ -538,10 +592,10 @@
     category="dsfilter"
     type="splt"
     clsid="{E21BE468-5C18-43EB-B0CC-DB93A847D769}" >
-    <extname value="ra"/>
-    <extname value="ram"/>
-    <extname value="rm"/>
-    <extname value="rmvb"/>
+    <ext value=".ra"/>
+    <ext value=".ram"/>
+    <ext value=".rm"/>
+    <ext value=".rmvb"/>
     <mediatype major="{E436EB83-524F-11CE-9F53-0020AF0BA770}" sub="{57428EC6-C2B2-44A2-AA9C-28F0B6A5C48E}"/>
     <depend dll="real\14_43260.dll"/>
     <depend dll="real\28_83260.dll"/>
@@ -565,7 +619,7 @@
     type="splt"
     clsid="{9736D831-9D6C-4E72-B6E7-560EF9181001}" >
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{e436eb88-524f-11ce-9f53-0020af0ba770}" />
-    <extname value="avi" />
+    <ext value=".avi" />
   </codecs>
 
   <codecs
@@ -590,7 +644,7 @@
     category="dsfilter"
     type="splt"
     clsid="{47E792CF-0BBE-4F7A-859C-194B0768650A}" >
-    <extname value="flv"/>
+    <ext value=".flv"/>
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{53465753-4AF8-4015-861A-7528E4FF435F}"/>
   </codecs>
 
@@ -602,9 +656,9 @@
     category="dsfilter"
     type="splt"
     clsid="{0E9D4BF7-CBCB-46C7-BD80-4EF223A3DC2B}" >
-    <extname value="mpg"/>
-    <extname value="mpeg"/>
-    <extname value="mp3"/>
+    <ext value=".mpg"/>
+    <ext value=".mpeg"/>
+    <ext value=".mp3"/>
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{e436eb87-524f-11ce-9f53-0020af0ba770}"/>
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{ABCDEF00-0000-0000-0000-000000000001}"/>
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{ABCDEF00-0000-0000-0000-000000000003}"/>
@@ -635,7 +689,7 @@
     type="splt"
     clsid="{9FF48807-E133-40AA-826F-9B2959E5232D}" >
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{d2855fa9-61a7-4db0-b979-71f297c17a04}" />
-    <extname value="ogg" />
+    <ext value=".ogg" />
   </codecs>
 
   <codecs
@@ -647,7 +701,7 @@
     type="splt"
     clsid="{412C98D0-B46E-4FFA-92E1-4016782EE0AB}" >
     <mediatype major="{e436eb83-524f-11ce-9f53-0020af0ba770}" sub="{ABCDEF00-0000-0000-0000-000000000005}" />
-    <extname value="pmp" />
+    <ext value=".pmp" />
   </codecs>
 
   <codecs
@@ -660,7 +714,7 @@
     clsid="{97ACFCC2-D036-660D-BC7D-16A003388BE5}" >
     <mediatype major="{E436EB83-524F-11CE-9F53-0020AF0BA770}" sub="{E436EB87-524F-11CE-9F53-0020AF0BA770}" />
     <mediatype major="{E436EB83-524F-11CE-9F53-0020AF0BA770}" sub="{E436EB8B-524F-11CE-9F53-0020AF0BA770}" />
-    <extname value="wav" />
+    <ext value=".wav" />
   </codecs>
 
   <codecs
@@ -750,10 +804,10 @@
     category="dsfilter"
     type="adec"
     clsid="{941A4793-A705-4312-8DFC-C11CA05F397E}" >
-    <extname value="ra"/>
-    <extname value="ram"/>
-    <extname value="rm"/>
-    <extname value="rmvb"/>
+    <ext value=".ra"/>
+    <ext value=".ram"/>
+    <ext value=".rm"/>
+    <ext value=".rmvb"/>
     <preload dll="pncrt.dll"/>
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{345f3431-0000-0010-8000-00aa00389b71}"/>
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{385f3832-0000-0010-8000-00aa00389b71}"/>
@@ -774,10 +828,10 @@
     category="dsfilter"
     type="vdec"
     clsid="{238D0F23-5DC9-45A6-9BE2-666160C324DD}" >
-    <extname value="ra"/>
-    <extname value="ram"/>
-    <extname value="rm"/>
-    <extname value="rmvb"/>
+    <ext value=".ra"/>
+    <ext value=".ram"/>
+    <ext value=".rm"/>
+    <ext value=".rmvb"/>
     <preload dll="pncrt.dll"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30325652-0000-0010-8000-00aa00389b71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30335652-0000-0010-8000-00aa00389b71}"/>
@@ -804,9 +858,9 @@
     <mediatype major="{43dc7a79-60b4-40b5-a3e7-963f9b35dc11}" sub="{e06d8026-db46-11cf-b4d1-00805f6cbbea}"/>
     <mediatype major="{43dc7a79-60b4-40b5-a3e7-963f9b35dc12}" sub="{e06d8026-db46-11cf-b4d1-00805f6cbbea}"/>
     <mediatype major="{e2522457-eb83-45b1-b45e-b298786d0e70}" sub="{e06d8026-db46-11cf-b4d1-00805f6cbbea}"/>
-    <extname value="mpg"/>
-    <extname value="mpeg"/>
-    <extname value="vob"/>
+    <ext value=".mpg"/>
+    <ext value=".mpeg"/>
+    <ext value=".vob"/>
   </codecs>
 
   <codecs
@@ -823,8 +877,8 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{e06d8026-db46-11cf-b4d1-00805f6cbbea}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{e436eb80-524f-11ce-9f53-0020af0ba770}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{e436eb81-524f-11ce-9f53-0020af0ba770}"/>
-    <extname value="mpg" />
-    <extname value="mpeg" />
+    <ext value=".mpg" />
+    <ext value=".mpeg" />
   </codecs>
 
 
@@ -840,9 +894,9 @@
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000161-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000162-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000163-0000-0010-8000-00aa00389b71}" />
-    <extname value="wmv"/>
-    <extname value="wma"/>
-    <extname value="asf"/>
+    <ext value=".wmv"/>
+    <ext value=".wma"/>
+    <ext value=".asf"/>
   </codecs>
 
   <codecs
@@ -860,9 +914,9 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{52564d57-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{50564d57-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32505657-0000-0010-8000-00aa00389b71}" />
-    <extname value="wmv"/>
-    <extname value="wma"/>
-    <extname value="asf"/>
+    <ext value=".wmv"/>
+    <ext value=".wma"/>
+    <ext value=".asf"/>
   </codecs>
 
   <!--codecs
@@ -880,9 +934,9 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{52564d57-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{50564d57-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32505657-0000-0010-8000-00aa00389b71}" />
-    <extname value="wmv" />
-    <extname value="wma" />
-    <extname value="asf" />
+    <ext value=".wmv" />
+    <ext value=".wma" />
+    <ext value=".asf" />
   </codecs>
 
   <codecs
@@ -906,9 +960,9 @@
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000161-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000162-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000163-0000-0010-8000-00aa00389b71}" />
-    <extname value="wmv" />
-    <extname value="wma" />
-    <extname value="asf" />
+    <ext value=".wmv" />
+    <ext value=".wma" />
+    <ext value=".asf" />
   </codecs>
 
     <codecs
@@ -941,9 +995,9 @@
 	merit="0x00400000" >
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{0000000a-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{0000000b-0000-0010-8000-00aa00389b71}" />
-    <extname value="wmv" />
-    <extname value="wma" />
-    <extname value="asf" />
+    <ext value=".wmv" />
+    <ext value=".wma" />
+    <ext value=".asf" />
   </codecs-->
 
   <codecs
@@ -1009,8 +1063,8 @@
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00002000-0000-0010-8000-00aa00389b71}" />
     <!--mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00002001-0000-0010-8000-00aa00389b71}" /-->
     <!--mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{e06d802c-db46-11cf-b4d1-00805f6cbbea}" /-->
-    <extname value="wav" />
-    <extname value="dts" />
+    <ext value=".wav" />
+    <ext value=".dts" />
   </codecs>
 
   <!--ACE-->
@@ -1023,7 +1077,7 @@
 	type="adec"
 	clsid="{4009F700-AEBA-11D1-8344-00C04FB92EB7}" >
     <mediatype major="{73647561-0000-0010-8000-00aa00389b71}" sub="{00000130-0000-0010-8000-00aa00389b71}" />
-    <extname value="ace" />
+    <ext value=".ace" />
   </codecs>
 
   <!--- FFDSHOW --->
@@ -1188,7 +1242,7 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{73697664-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{43564450-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{63766470-0000-0010-8000-00aa00389b71}" />
-    <!--mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00aa00389b71}" /-->
+    <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32315659-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56555949-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{32595559-0000-0010-8000-00aa00389b71}" />
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{56595559-0000-0010-8000-00aa00389b71}" />
@@ -1341,7 +1395,7 @@
 
 
   <!--- MPC --->
-  <codecs
+  <!--codecs
     enable="1" priority="10"
     name="MPC - Video decoder"
     pathflag="file"
@@ -1467,7 +1521,6 @@
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{6f656874-0000-0010-8000-00aa00389b71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{31435657-0000-0010-8000-00aa00389b71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{31637677-0000-0010-8000-00aa00389b71}"/>
-    <!--new-->
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30335056-0000-0010-8000-00AA00389B71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{31335056-0000-0010-8000-00aa00389b71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30385056-0000-0010-8000-00AA00389B71}"/>
@@ -1488,7 +1541,7 @@
     <mediatype major="{73646976-0000-0010-8000-00AA00389B71}" sub="{30325652-0000-0010-8000-00AA00389B71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30335652-0000-0010-8000-00aa00389b71}"/>
     <mediatype major="{73646976-0000-0010-8000-00aa00389b71}" sub="{30345652-0000-0010-8000-00aa00389b71}"/>
-  </codecs>
+  </codecs-->
 
   <codecs
     enable="1" priority="10"

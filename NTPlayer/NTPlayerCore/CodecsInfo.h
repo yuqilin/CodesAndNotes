@@ -20,13 +20,13 @@ enum CodecsType
 {
     kCodecsTypeUnknown = 0,
     kCodecsTypeSourceFilter,
+    kCodecsTypeSplitter,
+    kCodecsTypeAudioDecoder,
+    kCodecsTypeVideoDecoder,
     kCodecsTypeAudioEffect,
     kCodecsTypeVideoEffect,
     kCodecsTypeAudioRenderer,
     kCodecsTypeVideoRenderer,
-    kCodecsTypeSplitter,
-    kCodecsTypeAudioDecoder,
-    kCodecsTypeVideoDecoder,
     kCodecsTypeNullRenderer,
 //     kCodecsTypeAudioEncoder,
 //     kCodecsTypeVideoEncoder,
@@ -70,8 +70,8 @@ struct CodecsInfo
 {
     CString name;
     bool enable;
+    bool preload;
     DWORD priority;
-    UINT64 merit;
     CodecsPathFlag	pathflag;
     CString	path;
     CodecsCategory category;
@@ -88,8 +88,9 @@ struct CodecsInfo
     CodecsInfo()
     {
         enable = false;
+        preload = false;
         priority = 0;
-        merit = MERIT64_DO_NOT_USE;
+        //merit = MERIT64_DO_NOT_USE;
         category = kCodecsCategoryUnknown;
         type = kCodecsTypeUnknown;
     }
@@ -126,28 +127,12 @@ struct CodecsInfo
 typedef CAtlList<CodecsInfo*>       CodecsInfoList;
 
 //////////////////////////////////////////////////////////////////////////
-class CodecsList
-{
-    struct codecs_t {
-        int index;
-        CodecsInfo* info;
-        int group;
-        bool exactmatch, autodelete, preferred;
-    };
-    static int codecs_cmp(const void* a, const void* b);
-    CAtlList<codecs_t> m_codecs;
-    CAtlList<CodecsInfo*> m_sortedcodecs;
 
-public:
-    CodecsList();
-    virtual ~CodecsList();
-
-    bool IsEmpty() { return m_codecs.IsEmpty(); }
-    void RemoveAll();
-    void Insert(CodecsInfo* info, int group, bool exactmatch = false, bool autodelete = false, bool preferred = false);
-
-    POSITION GetHeadPosition();
-    CodecsInfo* GetNext(POSITION& pos);
+enum {
+    kCustomPriorityDefault = 0,
+    kCustomPriorityExtension,
+    kCustomPriorityStreamEnd,
+    kCustomPriorityUserPreferred,
 };
 
 class CodecsListEx
@@ -170,7 +155,7 @@ public:
 
     bool IsEmpty() { return m_codecs.IsEmpty(); }
     void RemoveAll();
-    void Insert(CodecsInfo* info, int group, int exactmatch = 0, int custom_priority = 0);
+    bool Insert(CodecsInfo* info, int group, int exactmatch = 0, int custom_priority = 0);
 
     POSITION GetHeadPosition();
     CodecsInfo* GetNext(POSITION& pos);

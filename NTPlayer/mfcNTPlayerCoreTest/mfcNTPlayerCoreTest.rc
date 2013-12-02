@@ -74,13 +74,59 @@ IDR_MAINFRAME           ICON                    "res\\mfcNTPlayerCoreTest.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Dialog
+//
+
+IDD_DLG_OPENURL DIALOGEX 0, 0, 396, 57
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,338,35,50,14
+    DEFPUSHBUTTON   "OK",IDOK,277,35,50,14
+    EDITTEXT        IDC_EDT_URL,38,7,351,18,ES_AUTOHSCROLL
+    LTEXT           "Url:",IDC_STATIC,16,11,17,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DLG_OPENURL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 389
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 50
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // Menu
 //
 
-IDR_MENU1 MENU 
+IDR_POPUP MENU 
 BEGIN
-    MENUITEM "Open",                        0
-    MENUITEM "Close",                       0
+    POPUP ""
+    BEGIN
+        POPUP "File"
+        BEGIN
+            MENUITEM "OpenFile",                    ID_FILE_OPENFILE
+            MENUITEM "OpenUrl",                     ID_FILE_OPENURL
+            MENUITEM "Close",                       ID_FILE_CLOSE
+        END
+        MENUITEM "Play",                        ID_PLAY_PLAY
+        MENUITEM "Pause",                       ID_PLAY_PAUSE
+        MENUITEM "Stop",                        ID_PLAY_STOP
+    END
 END
 
 
@@ -125,12 +171,13 @@ EXSTYLE WS_EX_ACCEPTFILES | WS_EX_APPWINDOW
 CAPTION "mfcNTPlayerCoreTest"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Open",IDC_BTN_OPEN,66,216,50,14
-    PUSHBUTTON      "Play",IDC_BTN_PLAY,127,216,50,14
-    PUSHBUTTON      "Pause",IDC_BTN_PAUSE,188,216,50,14
-    PUSHBUTTON      "Stop",IDC_BTN_STOP,249,216,50,14
-    PUSHBUTTON      "Close",IDC_BTN_CLOSE,310,216,50,14
-    CONTROL         134,IDC_VIDEO_DISPLAY,"Static",SS_BITMAP,7,7,32,30
+    CONTROL         134,IDC_VIDEO_DISPLAY,"Static",SS_BITMAP,7,7,267,185
+END
+
+IDD_PLAYERSEEKBAR DIALOGEX 0, 0, 330, 16
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
 END
 
 

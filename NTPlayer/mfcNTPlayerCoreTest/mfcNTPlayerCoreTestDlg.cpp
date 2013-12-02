@@ -43,10 +43,76 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 END_MESSAGE_MAP()
 
 
+// COpenUrlDlg dialog
+
+class COpenUrlDlg : public CDialog
+{
+public:
+    COpenUrlDlg();
+
+    // Dialog Data
+    enum { IDD = IDD_DLG_OPENURL };
+
+protected:
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    virtual BOOL OnInitDialog();
+
+    // Implementation
+protected:
+    DECLARE_MESSAGE_MAP()
+public:
+    afx_msg void OnBnClickedOk();
+
+    CString GetUrl() {
+        return m_strUrl;
+    }
+
+protected:
+    CString m_strUrl;
+public:
+    afx_msg void OnBnClickedCancel();
+};
+
+COpenUrlDlg::COpenUrlDlg() : CDialog(COpenUrlDlg::IDD)
+{
+}
+
+void COpenUrlDlg::DoDataExchange(CDataExchange* pDX)
+{
+    CDialog::DoDataExchange(pDX);
+}
+
+BEGIN_MESSAGE_MAP(COpenUrlDlg, CDialog)
+    ON_BN_CLICKED(IDOK, &COpenUrlDlg::OnBnClickedOk)
+    ON_BN_CLICKED(IDCANCEL, &COpenUrlDlg::OnBnClickedCancel)
+END_MESSAGE_MAP()
+
+BOOL COpenUrlDlg::OnInitDialog()
+{
+    CDialog::OnInitDialog();
+
+    CFont font;
+    font.CreateFont(22, // nHeight 
+        0, // nWidth 
+        0, // nEscapement 
+        0, // nOrientation 
+        FW_BOLD, // nWeight 
+        TRUE, // bItalic 
+        FALSE, // bUnderline 
+        0, // cStrikeOut 
+        ANSI_CHARSET, // nCharSet 
+        OUT_DEFAULT_PRECIS, // nOutPrecision 
+        CLIP_DEFAULT_PRECIS, // nClipPrecision 
+        DEFAULT_QUALITY, // nQuality 
+        DEFAULT_PITCH | FF_SWISS, // nPitchAndFamily 
+        _T("Arial")); // lpszFac 
+    GetDlgItem(IDC_EDT_URL)->SetFont(&font);
+
+    return TRUE;
+}
+
+
 // CmfcNTPlayerCoreTestDlg dialog
-
-
-
 
 CmfcNTPlayerCoreTestDlg::CmfcNTPlayerCoreTestDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CmfcNTPlayerCoreTestDlg::IDD, pParent)
@@ -74,16 +140,28 @@ BEGIN_MESSAGE_MAP(CmfcNTPlayerCoreTestDlg, CDialog)
     ON_BN_CLICKED(IDC_BTN_CLOSE, &CmfcNTPlayerCoreTestDlg::OnBnClickedBtnClose)
     ON_WM_TIMER()
     ON_WM_DROPFILES()
+
+    ON_COMMAND(ID_FILE_OPENFILE, &CmfcNTPlayerCoreTestDlg::OnFileOpenFile)
+    ON_COMMAND(ID_FILE_OPENURL, &CmfcNTPlayerCoreTestDlg::OnFileOpenUrl)
+    ON_COMMAND(ID_FILE_CLOSE, &CmfcNTPlayerCoreTestDlg::OnFileClose)
+    ON_COMMAND(ID_PLAY_PLAY, &CmfcNTPlayerCoreTestDlg::OnPlayPlay)
+    ON_COMMAND(ID_PLAY_PAUSE, &CmfcNTPlayerCoreTestDlg::OnPlayPause)
+    ON_COMMAND(ID_PLAY_STOP, &CmfcNTPlayerCoreTestDlg::OnPlayStop)
+    ON_WM_CONTEXTMENU()
+
+    ON_WM_HSCROLL()
+
+    ON_WM_CREATE()
 END_MESSAGE_MAP()
 
-BEGIN_EASYSIZE_MAP(CmfcNTPlayerCoreTestDlg)
-    //EASYSIZE(IDC_VIDEO_DISPLAY, ES_BORDER, ES_BORDER, ES_BORDER, IDC_BTN_PAUSE, ES_HCENTER)
-    EASYSIZE(IDC_BTN_PAUSE, ES_BORDER, ES_KEEPSIZE, ES_BORDER, ES_BORDER, ES_HCENTER)
-    EASYSIZE(IDC_BTN_PLAY, IDC_BTN_PAUSE, ES_KEEPSIZE, IDC_BTN_PAUSE, ES_BORDER, 0)
-    EASYSIZE(IDC_BTN_OPEN, IDC_BTN_PLAY, ES_KEEPSIZE, IDC_BTN_PLAY, ES_BORDER, 0)
-    EASYSIZE(IDC_BTN_STOP, IDC_BTN_PAUSE, ES_KEEPSIZE, IDC_BTN_PAUSE, ES_BORDER, 0)
-    EASYSIZE(IDC_BTN_CLOSE, IDC_BTN_STOP, ES_KEEPSIZE, IDC_BTN_STOP, ES_BORDER, 0)
-END_EASYSIZE_MAP()
+// BEGIN_EASYSIZE_MAP(CmfcNTPlayerCoreTestDlg)
+//     //EASYSIZE(IDC_VIDEO_DISPLAY, ES_BORDER, ES_BORDER, ES_BORDER, IDC_BTN_PAUSE, ES_HCENTER)
+//     EASYSIZE(IDC_BTN_PAUSE, ES_BORDER, ES_KEEPSIZE, ES_BORDER, ES_BORDER, ES_HCENTER)
+//     EASYSIZE(IDC_BTN_PLAY, IDC_BTN_PAUSE, ES_KEEPSIZE, IDC_BTN_PAUSE, ES_BORDER, 0)
+//     EASYSIZE(IDC_BTN_OPEN, IDC_BTN_PLAY, ES_KEEPSIZE, IDC_BTN_PLAY, ES_BORDER, 0)
+//     EASYSIZE(IDC_BTN_STOP, IDC_BTN_PAUSE, ES_KEEPSIZE, IDC_BTN_PAUSE, ES_BORDER, 0)
+//     EASYSIZE(IDC_BTN_CLOSE, IDC_BTN_STOP, ES_KEEPSIZE, IDC_BTN_STOP, ES_BORDER, 0)
+// END_EASYSIZE_MAP()
 
 
 
@@ -119,10 +197,20 @@ BOOL CmfcNTPlayerCoreTestDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-    INIT_EASYSIZE;
+    m_popup.LoadMenu(IDR_POPUP);
+
+//     m_wndSeekBar.Create(this);
+//     m_wndSeekBar.Enable(false);
+
+    m_wndSeekBar.ShowWindow(SW_NORMAL);
+
+    //INIT_EASYSIZE;
 
     CRect rect(0, 0, 600, 450);
     MoveWindow(rect);
+
+    m_strFileName.Empty();
+    m_msDuration = 0;
 
 
     ntplayer_init(OnNtPlayerNotify, this);
@@ -182,14 +270,20 @@ HCURSOR CmfcNTPlayerCoreTestDlg::OnQueryDragIcon()
 void CmfcNTPlayerCoreTestDlg::OnSize(UINT nType, int cx, int cy)
 {
     CDialog::OnSize(nType, cx, cy);
-    UPDATE_EASYSIZE;
+    //UPDATE_EASYSIZE;
 
     RECT rcControl, rcDisplay;
     GetClientRect(&rcDisplay);
-    GetDlgItem(IDC_BTN_OPEN)->GetClientRect(&rcControl);
-    GetDlgItem(IDC_BTN_OPEN)->MapWindowPoints(this, &rcControl);
+//     GetDlgItem(IDC_SLIDER_PLAYPOS)->GetClientRect(&rcControl);
+//     GetDlgItem(IDC_SLIDER_PLAYPOS)->MapWindowPoints(this, &rcControl);
 
-    rcDisplay.bottom = rcControl.top - 2;
+//     if (m_wndSeekBar.IsVisible())
+//     {
+//         m_wndSeekBar.GetClientRect(&rcControl);
+//         m_wndSeekBar.MapWindowPoints(this, &rcControl);
+//         rcDisplay.bottom = rcControl.top - 2;
+//     }
+    rcDisplay.bottom -= 40;//= rcControl.top - 2;
     GetDlgItem(IDC_VIDEO_DISPLAY)->MoveWindow(&rcDisplay);
 
     ntplayer_update_video_display(&rcDisplay, false);
@@ -198,7 +292,7 @@ void CmfcNTPlayerCoreTestDlg::OnSize(UINT nType, int cx, int cy)
 void CmfcNTPlayerCoreTestDlg::OnSizing(UINT fwSide, LPRECT pRect)
 {
     CDialog::OnSizing(fwSide, pRect);
-    EASYSIZE_MINSIZE(600, 450, fwSide, pRect);
+//    EASYSIZE_MINSIZE(600, 450, fwSide, pRect);
 }
 void CmfcNTPlayerCoreTestDlg::OnDestroy()
 {
@@ -279,6 +373,26 @@ void CmfcNTPlayerCoreTestDlg::OnBnClickedBtnClose()
     GetDlgItem(IDC_VIDEO_DISPLAY)->Invalidate();
 }
 
+void CmfcNTPlayerCoreTestDlg::OnFileOpenFile()
+{
+    OnBnClickedBtnOpen();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnFileOpenUrl()
+{
+    COpenUrlDlg dlg;
+    if (IDOK == dlg.DoModal())
+    {
+        m_strFileName = dlg.GetUrl();
+    }
+
+    OnOpenFileToPlay();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnFileClose()
+{
+    OnBnClickedBtnClose();
+}
 
 void CmfcNTPlayerCoreTestDlg::OnNtPlayerNotify(void* pUser, int msg, void* pParam)
 {
@@ -296,7 +410,9 @@ void CmfcNTPlayerCoreTestDlg::OnNtPlayerNotify(void* pUser, int msg, void* pPara
 
 void CmfcNTPlayerCoreTestDlg::OnOpenSucceeded()
 {
-    SetTimer(TIMER_ID_GET_CURRENT_PLAY_POS, 1000, NULL);
+    SetTimer(TIMER_ID_GET_CURRENT_PLAY_POS, 50, NULL);
+
+
     ntplayer_play();
 }
 
@@ -311,8 +427,14 @@ void CmfcNTPlayerCoreTestDlg::OnTimer(UINT_PTR nIDEvent)
     {
     case TIMER_ID_GET_CURRENT_PLAY_POS:
         {
-            long cur_play_pos = 0;
+            long cur_play_pos = 0, duration = 0;
             ntplayer_get_current_play_pos(&cur_play_pos);
+            ntplayer_get_duration(&duration);
+
+            m_wndSeekBar.Enable(duration > 0);
+            m_wndSeekBar.SetRange(0, duration);
+            m_wndSeekBar.SetPos(cur_play_pos);
+
         }
         break;
     }
@@ -338,9 +460,77 @@ void CmfcNTPlayerCoreTestDlg::OnDropFiles(HDROP hDropInfo)
 
 void CmfcNTPlayerCoreTestDlg::OnOpenFileToPlay()
 {
+    m_strFileName.Trim();
+    if (m_strFileName.IsEmpty())
+        return;
     RECT rcDisplay;
     GetDlgItem(IDC_VIDEO_DISPLAY)->GetClientRect(&rcDisplay);
     ntplayer_set_video_display(GetDlgItem(IDC_VIDEO_DISPLAY)->GetSafeHwnd(), &rcDisplay, false);
 
     ntplayer_open(wcs2mbs(CP_UTF8, m_strFileName).c_str());
+}
+void CmfcNTPlayerCoreTestDlg::OnContextMenu(CWnd* pWnd, CPoint point)
+{
+    // TODO: Add your message handler code here
+//     CRect rect;
+//     GetDlgItem(IDC_VIDEO_DISPLAY)->GetWindowRect(&rect);
+
+    m_popup.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTBUTTON | TPM_NOANIMATION, point.x + 1, point.y + 1, this);
+
+//     if (rect.PtInRect(point))
+//     {
+//         m_popup.TrackPopupMenu(TPM_LEFTBUTTON | TPM_NOANIMATION, point.x + 1, point.y + 1, this);
+//     }
+}
+
+void CmfcNTPlayerCoreTestDlg::OnPlayPlay()
+{
+    OnBnClickedBtnPlay();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnPlayPause()
+{
+    OnBnClickedBtnPause();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnPlayStop()
+{
+    OnBnClickedBtnStop();
+}
+void COpenUrlDlg::OnBnClickedOk()
+{
+    // TODO: Add your control notification handler code here
+    GetDlgItem(IDC_EDT_URL)->GetWindowText(m_strUrl);
+    OnOK();
+}
+
+void COpenUrlDlg::OnBnClickedCancel()
+{
+    // TODO: Add your control notification handler code here
+    m_strUrl.Empty();
+    OnCancel();
+}
+
+void CmfcNTPlayerCoreTestDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+    if (pScrollBar->IsKindOf(RUNTIME_CLASS(CPlayerSeekBar)))
+    {
+        long pos_to_play = m_wndSeekBar.GetPos();
+        ntplayer_set_play_pos(pos_to_play);
+    }
+
+    __super::OnHScroll(nSBCode, nPos, pScrollBar);
+
+}
+int CmfcNTPlayerCoreTestDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+    if (CDialog::OnCreate(lpCreateStruct) == -1)
+        return -1;
+
+    // TODO:  Add your specialized creation code here
+    m_wndSeekBar.Create(this);
+    m_wndSeekBar.Enable(false);
+    m_wndSeekBar.m_pDockSite = (CFrameWnd*)this;
+    m_wndSeekBar.m_pDockSite->ShowControlBar(&m_wndSeekBar, TRUE, TRUE);
+    return 0;
 }

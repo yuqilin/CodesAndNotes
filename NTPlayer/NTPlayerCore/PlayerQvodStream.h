@@ -10,10 +10,11 @@ public:
     PlayerQvodStream();
     ~PlayerQvodStream();
 
-    void SetSavedPath(LPCTSTR path);
+    void SetDownloadSavePath(LPCTSTR path);
 
     virtual HRESULT Open(LPCTSTR lpUrl);
     virtual void Close();
+    virtual void Abort();
 
     // CAsyncStream
     virtual HRESULT SetPointer(LONGLONG llPos);

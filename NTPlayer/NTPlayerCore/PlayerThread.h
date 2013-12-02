@@ -14,6 +14,7 @@ public:
         kMsgPlay,
         kMsgPause,
         kMsgStop,
+        kMsgSeek,
         kMsgExit
     };
 
@@ -33,6 +34,7 @@ protected:
     LRESULT OnPlay(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent);
     LRESULT OnPause(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent);
     LRESULT OnStop(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent);
+    LRESULT OnSeek(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent);
     LRESULT OnExit(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent);
 
 protected:

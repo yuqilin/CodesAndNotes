@@ -5,11 +5,12 @@
 #pragma once
 
 #include <string>
+#include "PlayerSeekBar.h"
 
 // CmfcNTPlayerCoreTestDlg dialog
 class CmfcNTPlayerCoreTestDlg : public CDialog
 {
-    DECLARE_EASYSIZE()
+    //DECLARE_EASYSIZE()
 // Construction
 public:
 	CmfcNTPlayerCoreTestDlg(CWnd* pParent = NULL);	// standard constructor
@@ -24,6 +25,10 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+
+    CMenu m_popup;
+
+    CPlayerSeekBar m_wndSeekBar;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -41,6 +46,14 @@ public:
     afx_msg void OnBnClickedBtnStop();
     afx_msg void OnBnClickedBtnClose();
 
+    afx_msg void OnFileOpenFile();
+    afx_msg void OnFileOpenUrl();
+    afx_msg void OnFileClose();
+    afx_msg void OnPlayPlay();
+    afx_msg void OnPlayPause();
+    afx_msg void OnPlayStop();
+
+
 public:
     static void OnNtPlayerNotify(void* pUser, int msg, void* pParam);
 
@@ -53,7 +66,13 @@ public:
 
 protected:
     CString m_strFileName;
+    long m_msDuration;
     void OnOpenFileToPlay();
+public:
+    afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
+    afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+
+    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
 std::string	wcs2mbs(int nCodePage, const wchar_t* wcs);

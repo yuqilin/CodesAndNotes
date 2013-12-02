@@ -7,6 +7,7 @@
 #include "DirectShowGraph.h"
 #include "PlayerFileStream.h"
 #include "PlayerQvodStream.h"
+#include "HookApi.h"
 
 //////////////////////////////////////////////////////////////////////////
 const TCHAR* PlayerStateString(ntplayer_state state);
@@ -14,13 +15,14 @@ const TCHAR* PlayerStateString(ntplayer_state state);
 static DWORD s_dwStart = 0;
 static DWORD s_dwStop = 0;
 
+
 //////////////////////////////////////////////////////////////////////////
 PlayerCore::PlayerCore()
 : m_pPlayerThread(NULL)
 , m_pMediaInfo(NULL)
 , m_pPlayerGraph(NULL)
 , m_pStream(NULL)
-, m_State(kPlayerStateNothingSpecial)
+, m_PlayerState(kPlayerStateNothingSpecial)
 , m_hVideoWindow(NULL)
 , m_pfnNotifyUI(NULL)
 , m_pUser(NULL)
@@ -50,7 +52,10 @@ HRESULT PlayerCore::Create(ntplayer_notify_to_ui notify_func, void* pUser)
         assert(m_pPlayerGraph == 0);
         assert(m_pStream == 0);
 
-        // load default settings
+        // Remove the working directory from the search path to work around the DLL preloading vulnerability
+        SetDllDirectory(_T(""));
+
+        // load default settings        
         hr = GetPlayerSettings().LoadSettings();
         if (FAILED(hr))
         {
@@ -109,6 +114,11 @@ HRESULT PlayerCore::Destroy()
         m_pfnNotifyUI = NULL;
         m_pUser = NULL;
         m_bCreated = false;
+
+        //UnloadUnusedExternalObjects();
+        UnloadExternalObjects();
+
+        SetDllDirectory(NULL);
     }
 
     return hr;
@@ -153,14 +163,19 @@ HRESULT PlayerCore::Destroy()
 
 HRESULT PlayerCore::CreatePlayerThread()
 {
-   assert(m_pPlayerThread == NULL);
+    assert(m_pPlayerThread == NULL);
+
+    if (m_pPlayerThread)
+        return S_FALSE;
 
     m_pPlayerThread = new PlayerThread(this);
     if (m_pPlayerThread == NULL)
     {
         return E_OUTOFMEMORY;
     }
-    
+
+    HookAPI();
+
     if (!m_pPlayerThread->CreateThread())
     {
         player_log(kLogLevelFatal, _T("PlayerCore::CreatePlayerThread, create thread failed"));
@@ -172,6 +187,9 @@ HRESULT PlayerCore::CreatePlayerThread()
 
 HRESULT PlayerCore::DestroyPlayerThread()
 {
+    if (!m_pPlayerThread)
+        return S_FALSE;
+
     if (m_pPlayerThread)
     {
         CAMMsgEvent evt;
@@ -181,66 +199,84 @@ HRESULT PlayerCore::DestroyPlayerThread()
             player_log(kLogLevelTrace, _T("PlayerCore::DestroyPlayerThread, wait timeout, try to terminate thread"));
             m_pPlayerThread->Terminate((DWORD)-1);
         }
-//         else
-//         {
-//             player_log(kLogLevelTrace, _T("PlayerCore::DestroyPlayerThread, wait it finish"));
-//         }
+
+        UnHookAPI();
     }
     SAFE_DELETE(m_pPlayerThread);
 
     return NOERROR;
 }
 
-HRESULT PlayerCore::Open(const TCHAR* url)
+HRESULT PlayerCore::Open(LPCTSTR pUrl, LPCTSTR pDownloadSavePath)
 {
-    HRESULT hr = E_FAIL;
-
-    if (!m_pPlayerThread || !m_pPlayerThread->IsRunning())
-    {
-        player_log(kLogLevelFatal, _T("PlayerCore::Open, player thread not running"));
-        return E_FAIL;
-    }
-
-    //g_XTimer.Start();
     s_dwStart = timeGetTime();
 
-    if (m_State != kPlayerStateNothingSpecial)
+    HRESULT hr = E_FAIL;
+
+    m_strDownloadSavePath = pDownloadSavePath;
+
+    do {
+        if (pUrl == NULL ||
+            lstrlen(pUrl) <= 0)
+        {
+            break;
+        }
+
+        if (!m_pPlayerThread || !m_pPlayerThread->IsRunning())
+        {
+            player_log(kLogLevelFatal, _T("PlayerCore::Open, player thread not running"));
+            break;
+        }
+
+        if (m_PlayerState != kPlayerStateNothingSpecial)
+        {
+            Close();
+        }
+
+        CAutoPtr<CString> autoUrl(new CString(pUrl));
+
+        SetPlayerState(kPlayerStateOpening);
+
+        m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgOpen, 0, (LPVOID)autoUrl.Detach());
+
+        hr = S_OK;
+
+    } while (0);
+
+    if (FAILED(hr))
     {
-        Close();
+        OnOpenResult(hr);
     }
-
-    CAutoPtr<CString> strUrl(new CString(url));
-
-    SetPlayerState(kPlayerStateOpening);
-
-    m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgOpen, 0, (LPVOID)strUrl.Detach());
-
-    // opening ...
-    // wait msg
 
     return hr;
 }
 
 HRESULT PlayerCore::Close()
 {
+    if (kPlayerStateNothingSpecial == m_PlayerState ||
+        kPlayerStateClosing == m_PlayerState)
+    {
+        player_log(kLogLevelTrace, _T("PlayerCore::Close, do nothing (%s)"), PlayerStateString(m_PlayerState));
+        return S_OK;
+    }
+
     HRESULT hr = S_OK;
     BOOL bTerminated = FALSE;
     int time_waited = 0;
-    while (kPlayerStateOpening == GetPlayerState())
+
+    if (m_pStream)
+        m_pStream->Abort();
+
+    if (m_pPlayerGraph)
+        m_pPlayerGraph->Abort();
+
+    while (kPlayerStateOpening == m_PlayerState)
     {
         m_bOpeningAborted = TRUE;
 
-        if (m_pPlayerGraph)
-            m_pPlayerGraph->Abort();
-
         if (time_waited > 2000)
         {
-            if (m_pPlayerThread)
-            {
-                bTerminated = m_pPlayerThread->Terminate(-1);
-
-                SAFE_DELETE(m_pPlayerThread);
-            }
+            DestroyPlayerThread();
             break;
         }
 
@@ -251,16 +287,13 @@ HRESULT PlayerCore::Close()
 
     if (!m_pPlayerThread)
     {
-        m_pPlayerThread = new PlayerThread(this);
-        if (!m_pPlayerThread || !m_pPlayerThread->CreateThread())
-        {
-            player_log(kLogLevelFatal, _T("PlayerCore::Close, new/create thread failed"));
-        }
+        CreatePlayerThread();
     }
 
     m_bOpeningAborted = FALSE;
 
     SetPlayerState(kPlayerStateClosing);
+    //m_strDownloadSavePath.Empty();
 
     if (m_pPlayerThread)
     {
@@ -274,6 +307,14 @@ HRESULT PlayerCore::Close()
 
 HRESULT PlayerCore::Play()
 {
+    if (kPlayerStateNothingSpecial ==  m_PlayerState ||
+        kPlayerStateClosing == m_PlayerState ||
+        kPlayerStatePlaying == m_PlayerState)
+    {
+        player_log(kLogLevelTrace, _T("PlayerCore::Play, do nothing (%s)"), PlayerStateString(m_PlayerState));
+        return S_OK;
+    }
+
     HRESULT hr = E_FAIL;
 
     if (!m_pPlayerThread || !m_pPlayerThread->IsRunning())
@@ -284,11 +325,19 @@ HRESULT PlayerCore::Play()
 
     m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgPlay, 0, NULL);
 
-    return hr;
+    return S_OK;
 }
 
 HRESULT PlayerCore::Pause()
 {
+    if (kPlayerStateNothingSpecial ==  m_PlayerState ||
+        kPlayerStateClosing == m_PlayerState ||
+        kPlayerStatePaused == m_PlayerState)
+    {
+        player_log(kLogLevelTrace, _T("PlayerCore::Pause, do nothing (%s)"), PlayerStateString(m_PlayerState));
+        return S_OK;
+    }
+
     HRESULT hr = E_FAIL;
 
     if (!m_pPlayerThread || !m_pPlayerThread->IsRunning())
@@ -299,12 +348,25 @@ HRESULT PlayerCore::Pause()
 
     m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgPause, 0, NULL);
 
-    return hr;
+    return S_OK;
 }
 
 HRESULT PlayerCore::Stop()
 {
     HRESULT hr = E_FAIL;
+
+    if (kPlayerStateNothingSpecial == m_PlayerState ||
+        kPlayerStateClosing == m_PlayerState)
+    {
+        player_log(kLogLevelTrace, _T("PlayerCore::Stop, do nothing (%s)"), PlayerStateString(m_PlayerState));
+        return S_OK;
+    }
+
+//     if (m_pStream)
+//         m_pStream->Abort();
+
+    if (m_pPlayerGraph)
+        m_pPlayerGraph->Abort();
 
     if (!m_pPlayerThread || !m_pPlayerThread->IsRunning())
     {
@@ -314,7 +376,7 @@ HRESULT PlayerCore::Stop()
 
     m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgStop, 0, NULL);
 
-    return hr;
+    return S_OK;
 }
 
 // HRESULT PlayerCore::Abort()
@@ -328,8 +390,8 @@ HRESULT PlayerCore::Stop()
 
 ntplayer_state PlayerCore::GetPlayerState()
 {
-    FastMutex::ScopedLock lock(m_StateMutex);
-    return m_State;
+    //FastMutex::ScopedLock lock(m_PlayerStateMutex);
+    return m_PlayerState;
 }
 
 HRESULT PlayerCore::GetDuration(LONG* pnDuration)
@@ -343,6 +405,8 @@ HRESULT PlayerCore::GetDuration(LONG* pnDuration)
     }
     if (pnDuration)
         *pnDuration = nDuration;
+
+    //player_log(kLogLevelTrace, _T("PlayerCore::GetDuration = %d"), nDuration);
     return hr;
 }
 
@@ -363,8 +427,8 @@ HRESULT PlayerCore::GetCurrentPlayPos(LONG *pnCurPlayPos)
     if (pnCurPlayPos)
         *pnCurPlayPos = m_lCurrentPlayPos;
 
-    player_log(kLogLevelTrace, _T("PlayerCore::GetCurrentPlayPos, current play pos = %d(%s)"), 
-        m_lCurrentPlayPos, Millisecs2CString(m_lCurrentPlayPos));
+//     player_log(kLogLevelTrace, _T("PlayerCore::GetCurrentPlayPos, current play pos = %d(%s)"), 
+//         m_lCurrentPlayPos, Millisecs2CString(m_lCurrentPlayPos));
 
     return hr;
 }
@@ -373,10 +437,13 @@ HRESULT PlayerCore::SetPlayPos(long pos_to_play)
 {
     HRESULT hr = E_FAIL;
 
-    if (m_pPlayerGraph)
+    if (!m_pPlayerThread || !m_pPlayerThread->IsRunning())
     {
-        hr = m_pPlayerGraph->SetPlayPos(pos_to_play);
+        player_log(kLogLevelFatal, _T("PlayerCore::Stop, player thread not running"));
+        return E_FAIL;
     }
+
+    m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgSeek, 0, (LPVOID)pos_to_play, NULL);
 
     return hr;
 }
@@ -417,6 +484,14 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
     else if (protocol == kProtocolQvod)
     {
         m_pStream = new PlayerQvodStream;
+        if (m_pStream)
+        {
+            ((PlayerQvodStream*)m_pStream)->SetDownloadSavePath(m_strDownloadSavePath);
+        }
+    }
+    else
+    {
+        return E_FAIL;
     }
     
     if (FAILED(hr = m_pStream->Open(m_pMediaInfo->GetUrl())))
@@ -444,7 +519,12 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
         return E_ABORT;
     }
 
-    hr = m_pPlayerGraph->OpenMedia(m_pMediaInfo);
+    {
+        //PlayerCore::GetPlayerCodecs().ChangeCurrentDirectory();
+        hr = m_pPlayerGraph->OpenMedia(m_pMediaInfo);
+        //PlayerCore::GetPlayerCodecs().ResotreCurrentDirectory();
+    }
+
     if (SUCCEEDED(hr))
     {
     }
@@ -461,8 +541,12 @@ HRESULT PlayerCore::DoClose()
     SAFE_DELETE(m_pMediaInfo);
 
     m_lCurrentPlayPos = 0;
+    m_strDownloadSavePath.Empty();
     
     SetPlayerState(kPlayerStateNothingSpecial);
+
+    if (::IsWindow(m_hVideoWindow))
+        ::InvalidateRect(m_hVideoWindow, NULL, TRUE);
 
     return hr;
 }
@@ -527,6 +611,20 @@ HRESULT PlayerCore::DoStop()
     return hr;
 }
 
+HRESULT PlayerCore::DoSeek(long pos)
+{
+    HRESULT hr = S_OK;
+
+    player_log(kLogLevelTrace, _T("PlayerCore::DoSeek = %d"), pos);
+
+    if (m_pPlayerGraph)
+    {
+        hr = m_pPlayerGraph->SetPlayPos(pos);
+    }
+
+    return hr;
+}
+
 HRESULT PlayerCore::DoAbort()
 {
     player_log(kLogLevelTrace, _T("PlayerCore::DoAbort"));
@@ -548,6 +646,10 @@ void PlayerCore::OnOpenResult(HRESULT hr)
         s_dwStop = timeGetTime();
         player_log(kLogLevelTrace, _T("OpenMedia Succeeded, cost time = %d ms"), s_dwStop - s_dwStart);
     }
+//     else if (hr == E_ABORT)
+//     {
+//         SetPlayerState(kPlayerStateClosing);
+//     }
     else
     {
         SetPlayerState(kPlayerStateNothingSpecial);
@@ -561,8 +663,12 @@ void PlayerCore::OnOpenResult(HRESULT hr)
 
 void PlayerCore::SetPlayerState(ntplayer_state state)
 {
-    FastMutex::ScopedLock lock(m_StateMutex); 
-    m_State = state;
+    //FastMutex::ScopedLock lock(m_PlayerStateMutex);
+    if (m_PlayerState != state)
+    {
+        m_PlayerState = state;
+        m_pfnNotifyUI(m_pUser, kPlayerNotifyPlayerStateChanged, (void*)&m_PlayerState);
+    }
     player_log(kLogLevelTrace, _T("PlayerCore::SetPlayerState = %s"), PlayerStateString(state));
 }
 
@@ -661,3 +767,4 @@ const TCHAR* PlayerStateString(ntplayer_state state)
     }
     return _T("Unknown");
 }
+
