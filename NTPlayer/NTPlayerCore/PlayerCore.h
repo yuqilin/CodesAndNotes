@@ -18,12 +18,18 @@ class BaseGraph;
 class ViewWindow;
 
 //////////////////////////////////////////////////////////////////////////
-typedef enum MediaLoadState_t {
+enum MediaLoadState_t {
     kMediaLoadStateClosed,
     kMediaLoadStateLoading,
     kMediaLoadStateLoaded,
     kMediaLoadStateClosing,
 };
+
+struct OpenMediaData{
+    CString strUrl;
+    CString strDownloadSavePath;
+};
+
 
 //////////////////////////////////////////////////////////////////////////
 class PlayerCore
@@ -94,7 +100,7 @@ protected:
     HRESULT CreatePlayerThread();
     HRESULT DestroyPlayerThread();
 
-    HRESULT DoOpen(CAutoPtr<CString> strUrl);
+    HRESULT DoOpen(CAutoPtr<OpenMediaData> pOMD);
     HRESULT DoClose();
     HRESULT DoPlay();
     HRESULT DoPause();
@@ -137,7 +143,7 @@ protected:
 
     LONG                    m_lCurrentPlayPos;
 
-    CString                 m_strDownloadSavePath;
+    //CString                 m_strDownloadSavePath;
 
 private:
     BOOL                    m_bCreated;

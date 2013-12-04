@@ -18,9 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\..\..\debug.vsprops"
 			UseOfMFC="0"
 			CharacterSet="1"
 			>
@@ -46,7 +45,6 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -81,9 +79,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\..\..\release.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -108,7 +105,6 @@
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\..\..\baseclasses;..\..\..\include;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"

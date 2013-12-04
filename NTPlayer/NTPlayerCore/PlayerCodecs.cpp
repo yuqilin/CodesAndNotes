@@ -232,16 +232,15 @@ HRESULT PlayerCodecs::CreateRegCodecs(CodecsInfo* info, IBaseFilter** ppBF, CInt
 
     // audio render
 
-
-    if (info->clsid.GetLength() > 0)
+    if (info->clsid != GUID_NULL)
     {
         CComQIPtr<IBaseFilter> pBF;
 
-        GUID clsid = GUIDFromCString(info->clsid);
+        REFCLSID clsid = info->clsid;
         if (FAILED(hr = pBF.CoCreateInstance(clsid)))
         {
             player_log(kLogLevelTrace, _T("PlayerCodecs::CreateRegCodecs, CoCreateInstance for %s failed, hr = 0x%08X"),
-                info->clsid, hr);
+                CStringFromGUID(info->clsid), hr);
             return hr;
         }
 
@@ -276,7 +275,8 @@ HRESULT PlayerCodecs::CreateVideoRenderer(CodecsInfo* info,
 {
     HRESULT hr = E_FAIL;
 
-    GUID clsid = GUIDFromCString(info->clsid);
+    //GUID clsid = GUIDFromCString(info->clsid);
+    REFCLSID clsid = info->clsid;
 
     ///*
     if (clsid == CLSID_EnhancedVideoRenderer ||
@@ -297,7 +297,7 @@ HRESULT PlayerCodecs::CreateVideoRenderer(CodecsInfo* info,
 //         }
 //         else
 //         {
-//             player_log(kLogLevelError, _T("CoCreateInstance for %s failed, hr = 0x%08x"), info->clsid, hr);
+//             player_log(kLogLevelError, _T("CoCreateInstance for %s failed, hr = 0x%08x"), CStringFromGUID(info->clsid), hr);
 //         }
 //     }
     //*/
@@ -327,7 +327,7 @@ HRESULT PlayerCodecs::CreateFileCodecs(CodecsInfo* info, IBaseFilter** ppBF, CIn
     CString codecspath = info->path;
     //player_log(kLogLevelTrace, _T("Loading filter, codecspath = %s"), codecspath);
 
-    GUID clsid = GUIDFromCString(info->clsid);
+    REFCLSID clsid = info->clsid;
     CString name(info->name);
 
     // ffdshow
@@ -366,7 +366,7 @@ HRESULT PlayerCodecs::CreateInnerCodecs(CodecsInfo* info,
 
     CComPtr<IBaseFilter> pBF;
 
-    GUID clsid = GUIDFromCString(info->clsid);
+    REFCLSID clsid = info->clsid;
     // PlayerAsyncReader
     if (clsid == __uuidof(PlayerAsyncReader))
     {
@@ -454,9 +454,8 @@ HRESULT PlayerCodecs::LoadPreloadCodecs()
         CodecsInfo* pInfo = m_CodecsList.GetNext(pos);
         if (pInfo && pInfo->preload)
         {
-            GUID clsid = GUIDFromCString(pInfo->clsid);
             IBaseFilter* pBF = NULL;
-            HRESULT hrLoad = LoadExternalFilter(pInfo->path, clsid, &pBF);
+            HRESULT hrLoad = LoadExternalFilter(pInfo->path, pInfo->clsid, &pBF);
             if (FAILED(hrLoad))
             {
                 player_log(kLogLevelError, _T("PlayerCodecs::LoadPreloadCodecs, LoadExternalFilter failed, hr = 0x%08x"), hrLoad);
@@ -495,7 +494,7 @@ HRESULT PlayerCodecs::SetCodecsInfo(CodecsInfo* info, const char* key, const cha
     }
     else if (_stricmp(key, "clsid") == 0)
     {
-        info->clsid = CStringA(val);
+        info->clsid = GUIDFromCString(CString(val));//CStringA(val);
     }
     else if (_stricmp(key, "category") == 0)
     {
@@ -563,7 +562,15 @@ HRESULT PlayerCodecs::SetCodecsInfo(CodecsInfo* info, void* subnode)
             if(i > 0)
             {
                 item.checkbyte = strVal.Mid(0, i);
-                item.subtype = strVal.Mid(i+1);
+                const GUID* guid = KnownGuid::Find(CStringA(strVal.Mid(i+1)));
+                if (guid)
+                {
+                    item.subtype = *guid;
+                }
+                else
+                {
+                    player_log(kLogLevelWarn, _T("## %s subtype not in global GUID map"), strVal.Mid(i+1));
+                }
             }
             else
             {
@@ -588,12 +595,26 @@ HRESULT PlayerCodecs::SetCodecsInfo(CodecsInfo* info, void* subnode)
 
         if (major && sub)
         {
-            CString strMajor(major->value());
-            CString strSub(sub->value());
-
             MediaTypeItem item;
-            item.majortype = strMajor;
-            item.subtype = strSub;
+            const GUID* pGUID = NULL;
+            
+            pGUID = KnownGuid::Find(major->value());
+            if (pGUID)
+                item.majortype = *pGUID;
+            else
+            {
+                player_log(kLogLevelWarn, _T("## %s not in the global GUID map"), CString(major->value()));
+                item.majortype = GUIDFromCString(CString(major->value()));
+            }
+            pGUID = KnownGuid::Find(sub->value());
+            if (pGUID)
+                item.subtype = *pGUID;
+            else
+            {
+                player_log(kLogLevelWarn, _T("## %s not in the global GUID map"), CString(sub->value()));
+                item.subtype = GUIDFromCString(CString(sub->value()));
+            }
+
             info->mediatypes.AddTail(item);
         }
     }
@@ -617,23 +638,16 @@ HRESULT PlayerCodecs::SetCodecsInfo(CodecsInfo* info, void* subnode)
 }
 
 
-CodecsInfo* PlayerCodecs::FindCodecsInfo(const CString& clsid, CodecsType type)
+CodecsInfo* PlayerCodecs::FindCodecsInfo(REFCLSID clsid)
 {
     CodecsInfo* pFound = NULL;
-
-    CodecsInfoList* codecs = &m_CodecsList;//NULL;
-//     if (type == kCodecsTypeSourceFilter)
-//         codecs = &m_source;
-//     else
-//         codecs = &m_transform;
-
-    POSITION pos = codecs->GetHeadPosition();
+    POSITION pos = m_CodecsList.GetHeadPosition();
     while (pos)
     {
-        CodecsInfo* info = codecs->GetNext(pos);
+        CodecsInfo* info = m_CodecsList.GetNext(pos);
         if (info)
         {
-            if (clsid.CompareNoCase(info->clsid) == 0)
+            if (clsid == info->clsid)
             {
                 pFound = info;
                 break;
@@ -644,7 +658,7 @@ CodecsInfo* PlayerCodecs::FindCodecsInfo(const CString& clsid, CodecsType type)
     return pFound;
 }
 
-void PlayerCodecs::ConfigFFDShow(void* pffdshowbase, const TCHAR * pcszGUID)
+void PlayerCodecs::ConfigFFDShow(void* pffdshowbase, REFCLSID clsid)
 {
     IffDShowBase* pffdshow = (IffDShowBase*)pffdshowbase;
     if(pffdshow == NULL)
@@ -656,16 +670,18 @@ void PlayerCodecs::ConfigFFDShow(void* pffdshowbase, const TCHAR * pcszGUID)
     pffdshow->putParam(IDFF_trayIcon, 0);
 
     // Set for special filter
-    if(_tcsicmp(pcszGUID, _T("{0B0EFF97-C750-462C-9488-B10E7D87F1A6}")) == 0)
-    {
-        player_log(kLogLevelTrace, _T("Is ffdshow DXVA decoder, enable text pin"));
-        pffdshow->putParam(IDFF_subTextpin, 1);
-    }
-    else
-    {
-        player_log(kLogLevelTrace, _T("Is not ffdshow DXVA decoder, disable text pin"));
-        pffdshow->putParam(IDFF_subTextpin, 0);
-    }
+    //if(_tcsicmp(pcszGUID, _T("{0B0EFF97-C750-462C-9488-B10E7D87F1A6}")) == 0)
+//     if (clsid == CLSID_FFDShowDXVADecoder)
+//     {
+//         player_log(kLogLevelTrace, _T("Is ffdshow DXVA decoder, enable text pin"));
+//         pffdshow->putParam(IDFF_subTextpin, 1);
+//     }
+//     else
+//     {
+//         player_log(kLogLevelTrace, _T("Is not ffdshow DXVA decoder, disable text pin"));
+//         pffdshow->putParam(IDFF_subTextpin, 0);
+//     }
+    pffdshow->putParam(IDFF_subTextpin, 0);
 
     // Set codecs
     pffdshow->putParam(IDFF_xvid, 1);

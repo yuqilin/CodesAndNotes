@@ -28,7 +28,7 @@ public:
     }
     void SortCodecsInfoList();
 
-    CodecsInfo* FindCodecsInfo(const CString& clsid, CodecsType type);
+    CodecsInfo* FindCodecsInfo(REFCLSID clsid);
 
     HRESULT CreateCodecsObject(CodecsInfo* info, IBaseFilter** ppBF, CInterfaceList<IUnknown, &IID_IUnknown>& pUnks, void* pParam = NULL);
 
@@ -46,7 +46,7 @@ private:
     HRESULT SetCodecsInfo(CodecsInfo* info, void* subnode);
 
 
-    void    ConfigFFDShow(void* pffdshowbase, const TCHAR * pcszGUID);
+    void    ConfigFFDShow(void* pffdshowbase, REFCLSID clsid);
 
 protected:
     CString m_strCodecsPath;

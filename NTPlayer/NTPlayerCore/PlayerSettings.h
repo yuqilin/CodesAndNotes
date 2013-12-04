@@ -38,7 +38,7 @@ public:
 
     VideoRenderMode m_VideoRenderMode;
     CString m_AudioRendererDisplayName;
-    CString m_SelVideoRendererClsid;
+    CLSID m_SelVideoRendererClsid;
 
     bool m_fVsfilterEnabled;
     bool m_fAudioSwitcherEnabled;

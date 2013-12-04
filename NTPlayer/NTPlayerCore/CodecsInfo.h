@@ -52,18 +52,29 @@ struct PathFlagItem
  {
      bool matched;
      CString checkbyte;
-     CString subtype;
+     GUID subtype;
 
      CheckByteItem()
      {
          matched = false;
+         subtype = GUID_NULL;
      }
  };
 
+// struct MediaTypeItem
+// {
+//     CString majortype;
+//     CString subtype;
+// };
+
 struct MediaTypeItem
 {
-    CString majortype;
-    CString subtype;
+    MediaTypeItem() {
+        majortype = GUID_NULL;
+        subtype = GUID_NULL;
+    }
+    GUID majortype;
+    GUID subtype;
 };
 
 struct CodecsInfo
@@ -77,7 +88,7 @@ struct CodecsInfo
     CodecsCategory category;
     CString	catedata;
     CodecsType type;
-    CString clsid;
+    CLSID clsid;
     CAtlList<CString> protocols;
     CAtlList<CString> extensions;
     CAtlList<CString> depends;
@@ -91,6 +102,7 @@ struct CodecsInfo
         preload = false;
         priority = 0;
         //merit = MERIT64_DO_NOT_USE;
+        clsid = GUID_NULL;
         category = kCodecsCategoryUnknown;
         type = kCodecsTypeUnknown;
     }

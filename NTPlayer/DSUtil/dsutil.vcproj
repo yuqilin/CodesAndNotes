@@ -18,9 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\debug.vsprops"
 			UseOfMFC="0"
 			CharacterSet="1"
 			>
@@ -47,7 +46,6 @@
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -64,7 +62,6 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="vfw32.lib Version.lib"
-				OutputFile="$(OutDir)\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -84,9 +81,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\release.vsprops"
 			UseOfMFC="0"
 			CharacterSet="1"
 			>
@@ -122,7 +118,6 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="vfw32.lib Version.lib"
-				OutputFile="$(OutDir)\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

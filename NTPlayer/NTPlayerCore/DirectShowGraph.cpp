@@ -15,8 +15,8 @@
 #define _100NS_UNITS_TO_MILLISECONDS(refTime) \
     ((LONG)(refTime / 10000))
 
-#define sClsid_VsFilter         _T("{93A22E7A-5091-45EF-BA61-6DA26156A5D0}")
-#define sClsid_AudioSwitcher    _T("{18C16B08-6497-420E-AD14-22D21C2CEAB7}")
+//#define sClsid_VsFilter         _T("{93A22E7A-5091-45EF-BA61-6DA26156A5D0}")
+//#define sClsid_AudioSwitcher    _T("{18C16B08-6497-420E-AD14-22D21C2CEAB7}")
 
 // #define LOGAUTO \
 //     LogPrefix logauto(this)
@@ -382,7 +382,7 @@ HRESULT DirectShowGraph::Core_OnRenderPrepare()
 
         if (!m_pAudioSwitcher)
         {
-            CodecsInfo* pInfo = PlayerCore::GetPlayerCodecs().FindCodecsInfo(sClsid_AudioSwitcher, kCodecsTypeAudioEffect);
+            CodecsInfo* pInfo = PlayerCore::GetPlayerCodecs().FindCodecsInfo(CLSID_AudioSwitcher);
             if (pInfo)
             {
                 CInterfaceList<IUnknown, &IID_IUnknown> pUnks;
@@ -517,8 +517,8 @@ BOOL DirectShowGraph::Core_CheckBytes(CodecsInfo* info)
         if (!CheckBytes(m_pPlayer->GetStream()->GetHeader(), item.checkbyte))
             continue;
         item.matched = true;
-        player_log(kLogLevelTrace, _T("CheckBytes, '%s' matched, subtype = %s"), 
-            info->name, item.subtype);
+        player_log(kLogLevelTrace, _T("CheckBytes, '%s' matched, subtype = %s %s"), 
+            info->name, KnownGuid::Find(item.subtype), CStringFromGUID(item.subtype));
         return TRUE;
     }
     return FALSE;
@@ -608,7 +608,7 @@ HRESULT DirectShowGraph::Core_EnumSourceFilters(CodecsListEx& fl)
 
 BOOL DirectShowGraph::Core_CanAddFilter(IPin* pPinOut, CodecsInfo* info)
 {
-    GUID clsid = GUIDFromCString(info->clsid);
+    const CLSID& clsid = info->clsid;//GUIDFromCString(info->clsid);
     for (CComPtr<IBaseFilter> pBFUS = GetFilterFromPin(pPinOut); pBFUS; pBFUS = GetUpStreamFilter(pBFUS))
     {
         CLSID clsidUpper = GetCLSID(pBFUS);
@@ -692,7 +692,7 @@ HRESULT DirectShowGraph::AddFilter(IBaseFilter* pBF, LPCWSTR pName)
     return S_OK;
 }
 
-HRESULT DirectShowGraph::Core_FileSourceFilterLoad(IBaseFilter* pBF, LPCWSTR pSubtype)
+HRESULT DirectShowGraph::Core_FileSourceFilterLoad(IBaseFilter* pBF, REFCLSID subtype)
 {
     HRESULT hr = E_FAIL;
 
@@ -704,29 +704,19 @@ HRESULT DirectShowGraph::Core_FileSourceFilterLoad(IBaseFilter* pBF, LPCWSTR pSu
     }
 
     LPCTSTR pUrl = m_pMediaInfo->GetUrl();
-    if(_tcslen(pSubtype) > 0)
+    AM_MEDIA_TYPE mt;
+    memset(&mt, 0, sizeof(mt));
+    mt.majortype = MEDIATYPE_Stream;
+    mt.subtype = subtype;
+
+    __try
     {
-        player_log(kLogLevelTrace, _T("Try IFileSource::Load as MEDIATYPE_Stream, %s"), pSubtype);
-
-        AM_MEDIA_TYPE mt;
-        memset(&mt, 0, sizeof(mt));
-        mt.majortype = MEDIATYPE_Stream;
-        ::CLSIDFromString((LPOLESTR)pSubtype, &mt.subtype);
-
-        __try
-        {
-            hr = pFSF->Load(pUrl, &mt);
-        }
-        __except(EXCEPTION_EXECUTE_HANDLER)
-        {
-            hr = DISP_E_EXCEPTION;
-            player_log(kLogLevelError, _T("pFileSource->Load raise exception"));
-        }
+        hr = pFSF->Load(pUrl, &mt);
     }
-    else
+    __except(EXCEPTION_EXECUTE_HANDLER)
     {
-        player_log(kLogLevelTrace, _T("Try IFileSource::Load as MEDIATYPE_Stream,MEDIASUBTYPE_NULL"));
-        hr = pFSF->Load(pUrl, NULL);
+        hr = DISP_E_EXCEPTION;
+        player_log(kLogLevelError, _T("pFileSource->Load raise exception"));
     }
 
     pFSF->Release();
@@ -748,18 +738,22 @@ HRESULT DirectShowGraph::Core_AddSourceFilter(CodecsInfo* info, IBaseFilter** pp
 
     player_log(kLogLevelTrace, _T("AddFilter %s added succeeded"), info->name);
 
-    CString strSubtype;
+    GUID subtype = GUID_NULL;
     POSITION pos = info->checkbytes.GetHeadPosition();
     while (pos)
     {
         CheckByteItem& chkbytes = info->checkbytes.GetNext(pos);
         if (chkbytes.matched)
         {
-            strSubtype = chkbytes.subtype;
+            subtype = chkbytes.subtype;
             break;
         }
     }
-    if (FAILED(hr = Core_FileSourceFilterLoad(pBF, strSubtype)))
+
+    player_log(kLogLevelTrace, _T("Try IFileSource::Load as MEDIATYPE_Stream, %s %s"), 
+        CString(KnownGuid::Find(subtype)), CStringFromGUID(subtype));
+
+    if (FAILED(hr = Core_FileSourceFilterLoad(pBF, subtype)))
     {
         return hr;
     }
@@ -1068,7 +1062,9 @@ HRESULT DirectShowGraph::LookupFiltersInCodecs(IPin* pPinUpper, CodecsListEx& fi
         player_log(kLogLevelTrace, _T("PinOut[%p] media types:"), pPinUpper);
         for (int i = 0, len = types.GetCount() & ~1; i < len; i+=2)
         {
-            player_log(kLogLevelTrace, _T("major=%s, sub=%s"), CStringFromGUID(types[i]), CStringFromGUID(types[i+1]));
+            player_log(kLogLevelTrace, _T("major=%s %s, sub=%s %s"),
+                KnownGuid::Find(types[i]), CStringFromGUID(types[i]),
+                KnownGuid::Find(types[i+1]), CStringFromGUID(types[i+1]));
         }
     }
     else
@@ -1093,10 +1089,10 @@ HRESULT DirectShowGraph::LookupFiltersInCodecs(IPin* pPinUpper, CodecsListEx& fi
             continue;
 
         if (!settings.m_fVsfilterEnabled &&
-            pInfo->clsid.CompareNoCase(sClsid_VsFilter) == 0)
+            CLSID_VSFilter == pInfo->clsid)
             continue;
         if (!settings.m_fAudioSwitcherEnabled &&
-            pInfo->clsid.CompareNoCase(sClsid_AudioSwitcher) == 0)
+            CLSID_AudioSwitcher == pInfo->clsid)
             continue;
 
         int group = 0;
@@ -1134,7 +1130,8 @@ HRESULT DirectShowGraph::LookupFiltersInCodecs(IPin* pPinUpper, CodecsListEx& fi
         }
 
         if (pInfo->type == kCodecsTypeVideoRenderer &&
-            pInfo->clsid.CompareNoCase(settings.m_SelVideoRendererClsid) == 0)
+            (settings.m_SelVideoRendererClsid != GUID_NULL && 
+            pInfo->clsid == settings.m_SelVideoRendererClsid))
         {
             custom_priority = kCustomPriorityUserPreferred;
         }
@@ -1142,7 +1139,7 @@ HRESULT DirectShowGraph::LookupFiltersInCodecs(IPin* pPinUpper, CodecsListEx& fi
         bool bInsert = filters.Insert(pInfo, group, exactmatch, custom_priority);
         player_log(kLogLevelTrace, _T("CodecsList::Insert [%d] [%d] [%d] [%d] '%s', result = %d"),
             group, exactmatch, custom_priority, pInfo->priority, 
-            pInfo->name.IsEmpty() ? pInfo->clsid : pInfo->name, bInsert);
+            pInfo->name.IsEmpty() ? CStringFromGUID(pInfo->clsid) : pInfo->name, bInsert);
     }
 
     player_log(kLogLevelTrace, _T("Sorting filters:"));
@@ -1153,7 +1150,7 @@ HRESULT DirectShowGraph::LookupFiltersInCodecs(IPin* pPinUpper, CodecsListEx& fi
         CodecsInfo* pInfo = filters.GetNext(pos);
         if (pInfo)
             player_log(kLogLevelTrace, _T("Filter[%d] - %s, %s, %d"),
-            i++, pInfo->name, pInfo->clsid, pInfo->priority);
+            i++, pInfo->name, CStringFromGUID(pInfo->clsid), pInfo->priority);
     }
 
     return S_OK;
@@ -1484,7 +1481,7 @@ HRESULT DirectShowGraph::FindInterface(REFIID iid, void** ppv, BOOL bRemove)
 
 HRESULT DirectShowGraph::OnCreateFilterPrepare(CodecsInfo* pInfo, void** pParam)
 {
-    GUID clsid = GUIDFromCString(pInfo->clsid);
+    REFCLSID clsid = pInfo->clsid;//GUIDFromCString(pInfo->clsid);
 
     // load preload dll
     POSITION pos = pInfo->preloads.GetHeadPosition();
@@ -1569,7 +1566,7 @@ HRESULT DirectShowGraph::OnRenderFilterEnd(CodecsInfo* pInfo, IBaseFilter* pBF)
 
     if (pInfo->type == kCodecsTypeVideoRenderer)
     {
-        GUID clsid = GUIDFromCString(pInfo->clsid);
+        //GUID clsid = GUIDFromCString(pInfo->clsid);
 
         //SAFE_DELETE(m_pVideoRenderer);
 

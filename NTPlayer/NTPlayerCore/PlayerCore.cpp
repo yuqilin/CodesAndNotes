@@ -8,13 +8,15 @@
 #include "PlayerFileStream.h"
 #include "PlayerQvodStream.h"
 #include "HookApi.h"
+#include "mapGUID.h"
 
 //////////////////////////////////////////////////////////////////////////
 const TCHAR* PlayerStateString(ntplayer_state state);
 
-static DWORD s_dwStart = 0;
-static DWORD s_dwStop = 0;
+static DWORD s_dwOpenStart = 0;
+static DWORD s_dwOpenStop = 0;
 
+//static DWORD s_dwCreateTime = 0;
 
 //////////////////////////////////////////////////////////////////////////
 PlayerCore::PlayerCore()
@@ -42,8 +44,12 @@ HRESULT PlayerCore::Create(ntplayer_notify_to_ui notify_func, void* pUser)
 {
     HRESULT hr = NOERROR;
 
+    DWORD dwCreateTime = 0;
+
     if (!m_bCreated)
     {
+        dwCreateTime = ::timeGetTime();
+
         m_pfnNotifyUI = notify_func;
         m_pUser = pUser;
 
@@ -54,6 +60,8 @@ HRESULT PlayerCore::Create(ntplayer_notify_to_ui notify_func, void* pUser)
 
         // Remove the working directory from the search path to work around the DLL preloading vulnerability
         SetDllDirectory(_T(""));
+
+        KnownGuid::Load();
 
         // load default settings        
         hr = GetPlayerSettings().LoadSettings();
@@ -82,7 +90,10 @@ HRESULT PlayerCore::Create(ntplayer_notify_to_ui notify_func, void* pUser)
 //         }
 
         if (SUCCEEDED(hr))
+        {
             m_bCreated = true;
+            player_log(kLogLevelTrace, _T("PlayerCore::Create, cost time = %d ms"), timeGetTime() - dwCreateTime);
+        }
     }
 
     if (!m_bCreated)
@@ -117,6 +128,8 @@ HRESULT PlayerCore::Destroy()
 
         //UnloadUnusedExternalObjects();
         UnloadExternalObjects();
+
+        KnownGuid::Free();
 
         SetDllDirectory(NULL);
     }
@@ -209,11 +222,9 @@ HRESULT PlayerCore::DestroyPlayerThread()
 
 HRESULT PlayerCore::Open(LPCTSTR pUrl, LPCTSTR pDownloadSavePath)
 {
-    s_dwStart = timeGetTime();
+    s_dwOpenStart = timeGetTime();
 
     HRESULT hr = E_FAIL;
-
-    m_strDownloadSavePath = pDownloadSavePath;
 
     do {
         if (pUrl == NULL ||
@@ -233,11 +244,13 @@ HRESULT PlayerCore::Open(LPCTSTR pUrl, LPCTSTR pDownloadSavePath)
             Close();
         }
 
-        CAutoPtr<CString> autoUrl(new CString(pUrl));
+        CAutoPtr<OpenMediaData> pOMD(new OpenMediaData);
+        pOMD->strUrl = pUrl;
+        pOMD->strDownloadSavePath = pDownloadSavePath;
 
         SetPlayerState(kPlayerStateOpening);
 
-        m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgOpen, 0, (LPVOID)autoUrl.Detach());
+        m_pPlayerThread->PutThreadMsg(PlayerThread::kMsgOpen, 0, (LPVOID)pOMD.Detach());
 
         hr = S_OK;
 
@@ -448,7 +461,7 @@ HRESULT PlayerCore::SetPlayPos(long pos_to_play)
     return hr;
 }
 
-HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
+HRESULT PlayerCore::DoOpen(CAutoPtr<OpenMediaData> pOMD)
 {
     player_log(kLogLevelTrace, _T("PlayerCore::DoOpen"));
 
@@ -461,7 +474,7 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
     }
 
     // Create MediaInfo
-    m_pMediaInfo = new MediaInfo(strUrl->GetBuffer(), hr);
+    m_pMediaInfo = new MediaInfo(pOMD->strUrl, hr);
     if (FAILED(hr) || !m_pMediaInfo)
     {
         player_log(kLogLevelError, _T("Create MediaInfo FAIL, hr = 0x%08x"), hr);
@@ -486,7 +499,7 @@ HRESULT PlayerCore::DoOpen(CAutoPtr<CString> strUrl)
         m_pStream = new PlayerQvodStream;
         if (m_pStream)
         {
-            ((PlayerQvodStream*)m_pStream)->SetDownloadSavePath(m_strDownloadSavePath);
+            ((PlayerQvodStream*)m_pStream)->SetDownloadSavePath(pOMD->strDownloadSavePath);
         }
     }
     else
@@ -541,7 +554,6 @@ HRESULT PlayerCore::DoClose()
     SAFE_DELETE(m_pMediaInfo);
 
     m_lCurrentPlayPos = 0;
-    m_strDownloadSavePath.Empty();
     
     SetPlayerState(kPlayerStateNothingSpecial);
 
@@ -643,8 +655,8 @@ void PlayerCore::OnOpenResult(HRESULT hr)
     {
         msg = kPlayerNotifyOpenSucceeded;
         
-        s_dwStop = timeGetTime();
-        player_log(kLogLevelTrace, _T("OpenMedia Succeeded, cost time = %d ms"), s_dwStop - s_dwStart);
+        s_dwOpenStop = timeGetTime();
+        player_log(kLogLevelTrace, _T("OpenMedia Succeeded, cost time = %d ms"), s_dwOpenStop - s_dwOpenStart);
     }
 //     else if (hr == E_ABORT)
 //     {

@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)bin\$(SolutionName)_$(ConfigurationName)\"
 			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			CharacterSet="1"
 			>
@@ -46,7 +47,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NTPLAYERCORE_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -62,9 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib Subtitles.lib detours.lib"
+				AdditionalDependencies="uafxcwd.lib dxguid.lib d3d9.lib baseclasses.lib dsutil.lib subpic.lib syncclock.lib videorenderers.lib lcms2.lib AsyncReader.lib shp2pservice.lib Subtitles.lib detours.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\lib&quot;;&quot;$(SolutionDir)bin\lib\$(ConfigurationName)\&quot;;..\thirdparty\vld\lib\Win32"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				ImportLibrary="$(SolutionDir)bin\lib\$(ConfigurationName)\$(ProjectName).lib"
@@ -97,6 +99,7 @@
 			OutputDirectory="$(SolutionDir)bin\$(SolutionName)_$(ConfigurationName)\"
 			IntermediateDirectory="$(SolutionDir)bin\obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			CharacterSet="1"
 			WholeProgramOptimization="1"

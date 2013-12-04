@@ -27,6 +27,7 @@
 
 #include "PlayerLog.h"
 #include "../DSUtil/DSUtil.h"
+#include "mapGUID.h"
 
 #include "resource.h"
 #include <assert.h>

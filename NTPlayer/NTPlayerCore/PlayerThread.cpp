@@ -83,7 +83,7 @@ LRESULT PlayerThread::OnOpen(UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent 
 
     if (m_pPlayer)
     {
-        CAutoPtr<CString> strUrl((CString*)lpParam);
+        CAutoPtr<OpenMediaData> strUrl((OpenMediaData*)lpParam);
         HRESULT hr = m_pPlayer->DoOpen(strUrl);
         m_pPlayer->OnOpenResult(hr);
     }

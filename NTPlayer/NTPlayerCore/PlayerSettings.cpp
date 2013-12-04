@@ -13,6 +13,7 @@ CRenderersSettings&  GetRenderersSettings();
 //////////////////////////////////////////////////////////////////////////
 PlayerSettings::PlayerSettings()
     : m_VideoRenderMode(kVideoRenderDefault)
+    , m_SelVideoRendererClsid(GUID_NULL)
 {
     
 }

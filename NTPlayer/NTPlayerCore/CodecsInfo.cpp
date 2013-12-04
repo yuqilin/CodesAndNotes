@@ -13,8 +13,8 @@ bool CodecsInfo::CheckTypes(const CAtlArray<GUID>& types, bool fExactMatch)
     while (pos)
     {
         const MediaTypeItem& item = this->mediatypes.GetNext(pos);
-        GUID majortype = GUIDFromCString(item.majortype);
-        GUID subtype = GUIDFromCString(item.subtype);
+        const GUID& majortype = item.majortype;//GUIDFromCString(item.majortype);
+        const GUID& subtype = item.subtype;//GUIDFromCString(item.subtype);
 
         for (int i = 0, len = types.GetCount() & ~1; i < len; i += 2)
         {
