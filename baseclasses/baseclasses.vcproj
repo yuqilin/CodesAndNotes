@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)lib\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\NTPlayer\debug.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -48,7 +47,6 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -65,7 +63,6 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="strmiids.lib winmm.lib"
-				OutputFile="$(OutDir)\$(ProjectName).lib"
 				AdditionalLibraryDirectories=""
 			/>
 			<Tool
@@ -86,9 +83,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\NTPlayer\debug.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -131,7 +127,6 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="strmiids.lib"
-				OutputFile="$(OutDir)\strmbasd.lib"
 				AdditionalLibraryDirectories=""
 			/>
 			<Tool
@@ -152,9 +147,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)lib\$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\NTPlayer\release.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -177,7 +171,6 @@
 				Optimization="2"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
-				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -194,7 +187,6 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="strmiids.lib winmm.lib"
-				OutputFile="$(OutDir)\$(ProjectName).lib"
 				AdditionalLibraryDirectories=""
 			/>
 			<Tool
@@ -215,9 +207,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
+			InheritedPropertySheets="..\NTPlayer\release.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -241,7 +232,6 @@
 				Optimization="2"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
-				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
