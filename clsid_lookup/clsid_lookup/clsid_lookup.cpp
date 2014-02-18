@@ -27,6 +27,9 @@ int WINAPI DlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
     case WM_INITDIALOG:
         {
+            HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON));
+            if (hIcon)
+                SendMessage(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
             CenterWindow(hDlg);
             KnownGuid::Load();
         }

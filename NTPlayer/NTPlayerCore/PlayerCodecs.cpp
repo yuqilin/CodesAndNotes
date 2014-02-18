@@ -288,18 +288,18 @@ HRESULT PlayerCodecs::CreateVideoRenderer(CodecsInfo* info,
             hr = pVR->CreateRenderer(ppBF);
         }
     }
-//     else
-//     {
-//         CComPtr<IBaseFilter> pBF;
-//         if (SUCCEEDED(hr = pBF.CoCreateInstance(clsid)))
-//         {
-//             *ppBF = pBF.Detach();
-//         }
-//         else
-//         {
-//             player_log(kLogLevelError, _T("CoCreateInstance for %s failed, hr = 0x%08x"), CStringFromGUID(info->clsid), hr);
-//         }
-//     }
+    else
+    {
+        CComPtr<IBaseFilter> pBF;
+        if (SUCCEEDED(hr = pBF.CoCreateInstance(clsid)))
+        {
+            *ppBF = pBF.Detach();
+        }
+        else
+        {
+            player_log(kLogLevelError, _T("CoCreateInstance for %s failed, hr = 0x%08x"), CStringFromGUID(info->clsid), hr);
+        }
+    }
     //*/
 
     if (!*ppBF)

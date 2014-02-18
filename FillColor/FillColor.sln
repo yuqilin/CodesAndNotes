@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FillColor", "FillColor\FillColor.vcproj", "{8097F6B2-D819-4F4E-90CE-CFF1EEDA61AA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColorIt", "ColorIt\ColorIt.vcproj", "{CB7F4283-ED70-4E1E-84BC-B8E5397F9E5C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8097F6B2-D819-4F4E-90CE-CFF1EEDA61AA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8097F6B2-D819-4F4E-90CE-CFF1EEDA61AA}.Debug|Win32.Build.0 = Debug|Win32
+		{8097F6B2-D819-4F4E-90CE-CFF1EEDA61AA}.Release|Win32.ActiveCfg = Release|Win32
+		{8097F6B2-D819-4F4E-90CE-CFF1EEDA61AA}.Release|Win32.Build.0 = Release|Win32
+		{CB7F4283-ED70-4E1E-84BC-B8E5397F9E5C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CB7F4283-ED70-4E1E-84BC-B8E5397F9E5C}.Debug|Win32.Build.0 = Debug|Win32
+		{CB7F4283-ED70-4E1E-84BC-B8E5397F9E5C}.Release|Win32.ActiveCfg = Release|Win32
+		{CB7F4283-ED70-4E1E-84BC-B8E5397F9E5C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

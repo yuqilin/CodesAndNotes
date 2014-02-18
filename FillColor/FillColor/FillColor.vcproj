@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="clsid_lookup"
-	ProjectGUID="{37CA970A-E3E3-47CD-A9C6-048C8BD388B2}"
-	RootNamespace="guid_lookup"
+	Name="FillColor"
+	ProjectGUID="{8097F6B2-D819-4F4E-90CE-CFF1EEDA61AA}"
+	RootNamespace="FillColor"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -115,7 +115,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -171,11 +171,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\clsid_lookup.cpp"
+				RelativePath=".\ColorIt.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\mapGUID.cpp"
+				RelativePath=".\FillColor.cpp"
 				>
 			</File>
 			<File
@@ -205,19 +213,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\mapGUID.h"
+				RelativePath=".\ColorIt.h"
 				>
 			</File>
 			<File
-				RelativePath=".\moreuuids.h"
+				RelativePath=".\FillColor.h"
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\Resource.h"
 				>
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
 				>
 			</File>
 		</Filter>
@@ -227,14 +239,22 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\clsid_lookup.rc"
+				RelativePath=".\FillColor.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\icon1.ico"
+				RelativePath=".\FillColor.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\small.ico"
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ReadMe.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
