@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -32,12 +33,8 @@ public class MainActivity extends Activity implements OnTouchListener{
 	
 	private Map<Integer, Integer> colorMap;
 	private int mChosenColor = 0xffff0000;
-	
-	private Bitmap mBitmap = null;
-	
-	private float mWidthRatio = 0.0f;
-	private float mHeightRatio = 0.0f;
-	private Rect mImageBounds;
+		
+	private MyImageView mImageView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +55,12 @@ public class MainActivity extends Activity implements OnTouchListener{
 		int dpScreenWidth = (int)(dm.widthPixels / dm.density);
 		int dpScreenHeight = (int)(dm.heightPixels / dm.density);
 		
-		Log.v(LOGTAG + " DisplayMetrics", "desity = " + density + ", densityDpi = " + densityDpi);
-		Log.v(LOGTAG + " DisplayMetrics", "xdpi = " + xdpi + ", ydpi = " + ydpi);
-		Log.v(LOGTAG + " DisplayMetrics", "screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
-		Log.v(LOGTAG + " DisplayMetrics", "dpScreenWidth = " + dpScreenWidth + ", dpScreenHeight = " + dpScreenHeight);
+		Log.v(LOGTAG, "DisplayMetrics desity = " + density + ", densityDpi = " + densityDpi);
+		Log.v(LOGTAG, "DisplayMetrics xdpi = " + xdpi + ", ydpi = " + ydpi);
+		Log.v(LOGTAG, "DisplayMetrics screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
+		Log.v(LOGTAG, "DisplayMetrics dpScreenWidth = " + dpScreenWidth + ", dpScreenHeight = " + dpScreenHeight);
         
-		final ImageView imgView = (ImageView)findViewById(R.id.imageview);//new ImageView(this);
+		mImageView = (MyImageView)findViewById(R.id.imageview);//new ImageView(this);
 		
 //		int viewWidth = getPx(dpScreenWidth);
 //		int viewHeight = getPx(dpScreenHeight * 9 / 11);
@@ -71,11 +68,19 @@ public class MainActivity extends Activity implements OnTouchListener{
 //				"viewWidth = " + viewWidth + ", viewHeight = " + viewHeight);
 //		imgView.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, viewHeight));
 		//imgView.setImageResource(R.drawable.simpson01);
-		//imgView.setBackgroundResource(R.drawable.shape_rect);
+		//imgView.setBackgroundResource(R.drawable.simpson01);
+		
+		
+//		String imageType = options.outMimeType;
+//		
+//		Log.v(LOGTAG + " onCreate", "imageViewHeight = " + imgView.getHeight() + " imageViewWidth = " + imgView.getWidth());
+//		
+		//Log.v(LOGTAG + " onCreate", "imageHeight = " + imageHeight + " imageWidth = " + imageWidth);
 		
 		
 		
-		imgView.setOnTouchListener(this);
+		//imgView.setImageBitmap(bitmap);
+		mImageView.setOnTouchListener(this);
 		
 		initColorPanle();
 		
@@ -183,9 +188,9 @@ public class MainActivity extends Activity implements OnTouchListener{
 	public void onColorPanleClickEvent(View view) {
 		Integer color = colorMap.get(view.getId());
 		if (color == null) {
-			Log.v(LOGTAG + "onClickEvent", "onColorPanleClickEvent, get view color null");
+			Log.v(LOGTAG, "onClickEvent onColorPanleClickEvent, get view color null");
 		} else {
-			Log.v(LOGTAG + "onClickEvent", "onColorPanleClickEvent, button clicked, color = " + String.format("%x", color));
+			Log.v(LOGTAG, "onClickEvent onColorPanleClickEvent, button clicked, color = " + String.format("%x", color));
 			final ImageView chosenColor = (ImageView)findViewById(R.id.color_chosen);
 			((GradientDrawable)chosenColor.getBackground()).setColor(color);
 			mChosenColor = color;
@@ -194,81 +199,36 @@ public class MainActivity extends Activity implements OnTouchListener{
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		
-		final ImageView imgView = (ImageView)v;
-		
-		if (mBitmap == null) {
-			Bitmap srcBitmap = ((BitmapDrawable)imgView.getDrawable()).getBitmap();// BitmapFactory.decodeResource(getResources(),
-									// R.drawable.simpson01);
-			mBitmap = Bitmap.createBitmap(srcBitmap.getWidth(),
-					srcBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-			mBitmap = srcBitmap.copy(Bitmap.Config.ARGB_8888, true);
 			
-			
-			Drawable drawable = imgView.getDrawable();
-			mImageBounds = imgView.getDrawable().getBounds();
-			
-			int intrinsicWidth = drawable.getIntrinsicWidth();
-			int intrinsicHeight = drawable.getIntrinsicHeight();
-			
-			int scaleWidth = mImageBounds.height();
-			int scaleHeight = mImageBounds.width();
-			
-			mWidthRatio = intrinsicWidth / scaleWidth;
-			mHeightRatio = intrinsicHeight / scaleHeight;
-			
-			
-			
-//			final int index = event.getActionIndex();
-//		    final float[] coords = new float[] { event.getX(index), event.getY(index) };
-//		    Matrix matrix = new Matrix();
-//		    imgView.getImageMatrix().invert(matrix);
-//		    matrix.postTranslate(imgView.getScrollX(), imgView.getScrollY());
-//		    matrix.mapPoints(coords);
-		    
-		}
-		
+		///*
         if(event.getAction() == MotionEvent.ACTION_UP) {
             float screenX = event.getX();
             float screenY = event.getY();
             float viewX = screenX;// - v.getLeft();
             float viewY = screenY;// - v.getTop();
             
-            int scaleImageOffsetX = (int)event.getX() - mImageBounds.left;
-			int scaleImageOffsetY = (int)event.getY() - mImageBounds.top;
-			
-			int orignalImageOffsetX = (int)(scaleImageOffsetX * mWidthRatio);
-			int orignalImageOffsetY = (int)(scaleImageOffsetY * mHeightRatio);
+            
             
             long startTime = System.currentTimeMillis();
-            ScanLineSeedFill((int)orignalImageOffsetX, (int)orignalImageOffsetY, mChosenColor, 0x0);
+            ScanLineSeedFill((int)viewY, (int)viewX, mChosenColor, 0x0);
             long costTime = System.currentTimeMillis() - startTime;
             
-            Log.v(LOGTAG + " onTouch", "fill cost time = " + costTime);
+            Log.v(LOGTAG, "onTouch fill cost time = " + costTime);
             
-            Log.v(LOGTAG + " onTouch", "imgView width = " + imgView.getWidth() 
-            		+ " imgView height = " + imgView.getHeight()
-            		+ " Bitmap width = " + mBitmap.getWidth()
-            		+ " Bitmap height = " + mBitmap.getHeight()
-            		+ " touch point x = " + viewX
-            		+ " touch point y = " + viewY
-            		+ " touch point img_x = " + orignalImageOffsetX
-            		+ " touch point img_y = " + orignalImageOffsetY);
-            
-            imgView.setImageBitmap(mBitmap);
-            //imgView.invalidate();
-            
+            //mImageView.invalidate();
+            mImageView.mRepaint = true;
+            mImageView.invalidate();
         }
+        //*/
         return true;
     }
 	
-	public int GetPixelColor(int x, int y) {
-		int pixelColor = mBitmap.getPixel(x, y);
-		return pixelColor;
+	public int getPixelColor(int x, int y) {
+		return mImageView.getPixelColor(y, x);
 	}
 	
-	public void SetPixelColor(int x, int y, int color) {		
-		mBitmap.setPixel(x, y, color);
+	public void setPixelColor(int x, int y, int color) {		
+		mImageView.setPixelColor(y, x, color);
 	}
 	
 	protected boolean ColorComp(int a, int b) {
@@ -278,7 +238,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 		    //float distance = ((float)(absR * absR + absG * absG + absB * absB));
 		    int distance = absR + absG + absB;
 		    //if (distance - 10000.0f < 0.01)
-		    if (distance < 30)
+		    if (distance < 50)
 		        return true;
 		    else
 		        return false;
@@ -287,10 +247,10 @@ public class MainActivity extends Activity implements OnTouchListener{
 	protected boolean IsPixelValid(int x, int y, int old_color, int new_color, int boundary_color) {
 		boolean bValid = false;
 
-		if (x < 0 || y >= mBitmap.getHeight())
+		if (x < 0 || y < 0 || x >= mImageView.getBitmapHeight() || y >= mImageView.getBitmapWidth())
 			return false;
 		
-	    int color = GetPixelColor(x, y);
+	    int color = getPixelColor(x, y);
 	    boolean bSimilarTarget = ColorComp(color, old_color);
 	    boolean bSimilarBoundary = ColorComp(color, boundary_color);
 	    if (bSimilarTarget && color != new_color && !bSimilarBoundary) {
@@ -314,16 +274,17 @@ public class MainActivity extends Activity implements OnTouchListener{
 	
 	protected void ScanLineSeedFill(int x, int y, int new_color, int boundary_color) {
 		
+		int old_color = getPixelColor(x, y);
+		
 	    Stack<Point> stk = new Stack<Point>();
 
 	    // 1. push seed into stack
 	    stk.push(new Point(x, y));
 	    
-	    int old_color = GetPixelColor(x, y);
-
+	    Point seed;
 	    while (!stk.empty()) {
 	        // 2. current seed
-	        Point seed = stk.peek();
+	        seed = stk.peek();
 	        stk.pop();
 
 	        // 3. fill right-hand
@@ -339,7 +300,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 	        {
 	            SearchLineNewSeed(stk, y_left, y_right, seed.x-1, old_color, new_color, boundary_color);
 	        }
-	        int imageHeight = mBitmap.getHeight();//((ImageView)findViewById(R.id.imageview)).getHeight();
+	        int imageHeight = mImageView.getBitmapHeight();
 	        if (seed.x < imageHeight-1)
 	        {
 	            SearchLineNewSeed(stk, y_left, y_right, seed.x+1, old_color, new_color, boundary_color);
@@ -350,9 +311,9 @@ public class MainActivity extends Activity implements OnTouchListener{
 	protected int FillLineRight(int x, int y, int old_color, int new_color, int boundary_color) {
 	    int count = 0;
 	    
-	    int imageWidth = mBitmap.getWidth();//((ImageView)findViewById(R.id.imageview)).getWidth();
+	    int imageWidth = mImageView.getBitmapWidth();
 	    while (y < imageWidth && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
-	        SetPixelColor(x, y, new_color);
+	        setPixelColor(x, y, new_color);
 	        y++;
 	        count++;
 	    }
@@ -362,7 +323,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 	protected int FillLineLeft(int x, int y, int old_color, int new_color, int boundary_color) {
 	    int count = 0;
 	    while (y >= 0 && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
-	    	SetPixelColor(x, y, new_color);
+	    	setPixelColor(x, y, new_color);
 	        y--;
 	        count++;
 	    }
@@ -407,6 +368,46 @@ public class MainActivity extends Activity implements OnTouchListener{
 					boundary_color);
 			yt += (yspan == 0) ? 1 : yspan;
 		}
+	}
+
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and
+			// keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
+	}
+	
+	public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+	        int reqWidth, int reqHeight) {
+
+	    // First decode with inJustDecodeBounds=true to check dimensions
+	    final BitmapFactory.Options options = new BitmapFactory.Options();
+	    options.inJustDecodeBounds = true;
+	    BitmapFactory.decodeResource(res, resId, options);
+
+	    // Calculate inSampleSize
+	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+	    // Decode bitmap with inSampleSize set
+	    options.inJustDecodeBounds = false;
+	    return BitmapFactory.decodeResource(res, resId, options);
 	}
 
 }
