@@ -217,7 +217,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\Tiff.lib"
+				OutputFile="..\lib\release\Tiff.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -292,7 +292,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\Tiff.lib"
+				OutputFile="..\lib\debug\Tiff.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

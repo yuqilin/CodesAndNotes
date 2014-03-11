@@ -1,0 +1,15 @@
+
+Android 应用的基本组件
+
+1. Activity 负责与用户交互的组件，是Window的容器
+   View 组件是所有UI控件、容器控件的基类。View需要放到容器组件中，或使用Activity将它显示出来。
+
+2. Service
+3. BroadcastReceiver
+4. ContentProvider
+
+
+Intent
+IntentFilter
+
+

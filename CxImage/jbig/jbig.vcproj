@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\jbig.lib"
+				OutputFile="..\lib\release\jbig.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -287,7 +287,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\jbig.lib"
+				OutputFile="..\lib\debug\jbig.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

@@ -213,7 +213,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\libdcr.lib"
+				OutputFile="..\lib\release\libdcr.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -287,7 +287,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\libdcr.lib"
+				OutputFile="..\lib\debug\libdcr.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

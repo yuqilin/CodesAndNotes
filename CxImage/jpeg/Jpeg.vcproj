@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\Jpeg.lib"
+				OutputFile="..\lib\release\Jpeg.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\Jpeg.lib"
+				OutputFile="..\lib\debug\Jpeg.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

@@ -216,7 +216,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\jasper.lib"
+				OutputFile="..\lib\release\jasper.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -291,7 +291,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\jasper.lib"
+				OutputFile="..\lib\debug\jasper.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

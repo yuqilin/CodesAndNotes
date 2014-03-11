@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\zlib.lib"
+				OutputFile="..\lib\release\zlib.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\zlib.lib"
+				OutputFile="..\lib\debug\zlib.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

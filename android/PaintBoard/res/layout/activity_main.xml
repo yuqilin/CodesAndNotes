@@ -1,0 +1,141 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:gravity="center" >
+
+    <com.myandroid.paintboard.MyImageView
+        android:id="@+id/imageview"
+        android:layout_width="350dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/image_desc"
+        />
+
+    <RelativeLayout
+        android:id="@+id/color_panle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" >
+	    <LinearLayout
+	        android:id="@+id/btn_colors"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+	        
+		    <LinearLayout
+		        android:id="@+id/btns_row01"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal"
+		        android:layout_gravity="center">
+		
+		        <Button
+		            android:id="@+id/btn_color00"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color01"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color02"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color03"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color04"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color05"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color06"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color07"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		    </LinearLayout>
+		
+		    <LinearLayout
+		        android:id="@+id/btns_row02"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal"
+		        android:layout_gravity="center" >
+		
+		        <Button
+		            android:id="@+id/btn_color10"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color11"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color12"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color13"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color14"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color15"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color16"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		
+		        <Button
+		            android:id="@+id/btn_color17"
+		            style="@style/style_custom_btn" >
+		        </Button>
+		    </LinearLayout>
+		 </LinearLayout>
+		 
+			 <ImageView 
+			     android:contentDescription="stroke"
+			     android:id="@+id/color_chosen_stroke"
+			     android:layout_toRightOf="@+id/btn_colors"
+			     android:layout_centerVertical="true"
+			     style="@style/style_chosen_color_stroke"/>
+			 <ImageView 
+			     android:contentDescription="show color"
+			     android:id="@+id/color_chosen"
+			     android:layout_toRightOf="@+id/btn_colors"
+			     android:layout_centerVertical="true"
+			     style="@style/style_chosen_color"/>
+		 
+	</RelativeLayout>
+</LinearLayout>

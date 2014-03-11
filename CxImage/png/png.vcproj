@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\png.lib"
+				OutputFile="..\lib\release\png.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -285,7 +285,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\png.lib"
+				OutputFile="..\lib\debug\png.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

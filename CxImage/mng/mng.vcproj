@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Release\mng.lib"
+				OutputFile="..\lib\release\mng.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -215,7 +215,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Unicode_Debug\mng.lib"
+				OutputFile="..\lib\debug\mng.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

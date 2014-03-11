@@ -20,3 +20,4 @@ ipch
 *.lib
 Debug/
 Release/
+bin/

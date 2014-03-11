@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CxImage", "cximage\cximage.vcproj", "{C1A707A0-EB4D-4DFC-B6AD-2D71E4BFCBB7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CxImage", "CxImage\cximage.vcproj", "{C1A707A0-EB4D-4DFC-B6AD-2D71E4BFCBB7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CxImageCrtDll", "CxImage\CxImageDLL\CxImageCrtDll.vcproj", "{C7B1EA02-6F75-4131-B47C-657F883D60C0}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -60,6 +60,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tiff", "tiff\Tiff.vcproj", "{4A7AC390-9C7A-47CA-8DA8-8BB9754E0DF8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{896F842C-608F-4D27-ABD1-E6A4FD1A1657}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcproj", "{B326D9B6-E5D6-4B30-AE5E-998C452D4340}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +175,14 @@ Global
 		{896F842C-608F-4D27-ABD1-E6A4FD1A1657}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
 		{896F842C-608F-4D27-ABD1-E6A4FD1A1657}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{896F842C-608F-4D27-ABD1-E6A4FD1A1657}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Debug|Win32.Build.0 = Debug|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Release|Win32.ActiveCfg = Release|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Release|Win32.Build.0 = Release|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Unicode Debug|Win32.ActiveCfg = Debug|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Unicode Debug|Win32.Build.0 = Debug|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Unicode Release|Win32.ActiveCfg = Release|Win32
+		{B326D9B6-E5D6-4B30-AE5E-998C452D4340}.Unicode Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
