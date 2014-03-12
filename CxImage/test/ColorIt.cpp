@@ -53,6 +53,7 @@ void SetImageInfo(void* image, int width, int height,
     s_cbDrawPixelColor = cb_DrawPixelColor;
 }
 
+// ScanLineSeedFill
 void ScanLineSeedFill(int x, int y, int new_color, int boundary_color) {
     int old_color = s_cbGetPixelColor(x, y);
 
@@ -130,6 +131,7 @@ bool IsPixelValid(int x, int y, int old_color, int new_color, int boundary_color
     return bValid;
 }
 
+// FillLineRight
 int FillLineRight(int x, int y, int old_color, int new_color, int boundary_color) {
     int count = 0;
     while (y < s_ImageWidth && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
@@ -140,6 +142,7 @@ int FillLineRight(int x, int y, int old_color, int new_color, int boundary_color
     return count;
 }
 
+// FillLineLeft
 int FillLineLeft(int x, int y, int old_color, int new_color, int boundary_color) {
     int count = 0;
     while (y >= 0 && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
