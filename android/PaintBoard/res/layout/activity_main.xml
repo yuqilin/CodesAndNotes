@@ -11,7 +11,8 @@
         android:layout_width="350dp"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
+        android:src="@drawable/simpson01"
         android:background="@drawable/shape_rect"
         android:contentDescription="@string/image_desc"
         />

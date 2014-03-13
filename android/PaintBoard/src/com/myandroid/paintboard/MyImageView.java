@@ -2,10 +2,7 @@ package com.myandroid.paintboard;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
@@ -48,25 +45,25 @@ public class MyImageView extends ImageView {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		
-		if (mBitmap == null) {
-			mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.simpson01);
-			if (mBitmap != null) {
-				mBitmap = Bitmap.createScaledBitmap(mBitmap, this.getWidth(), this.getHeight(), true);
-				if (mBitmap != null) {
-					mRepaint = true;
-				}
-			}
-		}
-		
-		if (mRepaint) {
-			if (mBitmap != null) {
-				this.setImageBitmap(mBitmap);
-				//canvas.drawBitmap(mBitmap, 0, 0, mPaint);
-				Log.v(MainActivity.LOGTAG, "MyImageView onDraw called, scaled bitmap width = " + mBitmap.getWidth()
-						+ ",height = " + mBitmap.getHeight());
-			}
-			mRepaint = false;
-		}
+//		if (mBitmap == null) {
+//			mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.simpson01);
+//			if (mBitmap != null) {
+//				mBitmap = Bitmap.createScaledBitmap(mBitmap, this.getWidth(), this.getHeight(), true);
+//				if (mBitmap != null) {
+//					mRepaint = true;
+//				}
+//			}
+//		}
+//		
+//		if (mRepaint) {
+//			if (mBitmap != null) {
+//				this.setImageBitmap(mBitmap);
+//				//canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+//				Log.v(MainActivity.LOGTAG, "MyImageView onDraw called, scaled bitmap width = " + mBitmap.getWidth()
+//						+ ",height = " + mBitmap.getHeight());
+//			}
+//			mRepaint = false;
+//		}
 		
 //		Bitmap srcBitmap = ((BitmapDrawable)this.getDrawable()).getBitmap();
 //		//Bitmap srcBitmap = ((BitmapDrawable)this.getBackground()).getBitmap();

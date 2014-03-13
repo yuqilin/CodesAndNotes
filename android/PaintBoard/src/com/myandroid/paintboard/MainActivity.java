@@ -9,14 +9,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +28,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 	private final int colorPanleLine = 2;
 	private final int colorPanleColumn = 8;
 	
-	private Map<Integer, Integer> colorMap;
+	private SparseIntArray colorMap;
 	private int mChosenColor = 0xffff0000;
 		
 	private MyImageView mImageView;
@@ -60,94 +57,12 @@ public class MainActivity extends Activity implements OnTouchListener{
 		Log.v(LOGTAG, "DisplayMetrics screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
 		Log.v(LOGTAG, "DisplayMetrics dpScreenWidth = " + dpScreenWidth + ", dpScreenHeight = " + dpScreenHeight);
         
-		mImageView = (MyImageView)findViewById(R.id.imageview);//new ImageView(this);
-		
-//		int viewWidth = getPx(dpScreenWidth);
-//		int viewHeight = getPx(dpScreenHeight * 9 / 11);
-//		Log.e(LOGTAG + " DisplayMetrics", 
-//				"viewWidth = " + viewWidth + ", viewHeight = " + viewHeight);
-//		imgView.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, viewHeight));
-		//imgView.setImageResource(R.drawable.simpson01);
-		//imgView.setBackgroundResource(R.drawable.simpson01);
-		
-		
-//		String imageType = options.outMimeType;
-//		
-//		Log.v(LOGTAG + " onCreate", "imageViewHeight = " + imgView.getHeight() + " imageViewWidth = " + imgView.getWidth());
-//		
-		//Log.v(LOGTAG + " onCreate", "imageHeight = " + imageHeight + " imageWidth = " + imageWidth);
-		
-		
-		
-		//imgView.setImageBitmap(bitmap);
+		mImageView = (MyImageView)findViewById(R.id.imageview);
 		mImageView.setOnTouchListener(this);
 		
+		mImageView.setImageResource(R.drawable.simpson01);
+		
 		initColorPanle();
-		
-//		final ImageView chosenColor = (ImageView)findViewById(R.id.color_chosen);
-//		GradientDrawable bkground = (GradientDrawable)chosenColor.getBackground();
-//		bkground.getPadding(padding)
-		
-		
-		//final LinearLayout btnsRow1 = (LinearLayout)findViewById(R.id.btns_row01);
-		//final LinearLayout btnsRow2 = (LinearLayout)findViewById(R.id.btns_row02);
-		//int btnRowWidth = viewWidth;
-		//int btnRowHeight = (screenHeight - viewHeight - 75) / 2;
-		//Log.e(LOGTAG + " DisplayMetrics", "btnRowWidth = " + btnRowWidth + ", btnRowHeight = " + btnRowHeight);
-        
-		//final ImageView chosenColor = (ImageView)findViewById(R.id.color_chosen);
-		//GradientDrawable shape = (GradientDrawable)chosenColor.getBackground();
-		//shape.setColor(Color.BLUE);
-		
-		//btnsRow1.setLayoutParams(new LinearLayout.LayoutParams(btnRowWidth, btnRowHeight));
-		//btnsRow2.setLayoutParams(new LinearLayout.LayoutParams(btnRowWidth, btnRowHeight));
-		
-		/*
-		int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);  
-		int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);  
-		imgView.measure(w, h);
-		viewWidth =imgView.getMeasuredWidth();  
-		viewHeight =imgView.getMeasuredHeight();
-		
-		ViewTreeObserver observer = imgView.getViewTreeObserver();
-		observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onGlobalLayout() {
-				imgView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				viewWidth = imgView.getWidth();
-				viewHeight = imgView.getHeight();
-				Log.e(LOGTAG + " ViewTreeObserver", "viewWidth = " + viewWidth + ", viewHeight = " + viewHeight);
-			}
-		}); 
-		Log.e(LOGTAG + " ImageView", "viewWidth = " + viewWidth + ", viewHeight = " + viewHeight);  
-		
-		//imgWidth = imgView.getLayoutParams().width = screenWidth;
-		//imgHeight = imgView.getLayoutParams().height = (int)(screenHeight * 4 / 5);
-		/*
-		TableRow tblRow = (TableRow)findViewById(R.id.tblrow01);
-		
-		int tblRowWidth = tblRow.getLayoutParams().width;
-		int tblRowHeight = tblRow.getLayoutParams().height;
-		
-		tblRowWidth = tblRow.getLayoutParams().width = screenWidth;
-		tblRowHeight = tblRow.getLayoutParams().height = screenHeight - imgView.getLayoutParams().height;
-		
-		
-		Button btn01 = (Button)findViewById(R.id.btn_color01);
-		int btnWidth = btn01.getLayoutParams().width;
-		int btnHeight = btn01.getLayoutParams().height;
-		
-		btnWidth = btn01.getLayoutParams().width = (int)(tblRow.getLayoutParams().width / 10);
-		btnHeight = btn01.getLayoutParams().height = (int)(tblRow.getLayoutParams().height / 2);
-		
-		Log.e(LOGTAG + " ImageView", "width = " + imgWidth + ", height = " + imgHeight);
-		Log.e(LOGTAG + " TableRow", "width = " + tblRowWidth + ", height = " + tblRowHeight);
-		Log.e(LOGTAG + " Button01", "width = " + btnWidth + ", height = " + btnHeight);
-		
-		Log.v(LOGTAG + " MainActivity", "onCreate" + System.currentTimeMillis());
-		//*/
 	}
 
 	@Override
@@ -165,7 +80,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 	private void initColorPanle() {
 		int i = 0, j = 0;
 		
-		colorMap = new HashMap<Integer, Integer>();
+		colorMap = new SparseIntArray();
 		
 		
 		for (i = 0; i < colorPanleLine; i++) {
@@ -202,15 +117,13 @@ public class MainActivity extends Activity implements OnTouchListener{
 			
 		///*
         if(event.getAction() == MotionEvent.ACTION_UP) {
-            float screenX = event.getX();
-            float screenY = event.getY();
-            float viewX = screenX;// - v.getLeft();
-            float viewY = screenY;// - v.getTop();
-            
-            
-            
+            float x = event.getX();
+            float y = event.getY();
+
             long startTime = System.currentTimeMillis();
-            ScanLineSeedFill((int)viewY, (int)viewX, mChosenColor, 0x0);
+            //ScanLineSeedFill((int)x, (int)y, mChosenColor, 0x0);
+            scanLineSeedFill(mImageView.getBitmapWidth(), mImageView.getBitmapHeight(),
+            		(int)x, (int)y, mChosenColor, 0);
             long costTime = System.currentTimeMillis() - startTime;
             
             Log.v(LOGTAG, "onTouch fill cost time = " + costTime);
@@ -224,11 +137,11 @@ public class MainActivity extends Activity implements OnTouchListener{
     }
 	
 	public int getPixelColor(int x, int y) {
-		return mImageView.getPixelColor(y, x);
+		return mImageView.getPixelColor(x, y);
 	}
 	
 	public void setPixelColor(int x, int y, int color) {		
-		mImageView.setPixelColor(y, x, color);
+		mImageView.setPixelColor(x, y, color);
 	}
 	
 	protected boolean ColorComp(int a, int b) {
@@ -244,10 +157,27 @@ public class MainActivity extends Activity implements OnTouchListener{
 		        return false;
 	}
 	
+	protected boolean isPixelValid(int w, int h, int x, int y, int old_color, int new_color, int boundary_color) {
+		boolean bValid = false;
+
+		if (x < 0 || y < 0 || x >= w || y >= h)
+			return false;
+		
+	    int color = getPixelColor(x, y);
+	    boolean bSimilarTarget = ColorComp(color, old_color);
+	    boolean bSimilarBoundary = ColorComp(color, boundary_color);
+	    if (color != new_color && bSimilarTarget && !bSimilarBoundary) {
+	        bValid = true;
+	    } else {
+	        bValid = false;
+	    }
+	    return bValid;
+	}
+	
 	protected boolean IsPixelValid(int x, int y, int old_color, int new_color, int boundary_color) {
 		boolean bValid = false;
 
-		if (x < 0 || y < 0 || x >= mImageView.getBitmapHeight() || y >= mImageView.getBitmapWidth())
+		if (x < 0 || y < 0 || x >= mImageView.getBitmapWidth() || y >= mImageView.getBitmapHeight())
 			return false;
 		
 	    int color = getPixelColor(x, y);
@@ -272,6 +202,97 @@ public class MainActivity extends Activity implements OnTouchListener{
 		}
 	}
 	
+	protected final class Seed {
+		private int y;
+		private int xLeft;
+		private int xRight;
+		private int prevLeft;
+		private int prevRight;
+		private int direction;
+		public Seed(int y, int xLeft, int xRight, int prevLeft, int prevRight, int direction) {
+			this.y = y;
+			this.xLeft = xLeft;
+			this.xRight = xRight;
+			this.prevLeft = prevLeft;
+			this.prevRight = prevRight;
+			this.direction = direction;
+		}
+	}
+	
+	protected void scanLineSeedFill(int w, int h, int x, int y, int new_color,
+			int boundary_color) {
+
+		final int DIR_UP = 1;
+		int old_color = getPixelColor(x, y);
+
+		int L, R;
+
+		L = R = x;
+		while (++R < w
+				&& isPixelValid(w, h, R, y, old_color, new_color,
+						boundary_color)) {
+			setPixelColor(R, y, new_color);
+		}
+
+		while (--L > 0
+				&& isPixelValid(w, h, L, y, old_color, new_color,
+						boundary_color)) {
+			setPixelColor(L, y, new_color);
+		}
+
+		--R;
+		++L;
+
+		Stack<Seed> stk = new Stack<Seed>();
+		stk.push(new Seed(y, L, R, R + 1, R, DIR_UP));
+
+		Seed seed;
+		while (!stk.empty()) {
+			seed = stk.pop();
+
+			int YC = seed.y;
+			L = seed.xLeft;
+			R = seed.xRight;
+			int PL = seed.prevLeft;
+			int PR = seed.prevRight;
+			int dir = seed.direction;
+			int _8_connectivity = 1;
+			int data[][] = {
+					{ -dir, L - _8_connectivity, R + _8_connectivity },
+					{ dir, L - _8_connectivity, PL - 1 },
+					{ dir, PR + 1, R + _8_connectivity } };
+			
+			for (int k = 0; k < 3; k++) {
+				dir = data[k][0];
+				int left = data[k][1];
+				int right = data[k][2];
+				
+				if (YC + dir >= h) 
+					continue;
+				
+				for (int i = left; i <= right; i++) {
+					if (i < w && 
+							isPixelValid(w, h, i, YC+dir, old_color, new_color, boundary_color)) {
+						int j = i;
+						setPixelColor(i, YC+dir, new_color);
+						
+						while (--j >=0 && 
+								isPixelValid(w, h, j, YC+dir, old_color, new_color, boundary_color)) {
+							setPixelColor(j, YC+dir, new_color);
+						}
+						
+						while (++i < w &&
+								isPixelValid(w, h, i, YC+dir, old_color, new_color, boundary_color)) {
+							setPixelColor(i, YC+dir, new_color);
+						}
+						
+						stk.push(new Seed(YC+dir, j+1, i-1, L, R, -dir));
+					}
+				}
+			}
+		}
+	}
+		
 	protected void ScanLineSeedFill(int x, int y, int new_color, int boundary_color) {
 		
 		int old_color = getPixelColor(x, y);
@@ -289,21 +310,21 @@ public class MainActivity extends Activity implements OnTouchListener{
 
 	        // 3. fill right-hand
 	        int count = FillLineRight(seed.x, seed.y, old_color, new_color, boundary_color);
+	        int x_right = seed.x + count - 1;
 	        
-	        int y_right = seed.y + count - 1;
 	        // 4. fill left-hand
-	        count = FillLineLeft(seed.x, seed.y-1, old_color, new_color, boundary_color);
-	        int y_left = seed.y - count;
+	        count = FillLineLeft(seed.x-1, seed.y, old_color, new_color, boundary_color);
+	        int x_left = seed.x - count;
 
 	        // 5. scan adjacent line
-	        if (seed.x > 0)
+	        if (seed.y > 0)
 	        {
-	            SearchLineNewSeed(stk, y_left, y_right, seed.x-1, old_color, new_color, boundary_color);
+	            SearchLineNewSeed(stk, seed.y-1, x_left, x_right, old_color, new_color, boundary_color);
 	        }
 	        int imageHeight = mImageView.getBitmapHeight();
-	        if (seed.x < imageHeight-1)
+	        if (seed.y < imageHeight-1)
 	        {
-	            SearchLineNewSeed(stk, y_left, y_right, seed.x+1, old_color, new_color, boundary_color);
+	            SearchLineNewSeed(stk, seed.y+1, x_left, x_right, old_color, new_color, boundary_color);
 	        }
 	    }
 	}
@@ -312,9 +333,9 @@ public class MainActivity extends Activity implements OnTouchListener{
 	    int count = 0;
 	    
 	    int imageWidth = mImageView.getBitmapWidth();
-	    while (y < imageWidth && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
+	    while (x < imageWidth && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
 	        setPixelColor(x, y, new_color);
-	        y++;
+	        x++;
 	        count++;
 	    }
 	    return count;
@@ -322,51 +343,51 @@ public class MainActivity extends Activity implements OnTouchListener{
 	
 	protected int FillLineLeft(int x, int y, int old_color, int new_color, int boundary_color) {
 	    int count = 0;
-	    while (y >= 0 && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
+	    while (x >= 0 && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
 	    	setPixelColor(x, y, new_color);
-	        y--;
+	        x--;
 	        count++;
 	    }
 	    return count;
 	}
 	
-	protected int SkipInvalidInLine(int x, int y, int y_right, int old_color, int new_color, int boundary_color) {
+	protected int SkipInvalidInLine(int y, int x, int x_right, int old_color, int new_color, int boundary_color) {
 	    int count = 0;
 
-	    while (y <= y_right && !IsPixelValid(x, y, old_color, new_color, boundary_color)) {
-	        y++;
+	    while (x <= x_right && !IsPixelValid(x, y, old_color, new_color, boundary_color)) {
+	        x++;
 	        count++;
 	    }
 
 	    return count;
 	}
 	
-	protected void SearchLineNewSeed(Stack<Point> stk, int y_left, int y_right, int x,
+	protected void SearchLineNewSeed(Stack<Point> stk, int y, int x_left, int x_right,
 			int old_color, int new_color, int boundary_color) {
-		int yt = y_left;
+		int xt = x_left;
 		boolean findNewSeed = false;
 
-		while (yt <= y_right) {
+		while (xt <= x_right) {
 			findNewSeed = false;
-			while (IsPixelValid(x, yt, old_color, new_color, boundary_color)
-					&& (yt <= y_right)) {
+			while (IsPixelValid(xt, y, old_color, new_color, boundary_color)
+					&& (xt <= x_right)) {
 				findNewSeed = true;
-				yt++;
+				xt++;
 			}
 			if (findNewSeed) {
-				if (yt == y_right
-						&& IsPixelValid(x, yt, old_color, new_color,
+				if (xt == x_right
+						&& IsPixelValid(xt, y, old_color, new_color,
 								boundary_color)) {
-					stk.push(new Point(x, yt));
+					stk.push(new Point(xt, y));
 				} else {
-					stk.push(new Point(x, yt - 1));
+					stk.push(new Point(xt-1, y));
 				}
 			}
 
 			// skip invalid point in line
-			int yspan = SkipInvalidInLine(x, yt, y_right, old_color, new_color,
+			int xspan = SkipInvalidInLine(y, xt, x_right, old_color, new_color,
 					boundary_color);
-			yt += (yspan == 0) ? 1 : yspan;
+			xt += (xspan == 0) ? 1 : xspan;
 		}
 	}
 
