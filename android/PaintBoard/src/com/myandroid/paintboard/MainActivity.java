@@ -1,7 +1,5 @@
 package com.myandroid.paintboard;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 import android.app.Activity;
@@ -15,21 +13,19 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
 
-public class MainActivity extends Activity implements OnTouchListener{
+public class MainActivity extends Activity {
 
-	public static final String LOGTAG = "PrintBoard";
+	public static final String LOGTAG = "PaintBoard";
 	
 	private final int colorPanleLine = 2;
 	private final int colorPanleColumn = 8;
 	
 	private SparseIntArray colorMap;
-	private int mChosenColor = 0xffff0000;
+	//private int mChosenColor = 0xffff0000;
 		
 	private MyImageView mImageView;
 	
@@ -58,9 +54,10 @@ public class MainActivity extends Activity implements OnTouchListener{
 		Log.v(LOGTAG, "DisplayMetrics dpScreenWidth = " + dpScreenWidth + ", dpScreenHeight = " + dpScreenHeight);
         
 		mImageView = (MyImageView)findViewById(R.id.imageview);
-		mImageView.setOnTouchListener(this);
+		//mImageView.setOnTouchListener(this);
 		
-		mImageView.setImageResource(R.drawable.simpson01);
+		//mImageView.setImageResource(R.drawable.simpson01);
+		//mImageView.setImageIndex(0);
 		
 		initColorPanle();
 	}
@@ -108,40 +105,18 @@ public class MainActivity extends Activity implements OnTouchListener{
 			Log.v(LOGTAG, "onClickEvent onColorPanleClickEvent, button clicked, color = " + String.format("%x", color));
 			final ImageView chosenColor = (ImageView)findViewById(R.id.color_chosen);
 			((GradientDrawable)chosenColor.getBackground()).setColor(color);
-			mChosenColor = color;
+			//mChosenColor = color;
+			mImageView.setChosenColor(color);
 		}
 	}
 	
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-			
-		///*
-        if(event.getAction() == MotionEvent.ACTION_UP) {
-            float x = event.getX();
-            float y = event.getY();
-
-            long startTime = System.currentTimeMillis();
-            //ScanLineSeedFill((int)x, (int)y, mChosenColor, 0x0);
-            scanLineSeedFill(mImageView.getBitmapWidth(), mImageView.getBitmapHeight(),
-            		(int)x, (int)y, mChosenColor, 0);
-            long costTime = System.currentTimeMillis() - startTime;
-            
-            Log.v(LOGTAG, "onTouch fill cost time = " + costTime);
-            
-            //mImageView.invalidate();
-            mImageView.mRepaint = true;
-            mImageView.invalidate();
-        }
-        //*/
-        return true;
-    }
 	
 	public int getPixelColor(int x, int y) {
-		return mImageView.getPixelColor(x, y);
+		return 0;//mImageView.getPixelColor(x, y);
 	}
 	
 	public void setPixelColor(int x, int y, int color) {		
-		mImageView.setPixelColor(x, y, color);
+		//mImageView.setPixelColor(x, y, color);
 	}
 	
 	protected boolean ColorComp(int a, int b) {
@@ -177,8 +152,8 @@ public class MainActivity extends Activity implements OnTouchListener{
 	protected boolean IsPixelValid(int x, int y, int old_color, int new_color, int boundary_color) {
 		boolean bValid = false;
 
-		if (x < 0 || y < 0 || x >= mImageView.getBitmapWidth() || y >= mImageView.getBitmapHeight())
-			return false;
+//		if (x < 0 || y < 0 || x >= mImageView.getBitmapWidth() || y >= mImageView.getBitmapHeight())
+//			return false;
 		
 	    int color = getPixelColor(x, y);
 	    boolean bSimilarTarget = ColorComp(color, old_color);
@@ -321,7 +296,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 	        {
 	            SearchLineNewSeed(stk, seed.y-1, x_left, x_right, old_color, new_color, boundary_color);
 	        }
-	        int imageHeight = mImageView.getBitmapHeight();
+	        int imageHeight = 0;//mImageView.getBitmapHeight();
 	        if (seed.y < imageHeight-1)
 	        {
 	            SearchLineNewSeed(stk, seed.y+1, x_left, x_right, old_color, new_color, boundary_color);
@@ -332,7 +307,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 	protected int FillLineRight(int x, int y, int old_color, int new_color, int boundary_color) {
 	    int count = 0;
 	    
-	    int imageWidth = mImageView.getBitmapWidth();
+	    int imageWidth = 0;//mImageView.getBitmapWidth();
 	    while (x < imageWidth && IsPixelValid(x, y, old_color, new_color, boundary_color)) {
 	        setPixelColor(x, y, new_color);
 	        x++;
