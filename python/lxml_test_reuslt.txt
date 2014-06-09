@@ -1,0 +1,646 @@
+{'title': u'\u8ba2\u9605\u672c\u7ad9\u8d44\u8baf', 'href': '/backend.php', 'class': 'feed', 'target': '_blank'}
+资讯
+{'title': u'\u8ba2\u9605\u672c\u7ad9\u7cbe\u5f69\u8bc4\u8bba', 'href': '/commentrss.php', 'class': 'feed', 'target': '_blank'}
+评论
+{'href': 'http://www.cnbeta.com'}
+cnbeta.com_中文业界资讯站
+{'href': 'http://www.cnbeta.com/'}
+首页
+{'style': 'color:#ffcc00;', 'href': 'http://www.cnbeta.com/deliver', 'target': '_blank'}
+投稿
+{'href': 'http://job.cnbeta.com/', 'target': '_blank'}
+招聘
+{'href': 'http://www.cnbeta.com/topics/306.htm'}
+互动
+{'href': 'http://www.cnbeta.com/topics.htm'}
+主题
+{'href': 'http://www.cnbeta.com/top10.htm'}
+排行
+{'href': 'http://www.cnbeta.com/about/index.htm'}
+关于
+{'href': 'http://www.cnbeta.com/topics/9.htm'}
+苹果
+{'href': 'http://www.cnbeta.com/topics/52.htm'}
+google
+{'href': 'http://www.cnbeta.com/topics/305.htm'}
+视点观察
+{'href': 'http://www.cnbeta.com/topics/448.htm'}
+科学探索
+{'href': 'http://www.cnbeta.com/topics/487.htm'}
+小米
+{'href': 'http://www.cnbeta.com/topics/70.htm'}
+硬件
+{'href': 'http://www.cnbeta.com/topics/353.htm'}
+b2c
+{'href': 'http://www.cnbeta.com/topics/371.htm'}
+三星
+{'href': 'http://www.cnbeta.com/topics/453.htm'}
+人物
+{'href': 'http://www.cnbeta.com/topics/243.htm'}
+手机
+{'href': 'http://www.cnbeta.com/topics/147.htm'}
+诺基亚
+{'href': 'http://www.cnbeta.com/topics/422.htm'}
+美国
+{'href': 'http://www.cnbeta.com/topics/436.htm'}
+魅族
+{'href': 'http://www.cnbeta.com/topics/39.htm'}
+游戏
+{'href': 'http://www.cnbeta.com/topics/469.htm'}
+3d
+{'href': 'http://www.cnbeta.com/topics/197.htm'}
+索尼
+{'href': 'http://www.cnbeta.com/topics/144.htm'}
+ultrabook
+{'href': 'http://www.cnbeta.com/topics/326.htm'}
+glass
+{'href': 'http://www.cnbeta.com/topics/506.htm'}
+windows 8.1
+{'href': 'http://www.cnbeta.com/topics/439.htm'}
+htc
+{'href': 'http://www.cnbeta.com/topics/4.htm'}
+微软
+{'href': 'http://www.cnbeta.com/topics/184.htm'}
+wp
+{'href': 'http://www.cnbeta.com/topics/444.htm'}
+android
+{'href': 'http://www.cnbeta.com/topics/91.htm'}
+yahoo!
+{'href': 'http://www.cnbeta.com/topics/32.htm'}
+intel
+{'href': 'http://www.cnbeta.com/topics/138.htm'}
+通信技术
+{'href': 'http://www.cnbeta.com/topics/331.htm'}
+华为
+{'href': 'http://www.cnbeta.com/topics/464.htm'}
+ipad
+{'href': 'http://www.cnbeta.com/topics.htm'}
+更多...
+{'href': 'http://www.cnbeta.com/articles/267723.htm', 'target': '_blank'}
+{'href': 'http://www.cnbeta.com/articles/267723.htm', 'target': '_blank', 'class': 'white'}
+windows 8.1春季更新早期build版本截图泄露
+{'href': 'http://count.chanet.com.cn/click.cgi?a=51684&d=256940&u=&e=', 'target': '_blank'}
+{'href': 'http://count.chanet.com.cn/click.cgi?a=51684&d=256940&u=&e=', 'target': '_blank', 'class': 'white'}
+苹果iphone 5s/5c开始发售 官网金色版5299价格不变
+{'href': 'http://www.cnbeta.com/articles/267907.htm', 'target': '_blank'}
+{'href': 'http://www.cnbeta.com/articles/267907.htm', 'target': '_blank', 'class': 'white'}
+诺基亚 lumia black 更新已经开始推送
+{'href': 'http://www.cnbeta.com/articles/267327.htm', 'target': '_blank'}
+{'href': 'http://www.cnbeta.com/articles/267327.htm', 'target': '_blank', 'class': 'white'}
+华为发布ascend mate 2 4g版 可为iphone充电
+{'href': 'http://www.cnbeta.com/articles/267968.htm', 'target': '_blank'}
+{'href': 'http://www.cnbeta.com/articles/267968.htm', 'target': '_blank', 'class': 'white'}
+带孩子宠物“上班”成真！小度i耳目1月13日京东开抢
+{}
+1
+{}
+2
+{}
+3
+{}
+4
+{}
+5
+{}
+999
+{'class': 'one current'}
+热点头条
+{'class': 'one'}
+一周热推
+{'class': 'one'}
+一周热议
+{'href': '/articles/268121.htm', 'target': '_blank'}
+iphone 5s/5c推送配置文件更新 解锁移动4g
+{'href': '/articles/268121.htm', 'target': '_blank'}
+{'href': '/articles/268144.htm', 'target': '_blank'}
+[图]中国移动山西公司4g终端机型、合约价格集中亮相
+{'href': '/articles/268144.htm', 'target': '_blank'}
+{'href': '/articles/268104.htm', 'target': '_blank'}
+今起可购除夕火车票 12306网站或迎“最强考验”
+{'href': '/articles/268104.htm', 'target': '_blank'}
+{'href': '/articles/267122.htm', 'target': '_blank'}
+北京龙泉寺的科研实力：如何用互联网思维管理一家寺庙？
+{'href': '/articles/267122.htm', 'target': '_blank'}
+{'href': '/articles/267194.htm', 'target': '_blank'}
+[视频]加拿大前国防部长：若我们停止战争 外星人会送来更多技术
+{'href': '/articles/267194.htm', 'target': '_blank'}
+{'href': '/articles/267115.htm', 'target': '_blank'}
+[图]魅族将带ubuntu phone出席ces
+{'href': '/articles/267115.htm', 'target': '_blank'}
+{'href': '/articles/267914.htm', 'target': '_blank'}
+[评论]让马云出手能拯救12306吗？
+{'href': '/articles/267914.htm', 'target': '_blank'}
+{'href': '/articles/267523.htm', 'target': '_blank'}
+挨骂压力大 12306自设发泄区
+{'href': '/articles/267523.htm', 'target': '_blank'}
+{'href': '/articles/267194.htm', 'target': '_blank'}
+[视频]加拿大前国防部长：若我们停止战争 外星人会送来更多技术
+{'href': '/articles/267194.htm', 'target': '_blank'}
+{'style': 'color:#fc0;font-weight:bold', 'href': '/deliver', 'target': '_blank'}
+投递资讯
+{'href': u'mailto:ugmbbc@gmail.com?subject=\u6295\u9012\u8d44\u8baf\uff1a'}
+邮箱爆料
+{'href': 'http://www.cnbeta.com/ios', 'target': '_blank'}
+ios阅读
+{'href': 'http://user.qzone.qq.com/706290416', 'target': '_blank'}
+qq空间
+{'href': 'http://weibo.com/cnbeta', 'target': '_blank'}
+新浪微博
+{'href': 'http://m.cnbeta.com/', 'target': '_blank'}
+移动版
+{'id': 'focus_next', 'class': 'cb_next fr'}
+next
+{'id': 'focus_prev', 'class': 'cb_prev fr'}
+prev
+{'href': 'http://www.cnbeta.com/articles/267878.htm', 'target': '_blank'}
+银行怀疑老人被骗临时锁门 他又去别处汇了40万
+{'href': 'http://www.cnbeta.com/articles/267878.htm', 'target': '_blank'}
+{'href': '/articles/268121.htm', 'target': '_blank'}
+iphone 5s/5c推送配置文件更新 解锁移动4g
+{'href': '/articles/268121.htm', 'target': '_blank'}
+{'href': '/articles/268120.htm', 'target': '_blank'}
+中国移动推出4g“飞享”套餐
+{'href': '/articles/268120.htm', 'target': '_blank'}
+{'href': '/articles/268085.htm', 'target': '_blank'}
+分析师报告： 今年iphone的确将有3种尺寸
+{'href': '/articles/268085.htm', 'target': '_blank'}
+{'href': 'http://t.cn/8ksghmn', 'target': '_blank'}
+苹果在线商店“特别购物日”1月10日启动
+{'href': 'http://t.cn/8ksghmn', 'target': '_blank'}
+{'href': '/articles/267894.htm', 'target': '_blank'}
+苹果在线商店1月10日特别购物日活动启动 大量商品打折销售
+{'href': '/articles/267894.htm', 'target': '_blank'}
+{'href': '/articles/267914.htm', 'target': '_blank'}
+[评论]让马云出手能拯救12306吗？
+{'href': '/articles/267914.htm', 'target': '_blank'}
+{'href': '/articles/267964.htm', 'target': '_blank'}
+女子微博自称孙悟空后人 验dna求证实
+{'href': '/articles/267964.htm', 'target': '_blank'}
+{'href': 'http://www.cnbeta.com/articles/266703.htm', 'target': '_blank'}
+纽约市长意图封杀纽约传统马车
+{'href': 'http://www.cnbeta.com/articles/266703.htm', 'target': '_blank'}
+{'href': '/articles/267812.htm', 'target': '_blank'}
+大一学生买电脑 钱不够打印钞票来凑
+{'href': '/articles/267812.htm', 'target': '_blank'}
+{'href': '/articles/267878.htm', 'target': '_blank'}
+银行怀疑老人被骗临时锁门 他又去别处汇了40万
+{'href': '/articles/267878.htm', 'target': '_blank'}
+{'href': '/articles/267808.htm', 'target': '_blank'}
+陈光标英文名片闪瞎美国记者
+{'href': '/articles/267808.htm', 'target': '_blank'}
+{'href': 'http://www.cnbeta.com/articles/266477.htm', 'target': '_blank'}
+首代iphone原型机拍卖 1500美元ebay成交
+{'href': 'http://www.cnbeta.com/articles/266477.htm', 'target': '_blank'}
+{'href': '/articles/267523.htm', 'target': '_blank'}
+挨骂压力大 12306自设发泄区
+{'href': '/articles/267523.htm', 'target': '_blank'}
+{'href': '/articles/267540.htm', 'target': '_blank'}
+ios 7.1 beta 3改变汇总 电话、关机、键盘ui都有变化
+{'href': '/articles/267540.htm', 'target': '_blank'}
+{'href': '/articles/267579.htm', 'target': '_blank'}
+小米推出小米手机3彩色版 1月14日首发
+{'href': '/articles/267579.htm', 'target': '_blank'}
+{'href': '/articles/268156.htm', 'target': '_blank'}
+硅芯片替代材料延续摩尔定律
+{'href': '/articles/268155.htm', 'target': '_blank'}
+雷军回应与董明珠赌局：快则三年成千亿企业
+{'href': '/articles/268154.htm', 'target': '_blank'}
+mwc大会 诺基亚将携诺曼底及一大波lumia设备来袭
+{'href': '/articles/268153.htm', 'target': '_blank'}
+路透社：软件成为汽车制造商新战场
+{'href': '/articles/268152.htm', 'target': '_blank'}
+黑客入侵dropbox官网 称为了纪念已故黑客
+{'href': '/articles/268151.htm', 'target': '_blank'}
+加拿大创业公司推出nymi腕带 使用心跳做密码
+{'data-type': 'all'}
+全部资讯
+{'data-type': 'dig'}
+人气推荐
+{'data-type': 'soft'}
+软件版
+{'data-type': 'industry'}
+业界版
+{'data-type': 'interact'}
+互动版
+{'href': '/articles/268150.htm', 'target': '_blank'}
+okidokeys推出智能门锁 可远程操控感应开门
+{'href': '/articles/268150.htm', 'target': '_blank'}
+{'href': '/articles/268150.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268149.htm', 'target': '_blank'}
+互联网第一大报创始人推出《世界邮报》
+{'href': '/articles/268149.htm', 'target': '_blank'}
+{'href': '/articles/268149.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268148.htm', 'target': '_blank'}
+除夕车票今天开抢 按钮未亮票已售完
+{'href': '/articles/268148.htm', 'target': '_blank'}
+{'href': '/articles/268148.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268147.htm', 'target': '_blank'}
+雷军：2014年卖4000万台是保守说法
+{'href': '/articles/268147.htm', 'target': '_blank'}
+{'href': '/articles/268147.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268146.htm', 'target': '_blank'}
+中国手机厂商征战美国：艰难中看到一缕曙光
+{'href': '/articles/268146.htm', 'target': '_blank'}
+{'href': '/articles/268146.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268145.htm', 'target': '_blank'}
+[评论]温室的花朵成不了苍天大树——评960手机操作系统
+{'href': '/articles/268145.htm', 'target': '_blank'}
+{'href': '/articles/268145.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268144.htm', 'target': '_blank'}
+[图]中国移动山西公司4g终端机型、合约价格集中亮相
+{'href': '/articles/268144.htm', 'target': '_blank'}
+{'href': '/articles/268144.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268143.htm', 'target': '_blank'}
+惠普最快下周发布智能手机 采用预付费模式
+{'href': '/articles/268143.htm', 'target': '_blank'}
+{'href': '/articles/268143.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268142.htm', 'target': '_blank'}
+[视频]售$579 matterform确定2月份推出负担得起的3d扫描仪
+{'href': '/articles/268142.htm', 'target': '_blank'}
+{'href': '/articles/268142.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268141.htm', 'target': '_blank'}
+[视频]“视觉”诱惑：lumus公司推出型号dk-40的智能眼镜
+{'href': '/articles/268141.htm', 'target': '_blank'}
+{'href': '/articles/268141.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268140.htm', 'target': '_blank'}
+[图]带音量旋钮 diamond展示$40的外置声卡xtreme sound 7.1
+{'href': '/articles/268140.htm', 'target': '_blank'}
+{'href': '/articles/268140.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268139.htm', 'target': '_blank'}
+中国智能手机厂商在美国面临逆境
+{'href': '/articles/268139.htm', 'target': '_blank'}
+{'href': '/articles/268139.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268138.htm', 'target': '_blank'}
+分析称可穿戴设备尚未被主流消费者接受
+{'href': '/articles/268138.htm', 'target': '_blank'}
+{'href': '/articles/268138.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268137.htm', 'target': '_blank'}
+今年微软可媲美其他科技巨头
+{'href': '/articles/268137.htm', 'target': '_blank'}
+{'href': '/articles/268137.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268136.htm', 'target': '_blank'}
+联发科展示全新屏幕分享技术
+{'href': '/articles/268136.htm', 'target': '_blank'}
+{'href': '/articles/268136.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268135.htm', 'target': '_blank'}
+[图]中兴模块化智能手机多图赏
+{'href': '/articles/268135.htm', 'target': '_blank'}
+{'href': '/articles/268135.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268134.htm', 'target': '_blank'}
+[视频]neptune pine智能手表亮相 不用手机独立运行
+{'href': '/articles/268134.htm', 'target': '_blank'}
+{'href': '/articles/268134.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268133.htm', 'target': '_blank'}
+[视频]中兴bluewatch智能手表亮相ces 续航时间达1周
+{'href': '/articles/268133.htm', 'target': '_blank'}
+{'href': '/articles/268133.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268132.htm', 'target': '_blank'}
+[图]ces 2014上那些很酷也很怪异的新产品
+{'href': '/articles/268132.htm', 'target': '_blank'}
+{'href': '/articles/268132.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268131.htm', 'target': '_blank'}
+[图]安卓投影机器人keecker 无需电脑可直接投射
+{'href': '/articles/268131.htm', 'target': '_blank'}
+{'href': '/articles/268131.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268130.htm', 'target': '_blank'}
+五款ces上最佳智能灯泡 通过手机连接进行控制
+{'href': '/articles/268130.htm', 'target': '_blank'}
+{'href': '/articles/268130.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268129.htm', 'target': '_blank'}
+证监会：百度百发理财产品未涉及“保本收益”违规
+{'href': '/articles/268129.htm', 'target': '_blank'}
+{'href': '/articles/268129.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268128.htm', 'target': '_blank'}
+[多图]嫦娥三号：首次集中公布第一月昼期拍摄的照片
+{'href': '/articles/268128.htm', 'target': '_blank'}
+{'href': '/articles/268128.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268127.htm', 'target': '_blank'}
+美x射线望远镜拍到幽灵状的“上帝之手”
+{'href': '/articles/268127.htm', 'target': '_blank'}
+{'href': '/articles/268127.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268126.htm', 'target': '_blank'}
+艺术家以五种情绪打造奇特的心灵之曲
+{'href': '/articles/268126.htm', 'target': '_blank'}
+{'href': '/articles/268126.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268125.htm', 'target': '_blank'}
+毒快递事件续:死者系氟乙酸甲酯中毒
+{'href': '/articles/268125.htm', 'target': '_blank'}
+{'href': '/articles/268125.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268124.htm', 'target': '_blank'}
+[图]galaxy s5有望装备 新专利显示三星拓展眼球和面部追踪技术
+{'href': '/articles/268124.htm', 'target': '_blank'}
+{'href': '/articles/268124.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268123.htm', 'target': '_blank'}
+三星高管：因量产问题oled面板电视在未来三四年将继续高价
+{'href': '/articles/268123.htm', 'target': '_blank'}
+{'href': '/articles/268123.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268122.htm', 'target': '_blank'}
+2013年第三季度每台pc的利润不到￥90
+{'href': '/articles/268122.htm', 'target': '_blank'}
+{'href': '/articles/268122.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268121.htm', 'target': '_blank'}
+iphone 5s/5c推送配置文件更新 解锁移动4g
+{'href': '/articles/268121.htm', 'target': '_blank'}
+{'href': '/articles/268121.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268120.htm', 'target': '_blank'}
+中国移动推出4g“飞享”套餐
+{'href': '/articles/268120.htm', 'target': '_blank'}
+{'href': '/articles/268120.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268119.htm', 'target': '_blank'}
+《刺客信条4》等大作获得2014年最佳游戏编剧奖提名
+{'href': '/articles/268119.htm', 'target': '_blank'}
+{'href': '/articles/268119.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268118.htm', 'target': '_blank'}
+英国政府称机器人农民是农业的未来
+{'href': '/articles/268118.htm', 'target': '_blank'}
+{'href': '/articles/268118.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268117.htm', 'target': '_blank'}
+《植物大战僵尸：花园战争》x360版演示曝光
+{'href': '/articles/268117.htm', 'target': '_blank'}
+{'href': '/articles/268117.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268116.htm', 'target': '_blank'}
+苹果公司联合创始人沃兹尼亚克：相信科技的力量
+{'href': '/articles/268116.htm', 'target': '_blank'}
+{'href': '/articles/268116.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268115.htm', 'target': '_blank'}
+facebook以广告为目的伪造用户“likes”遭用户集体诉讼
+{'href': '/articles/268115.htm', 'target': '_blank'}
+{'href': '/articles/268115.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268114.htm', 'target': '_blank'}
+谷歌密会fda拟开发生物传感器
+{'href': '/articles/268114.htm', 'target': '_blank'}
+{'href': '/articles/268114.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268113.htm', 'target': '_blank'}
+专利流氓盯上中国大肥羊 华为中兴展开反击战
+{'href': '/articles/268113.htm', 'target': '_blank'}
+{'href': '/articles/268113.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268112.htm', 'target': '_blank'}
+[图]美国大型网络电商overstock.com宣布支持比特币付款
+{'href': '/articles/268112.htm', 'target': '_blank'}
+{'href': '/articles/268112.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268111.htm', 'target': '_blank'}
+[图]美政府缩减医改网站承包商cgi预算 并计划由accenture接手
+{'href': '/articles/268111.htm', 'target': '_blank'}
+{'href': '/articles/268111.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268110.htm', 'target': '_blank'}
+[图]ces大展：连续87小时观看电视打破世界记录
+{'href': '/articles/268110.htm', 'target': '_blank'}
+{'href': '/articles/268110.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268109.htm', 'target': '_blank'}
+苹果新专利 将在三维立体表面进行喷墨打印
+{'href': '/articles/268109.htm', 'target': '_blank'}
+{'href': '/articles/268109.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268108.htm', 'target': '_blank'}
+[图]脱掉“临时”帽子 程守宗转正掌舵黑莓
+{'href': '/articles/268108.htm', 'target': '_blank'}
+{'href': '/articles/268108.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268107.htm', 'target': '_blank'}
+[动态图]android版gmail更新：邮件正文自动显示图片
+{'href': '/articles/268107.htm', 'target': '_blank'}
+{'href': '/articles/268107.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268106.htm', 'target': '_blank'}
+回归拍照本质 索尼将推出全画幅黑白相机
+{'href': '/articles/268106.htm', 'target': '_blank'}
+{'href': '/articles/268106.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268105.htm', 'target': '_blank'}
+特斯拉宣布为model s用户免费更换全新充电器
+{'href': '/articles/268105.htm', 'target': '_blank'}
+{'href': '/articles/268105.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268104.htm', 'target': '_blank'}
+今起可购除夕火车票 12306网站或迎“最强考验”
+{'href': '/articles/268104.htm', 'target': '_blank'}
+{'href': '/articles/268104.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268103.htm', 'target': '_blank'}
+chromebooks去年销量250万 市场份额为1%
+{'href': '/articles/268103.htm', 'target': '_blank'}
+{'href': '/articles/268103.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268102.htm', 'target': '_blank'}
+windows 8平板电脑能帮微软扭转局势吗？
+{'href': '/articles/268102.htm', 'target': '_blank'}
+{'href': '/articles/268102.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268101.htm', 'target': '_blank'}
+索尼ps4销量远超微软xbox one的原因何在？
+{'href': '/articles/268101.htm', 'target': '_blank'}
+{'href': '/articles/268101.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268100.htm', 'target': '_blank'}
+仁宝电脑预计今年其平板电脑出货量将翻一倍
+{'href': '/articles/268100.htm', 'target': '_blank'}
+{'href': '/articles/268100.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268099.htm', 'target': '_blank'}
+facebook开发新移动测试框架airlock
+{'href': '/articles/268099.htm', 'target': '_blank'}
+{'href': '/articles/268099.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268098.htm', 'target': '_blank'}
+张亚勤：消费电子的互联网化削弱了ces影响力
+{'href': '/articles/268098.htm', 'target': '_blank'}
+{'href': '/articles/268098.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268097.htm', 'target': '_blank'}
+谷歌程序员年薪300万美元 想挖人自己看着办
+{'href': '/articles/268097.htm', 'target': '_blank'}
+{'href': '/articles/268097.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268096.htm', 'target': '_blank'}
+[图]庆新年习俗导致美国小镇网络瘫痪十多天
+{'href': '/articles/268096.htm', 'target': '_blank'}
+{'href': '/articles/268096.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268095.htm', 'target': '_blank'}
+律师:支付宝“泄密”应承担民事责任
+{'href': '/articles/268095.htm', 'target': '_blank'}
+{'href': '/articles/268095.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268094.htm', 'target': '_blank'}
+还有surface mini版本 谣传称surface 3将使用tegra k1处理器
+{'href': '/articles/268094.htm', 'target': '_blank'}
+{'href': '/articles/268094.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268093.htm', 'target': '_blank'}
+[图]纪念斯沃茨 众多机构联合确定2月11日为反监控日
+{'href': '/articles/268093.htm', 'target': '_blank'}
+{'href': '/articles/268093.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268092.htm', 'target': '_blank'}
+target灾难季：在原有4000万基础上还有7000万隐私信息被窃
+{'href': '/articles/268092.htm', 'target': '_blank'}
+{'href': '/articles/268092.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/articles/268091.htm', 'target': '_blank'}
+比特币怕被偷？尝试下伦敦新上线的“elliptic vault”服务
+{'href': '/articles/268091.htm', 'target': '_blank'}
+{'href': '/articles/268091.htm', 'target': '_blank'}
+阅读全文>>
+{'href': '/topics.htm', 'target': '_blank'}
+{'href': '/top10.htm', 'target': '_blank'}
+{'href': '/soft.htm', 'target': '_blank'}
+{'href': '/industry.htm', 'target': '_blank'}
+{'href': '/interact.htm', 'target': '_blank'}
+{'class': 'two current'}
+精彩评论
+{'class': 'two'}
+编辑推荐
+{'class': 'two'}
+公告栏
+{'href': '/articles/267869.htm', 'target': '_blank'}
+记者实测黄牛抢票软件 5分钟抢到数百张票
+{'href': '/articles/267879.htm', 'target': '_blank'}
+调查显示微软在美国的品牌欢迎度远超苹果
+{'href': '/articles/267878.htm', 'target': '_blank'}
+银行怀疑老人被骗临时锁门 他又去别处汇了40万
+{'href': '/articles/267846.htm', 'target': '_blank'}
+实属不该 苹果的设计竟然犯这种错
+{'href': '/articles/267878.htm', 'target': '_blank'}
+银行怀疑老人被骗临时锁门 他又去别处汇了40万
+{'href': '/articles/267851.htm', 'target': '_blank'}
+腾讯封杀淘宝q币代理商 淘宝：希望q币照照阳光
+{'href': '/articles/267618.htm', 'target': '_blank'}
+半个世纪前预测的2014
+{'href': '/articles/267706.htm', 'target': '_blank'}
+[图]亚马逊用集装箱那么大的包裹给你送来网购的尼桑汽车
+{'href': '/articles/267603.htm', 'target': '_blank'}
+九阳借势互联网营销 "小米浆"豆浆机后天开卖
+{'href': '/articles/267706.htm', 'target': '_blank'}
+[图]亚马逊用集装箱那么大的包裹给你送来网购的尼桑汽车
+{'id': 'comments_page_next', 'class': 'cb_more fr'}
+{'href': '/articles/267894.htm', 'target': '_blank'}
+苹果在线商店1月10日特别购物日活动启动 大量商品打折销售
+{'href': '/articles/267811.htm', 'target': '_blank'}
+隔代升级戏码将不再重演 微软确定所有wp8设备都可升wp8.1
+{'href': '/articles/267831.htm', 'target': '_blank'}
+[视频]“外星人”真来了！德警方证实ufo停靠不莱梅
+{'href': '/articles/267812.htm', 'target': '_blank'}
+大一学生买电脑 钱不够打印钞票来凑
+{'href': '/articles/267808.htm', 'target': '_blank'}
+陈光标英文名片闪瞎美国记者
+{'href': '/articles/267773.htm', 'target': '_blank'}
+小米路由器1元公测第二轮 1月14日开售
+{'href': '/articles/267729.htm', 'target': '_blank'}
+那些“食言”的大佬 马云曾说饿死不做游戏
+{'href': '/articles/267725.htm', 'target': '_blank'}
+[图]疑似诺基亚android操作系统用户界面再曝光
+{'href': '/articles/266625.htm', 'target': '_blank'}
+cnbeta 2014 新年献词：愿科技进步惠及每一个人
+{'href': '/articles/252839.htm', 'target': '_blank'}
+[程序员注意]南方电网信息中心招聘 - cnbeta专场
+{'id': 'commend_page_next', 'class': 'cb_more fr'}
+{'href': 'http://m.cnbeta.com', 'target': '_blank'}
+http://m.cnbeta.com/
+{'href': 'http://www.cnbeta.com/about/contact.htm', 'target': '_blank'}
+联系
+{'href': '/articles/267914.htm', 'target': '_blank'}
+评论:[评论]让马云出手能拯救12306吗？
+{'href': '/articles/267523.htm', 'target': '_blank'}
+评论:挨骂压力大 12306自设发泄区
+{'href': '/articles/267194.htm', 'target': '_blank'}
+评论:[视频]加拿大前国防部长：若我们停止战争 外星人会送来更多技术
+{'href': '/articles/267458.htm', 'target': '_blank'}
+评论:揭秘：魅族为啥要做ubuntu手机
+{'href': '/articles/267115.htm', 'target': '_blank'}
+评论:[图]魅族将带ubuntu phone出席ces
+{'href': '/articles/267725.htm', 'target': '_blank'}
+评论:[图]疑似诺基亚android操作系统用户界面再曝光
+{'href': '/articles/267971.htm', 'target': '_blank'}
+评论:[评论]出招解决12306公平买火车票的问题
+{'href': '/articles/267812.htm', 'target': '_blank'}
+评论:大一学生买电脑 钱不够打印钞票来凑
+{'href': '/articles/267964.htm', 'target': '_blank'}
+评论:女子微博自称孙悟空后人 验dna求证实
+{'href': '/articles/267321.htm', 'target': '_blank'}
+评论:“第二星期现象”：被富士康改变的河南
+{'href': 'http://thewind.hk/'}
+thewind
+{'href': 'http://www.apppoo.com/'}
+安卓应用谱
+{'href': 'http://weibo.com/ictech'}
+c科技
+{'href': 'http://news.mydrivers.com/'}
+驱动之家
+{'href': 'http://www.bio360.net/'}
+生物360
+{'href': 'http://google.org.cn/'}
+谷奥
+{'href': 'http://www.weiphone.com/'}
+iphone威锋网
+{'href': 'http://www.huxiu.com/'}
+虎嗅
+{'href': 'http://www.yseeker.com/'}
+品味雅虎
+{'href': 'http://www.ownlinux.org/'}
+ownlinux
+{'href': 'http://www.leica.org.cn/'}
+中文摄影杂志
+{'href': 'http://www.geekpark.net/'}
+极客公园
+{'href': 'http://www.macx.cn/'}
+macx
+{'href': 'http://www.verycloud.cn/', 'target': '_blank'}
+verycloud
+{'href': 'http://www.whozen.com/', 'target': '_blank'}
+互城网络
+{'href': 'http://www.gigelayer.com/', 'target': '_blank'}
+浙岭云擎
+{'href': 'http://www.hypo.cn/', 'target': '_blank'}
+海波网络
+{'href': 'http://www.wy.com.cn/cn2.aspx', 'target': '_blank'}
+唯一网络cn2
+{'href': 'http://www.miibeian.gov.cn', 'target': '_blank'}
+浙icp备11027646号
+{'href': '/about/index.htm', 'target': '_blank'}
+关于我们
+{'href': '/about/cooperation.htm', 'target': '_blank'}
+广告招租
+{'href': 'mailto:ugmbbc@gmail.com', 'target': '_blank'}
+报告不适当内容
+{'href': 'javascript:void(0)', 'class': 'totop', 'rel': 'nofollow'}

@@ -1,11 +1,13 @@
 package com.myandroid.paintboard;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +32,23 @@ public class MainActivity extends Activity {
 		int screenWidth = 0, screenHeight = 0;
 
 		/*
-		 * 1. get screen size
+		 * 1. get screen size, density, dpi, ...
 		 */
+		// Android >= 13
+		Point displaySize = new Point();
+		Display display = getWindowManager().getDefaultDisplay();
+		display.getSize(displaySize);
+		screenWidth = displaySize.x;
+		screenHeight = displaySize.y;
+		Log.v(LOGTAG, "API Level gt 13, screenWidth=" + screenWidth + ", screenHeight=" + screenHeight);
+		
+		// Android < 13
+		display = getWindowManager().getDefaultDisplay();
+		screenWidth = display.getWidth();
+		screenHeight = display.getHeight();
+		
+		Log.v(LOGTAG, "API Level lt 13, screenWidth=" + screenWidth + ", screenHeight=" + screenHeight);
+		
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 

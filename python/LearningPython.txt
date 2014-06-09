@@ -1,0 +1,28 @@
+
+-------------------------------------------------------------------------------
+regex
+-------------------------------------------------------------------------------
+
+metacharacters
+
+. ^ $ * + ? { } [ ] \ | ( )
+
+
+[ ] 
+specifying a character class, which is a set of characters that you wish to match.
+
+*			repeat >= 0
++			repeat >= 1
+?			repeat <= 1
+{m, n}		m<= repeat <= n
+
+[^ ]
+^ as the first character of the class, complement set(²¹¼¯).
+
+-------------------------------------------------------------------------------
+Data Structures
+-------------------------------------------------------------------------------
+[] list
+{} directory
+
+

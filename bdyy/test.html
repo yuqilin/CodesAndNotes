@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<head>
+<title>百度影音测试页</title>
+<body>
+
+<div id="GxPlayer" class="Loading">
+<script language="javascript">
+var BdPlayer = new Array();
+BdPlayer['time'] = 8;//缓冲广告展示时间(如果设为0,则根据缓冲进度自动控制广告展示时间)
+BdPlayer['buffer'] = 'http://player.baidu.com/lib/show.html?buffer';//贴片广告网页地址
+BdPlayer['pause'] = 'http://player.baidu.com/lib/show.html?pause';//暂停广告网页地址
+BdPlayer['end'] = 'http://player.baidu.com/lib/show.html?end';//影片播放完成后加载的广告
+BdPlayer['download'] = 'http://dl.client.baidu.com/BaiduPlayer/BaiduPlayer1.0.22.39.exe';//播放器下载地址
+BdPlayer['width'] = 800;//播放器宽度(只能为数字)
+BdPlayer['height'] = 550;//播放器高度(只能为数字)
+BdPlayer['showclient'] = 1;//是否显示拉起拖盘按钮(1为显示 0为隐藏)
+BdPlayer['url'] = 'bdhd://92448883|E828039EFE786AD7CFB0E7E4222C96F6|百度新首页.flv';//当前播放任务播放地址
+BdPlayer['nextcacheurl'] = 'bdhd://258153089|948E0EB38A2DFA1AF7D1B488E86AFFDD|还珠格格之燕儿翩翩飞02.HDTV.rmvb';//下一集播放地址(没有请留空)
+BdPlayer['lastwebpage'] = 'http://player.baidu.com/lib/eg.html?1';//上一集网页地址(没有请留空)
+BdPlayer['nextwebpage'] = 'http://player.baidu.com/lib/eg.html?2';//下一集网页地址(没有请留空)
+</script>
+<script language="javascript" src="http://player.baidu.com/lib/player.js" charset="utf-8"></script>
+</div>
+
+</body>
+</head>
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="zh-CN" dir="ltr"><!--<![endif]-->
+<head>
+  <base href="http://www.geekpark.net/" />
+  <meta charset="utf-8" />
+  <title>极客公园 - 发现产品的价值</title>
+  <meta name="keywords" content="极客公园, Geekpark, 极客, 极客观察, 极客广播, 极客活动, Geek, Geeker" />
+  <meta name="description" content="为你带来互联网热门趋势、热点产品的深度分析，发掘产品和趋势的价值。" />
+  <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.5"/>
+  <meta name="robots" content="index, follow" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144x144-precomposed.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="/public/apple-touch-icon-114x114-precomposed.png" />
+  <link rel="apple-touch-icon" sizes="72x72"   href="/public/apple-touch-icon-72x72-precomposed.png" />
+  <link rel="apple-touch-icon" sizes="57x57"   href="/public/apple-touch-icon-precomposed.png" />
+  <link rel="apple-touch-icon-precomposed" href="/public/apple-touch-icon-precomposed.png" />
+  <link rel="apple-touch-startup-image" href="/public/startup.png" />
+  <link rel="alternate" type="application/rss+xml" title="极客公园 RSS Feed" href="http://feeds.geekpark.net/" />
+  <link rel="stylesheet" href="/public/css/style.css" />
+  <link rel="stylesheet" href="/public/css/icons.css" />
+  <link rel="stylesheet" href="/public/css/media.css" />
+  <link rel="stylesheet" href="/public/js/libs/ajaxupload/fileuploader.css" />
+  <link rel="stylesheet" href="/public/css/home-style.css" />
+  <link rel="stylesheet" href="/public/js/libs/fancybox/jquery.fancybox.css" />
+  <script src="/public/js/libs/jquery-1.7.1.min.js"></script>
+  <script src="/public/js/libs/modernizr-1.7.min.js"></script>
+  <script type="text/javascript" src="/public/js/libs/jquery.tools.scrollable.js"></script>
+  <script type="text/javascript" src="/public/js/libs/jquery.imgscale.min.js"></script>
+  <script type="text/javascript" src="/public/js/libs/jquery-ui-1.10.3.custom.min.js"></script>
+  <script type="text/javascript" src="/public/js/libs/jquery.slimscroll.min.js"></script>
+  <script type="text/javascript" src="/public/js/init.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1083082-15']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.geekpark.net/public/js/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</head>
+<body class="home ">
+  <div id="container">
+    <header id="header">
+      <div class='container'>
+        <h1><span class='geekpark-logo'></span><a class="png_bg" href='/'>GeekPark</a><sup>2013</sup></h1>
+        <nav class='global'>
+          <ul>
+            <li class='on'>
+              <a href='/' title="首页">首页</a>
+            </li>
+            <li class=''>
+              <a href='/read/seed' title="极客观察">极客观察</a>
+              <ul style="display:none;">
+                <li><a href="#">极客人物</a></li>
+                <li><a href="#">每周一品</a></li>
+                <li><a href="#">极客攻略</a></li>
+                <li><a href="#">极客早知道</a></li>
+                <li class="hr"></li>
+                <li><a href="#">极客快闻</a></li>
+              </ul>
+            </li>
+            <li class=''>
+              <a href='/cast/' title="极客广播">极客广播</a>
+            </li>
+            <li class=''>
+              <a href='/event/' title="极客活动">极客活动</a>
+            </li>
+            <li class='sub long '>
+              <a href='/jobs/recommend/' title="">极客工作吧</a>
+              <ul>
+                <li><a href="/jobs/recommend/">职务列表</a></li>
+                <li><a href="/jobs/welcome/">发布职位</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- <div id='searchbox'>
+          <form id='search-form' name='global-search' action="/search/all" method="post">
+            <input type='search' id='search' name='search' placeholder='搜索' value="" />
+            <input type='submit' class='submit' value=''>
+          </form>
+        </div> -->
+        <div class='tool-box'>
+          <ul>
+            <li class="sub follow">
+              <a href="http://weibo.com/geekpark" title="关注我们">关注我们</a>
+              <ul>
+                <li><a title="新浪微博: @geekpark" target="_blank" href="http://weibo.com/geekpark" class="social-media-icon sina">新浪微博</a></li>
+                <!-- <li><a title="腾讯微博: @geekparknet" target="_blank" href="http://t.qq.com/geekparknet" class="social-media-icon tencent">腾讯微博</a></li> -->
+                <li><a title="Twitter: @GeekParkNet" target="_blank" href="https://twitter.com/GeekParkNet" class="social-media-icon twitter">Twitter</a></li>
+                <li><a title="Google+: @geekpark" target="_blank" href="https://plus.google.com/117900237066383009895/" rel="publisher" class="social-media-icon google">Google+</a></li>
+                <!-- <li><a title="人人小站: @geekpark" target="_blank" href="http://zhan.renren.com/geekpark" class="social-media-icon renren">人人小站</a></li> -->
+                <li><a title="RSS" target="_blank" href="http://feeds.geekpark.net/" class="social-media-icon rss">RSS订阅</a></li>
+                <li style="width:105px;"><a title="Email Service" target="_blank" href="http://eepurl.com/fzlSk" class="social-media-icon email">订阅活动通知</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/observer/" title="产品观察家" style="color: cadetblue;">我要写观察</a>
+            </li>
+            <li class="first">
+              <a href='/user/login' title="登录">登录</a>
+            </li>
+            <li>
+              <a href='/user/register' title="注册">注册</a>
+            </li>
+          </ul>
+        </div>
+        <div id="search-area" class="sub">
+          <div id="search-btn"></div>
+          <ul>
+              <li>
+                <form id='search-form' name='global-search' action="/search/all" method="post">
+                  <input type='search' id='search' name='search' placeholder='搜索' value="" />
+                  <input type='submit' class='submit' value=''>
+                </form>
+              </li>
+            </ul>
+        </div>
+        <div id="ajaxing" style="display: none;"></div>
+      </div>
+      <script>
+        $(function(){
+          Recruitment_manger($(".tool-box .recruitment-manger"),$(".tool-box .recruitment-manger .manger-list"));
+        })
+      </script>
+    </header>
+        <div id="main" role="main" class="container" >
+      <script type="text/javascript">
+        var IMG_URL = "http://geekpark-img.qiniudn.com";
+      </script>
+      <div class="announcement"><label>这个冬天你唯一不能错过的大会</label><a href="http://gpk.im/qtlf" target="_blank">极客公园创新大会 2014 - 创新者的头脑风暴，与众不同的 48 小时！<i style="color: rgb(209, 1, 1);font-weight: bold;">关注大会！</i></a>　<span></span></div>
+      <section class="i-recommend">
+        <div class="recommend-main">
+          <a target="_blank" href="http://www.geekpark.net/read/view/196552" title = "百度创始人李彦宏：互联网的下一章"><img width="610" height="290" alt="百度创始人李彦宏：互联网的下一章" src="http://geekpark-img.qiniudn.com/uploads/home_p/se3reIkJDwyZ8LfN7RDkaynFvLEmTFTV.jpg"/></a>
+        </div>
+        <div class="recommend-en">
+          <div class="recommend-inner early">
+            <div class="title">
+              <h2><a target="_blank" href="http://www.geekpark.net/read/seed#monitor" class="bg-img" title = "查看更多极客早知道">极客早知道</a></h2><span class="time">2014年01月13日</span>
+            </div>
+            <div class="cont"><a target="_blank" title="临界点 Windows 9  | 极客早知道 2014 年 1 月 13 日" href="/read/view/196669"><img alt="临界点 Windows 9  | 极客早知道 2014 年 1 月 13 日" src="http://geekpark-img.qiniudn.com/uploads/reading/chome/M6NQwlyJlYHCoQT8upM6v8BfwHRoNyDS.png"/></a>
+              <div class="w">
+                <ul>
+                  <li><a href="/read/view/196669#section-1" title=" 传微软将于 2015 年 4 月发布最新 Windows 系统"> 传微软将于明年 4 月发布 Windows  9</a></li>
+                  <li><a href="/read/view/196669#section-2" title="联通推首批 42M 千元智能机对抗中移动 4G">联通推 42M 千元机对抗中移动 4G</a></li>
+                  <li><a href="/read/view/196669#section-3" title="诺基亚诉 HTC 侵害专利案被德法院驳回">诺基亚诉 HTC 侵害专利案被德法院驳回</a></li>
+                  <li><a href="/read/view/196669#section-4" title=" 苹果新配置：港版 iPhone 可用移动 4G">港版 iPhone 可直接用移动 4G</a></li>
+                  <li><a href="/read/view/196669#section-5" title="雷军对话苹果联合创始人沃兹">雷军对话苹果联合创始人沃兹</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="i-slide">
+          <a href="#" class="prev bg-img browse left">上一页</a>
+          <div class="slide-main i-scrollable">
+            <div class="slide-ul i-items">
+              <ul>
+                <li><a target="_blank" title="极客公园创新大会" href="http://gif.geekpark.net/#section-description"><img width="220" height="105" alt="极客公园创新大会" src="http://geekpark-img.qiniudn.com/uploads/home_p/T4OMCkj7lMfkY8bHkuvdpL4VF3rMg3qK.jpg"/></a></li>
+                <li><a target="_blank" title="《罗辑思维》主讲人罗振宇：找到匠人精神" href="http://www.geekpark.net/read/view/196473"><img width="220" height="105" alt="《罗辑思维》主讲人罗振宇：找到匠人精神" src="http://geekpark-img.qiniudn.com/uploads/home_p/6170Fl07C6udqLwUbmSJsQhikrU5aidm.jpg"/></a></li>
+                <li><a target="_blank" title="王小川：硬件创业的三大误区与本质" href="http://www.geekpark.net/read/view/196441"><img width="220" height="105" alt="王小川：硬件创业的三大误区与本质" src="http://geekpark-img.qiniudn.com/uploads/home_p/JVmAdAmOhrB0j8M7PuwBOUicKR5coenI.jpg"/></a></li>
+                <li><a target="_blank" title="极客之父的四台爱车" href="http://www.geekpark.net/read/view/196384"><img width="220" height="105" alt="极客之父的四台爱车" src="http://geekpark-img.qiniudn.com/uploads/home_p/tkW2s5EQJQ4VcO9T9MePBC829Oo0zw6G.png"/></a></li>
+              </ul>
+              <ul>
+                <li><a target="_blank" title="【预告】这个冬天你唯一不能错过的大会" href="http://www.geekpark.net/read/view/196325"><img width="220" height="105" alt="【预告】这个冬天你唯一不能错过的大会" src="http://geekpark-img.qiniudn.com/uploads/home_p/8P9S8JkKpaZnF9RqMyWUMbmw8JuhEFN8.jpg"/></a></li>
+                <li><a target="_blank" title="自媒体的喧嚣中，罗胖与他的罗辑思维" href="http://www.geekpark.net/read/view/196251"><img width="220" height="105" alt="自媒体的喧嚣中，罗胖与他的罗辑思维" src="http://geekpark-img.qiniudn.com/uploads/home_p/qrfzTJbOuUJBr73Hfk0LtlLCw7fnAsHj.jpg"/></a></li>
+                <li><a target="_blank" title="我能像玩乐高积木那样玩笔记本么？" href="http://www.geekpark.net/read/view/196175"><img width="220" height="105" alt="我能像玩乐高积木那样玩笔记本么？" src="http://geekpark-img.qiniudn.com/uploads/home_p/YsRAwDlSlczINBYqixToNpwEdV7fS6CJ.jpg"/></a></li>
+                <li><a target="_blank" title="【极客玩物推荐】跟 Kindle 说拜拜" href="http://www.geekpark.net/read/view/196171"><img width="220" height="105" alt="【极客玩物推荐】跟 Kindle 说拜拜" src="http://geekpark-img.qiniudn.com/uploads/home_p/nNUwXbzykeiEOB3bfcnsVL4LcLe0fw4s.png"/></a></li>
+              </ul>
+              <ul>
+                <li><a target="_blank" title="犹有壮心在，付与百川流：webOS 在惠普的最后岁月" href="http://www.geekpark.net/read/view/196113"><img width="220" height="105" alt="犹有壮心在，付与百川流：webOS 在惠普的最后岁月" src="http://geekpark-img.qiniudn.com/uploads/home_p/ZLR4wRAHcCm5PsF17eTzeXxS8vRTLPhs.jpg"/></a></li>
+                <li><a target="_blank" title="三年小米 问道雷军" href="http://www.geekpark.net/read/view/196071"><img width="220" height="105" alt="三年小米 问道雷军" src="http://geekpark-img.qiniudn.com/uploads/home_p/PeU6wqv24H5hVEWmxdYDuFKvETcP6XBk.jpg"/></a></li>
+                <li><a target="_blank" title="技术有什么未来？" href="http://www.geekpark.net/read/view/196006"><img width="220" height="105" alt="技术有什么未来？" src="http://geekpark-img.qiniudn.com/uploads/home_p/Wp6X9AtVHr4cdpRD26PN0uDhNKnbxU4t.jpg"/></a></li>
+                <li><a target="_blank" title="呼啦3.0：独立应用走向娱乐平台" href="http://www.geekpark.net/read/view/195890"><img width="220" height="105" alt="呼啦3.0：独立应用走向娱乐平台" src="http://geekpark-img.qiniudn.com/uploads/home_p/9MGAylma4hIp5sG6CsBENwNcjMIaouM1.png"/></a></li>
+              </ul>
+            </div>
+          </div>
+          <a href="#" class="next bg-img browse right">下一页</a>
+        </div>
+      </section>
+      <section class="i-content">
+        <div class="cont-main">
+          <div class="seed">
+            <div class="tit-mod">
+              <h2><a href="/read/seed" title="极客观察" class="t">极客观察</a><span class="info">以产品的思维解读产品</span></h2><span class="more"> <a href="/read/seed" target="_blank" class="bg-img" title="更多极客观察">更多</a></span>
+            </div>
+            <div class="seed-list mode-thumb">
+              <ul class="n">
+                <li>
+                  <h3><a target="_blank" title="中国互联网创新产品评选结果揭晓，大奖花落谁家？" href="/read/view/196635">中国互联网创新产品评选结果揭晓，大奖花落谁家？</a></h3>
+                  <span class="info">
+                    <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.12                  </span>
+                  <p>5 个月的报名、筛选、投票之后，哪些产品获得了 InnoAwards 的荣誉呢？</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" title="美团网 CEO 王兴：大连接下的新商业" href="/read/view/196567">美团网 CEO 王兴：大连接下的新商业</a></h3>
+                  <span class="info">
+                    <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11                  </span>
+                  <p>美团网 CEO 王兴总结出创业领域的“四纵”：娱乐、信息、通信、商务。而“三横”是每五年，会有一个大的技术变革影响这四个领域，所谓“四纵三横”，现在需要再加一横，第四横是物联网。</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" title="UC 优视俞永福：中国互联网未来 5 年的机会在哪里？" href="/read/view/196563">UC 优视俞永福：中国互联网未来 5 年的机会在哪里？</a></h3>
+                  <span class="info">
+                    <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11                  </span>
+                  <p>每十年里都有三次产业最重要的风暴，是产业大的变化，也是产业的机遇和挑战。而 UC 优视俞永福将告诉你，未来 5 年还有哪四大机会。</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" title="佳沃总裁陈绍鹏：科技点亮农业" href="/read/view/196562">佳沃总裁陈绍鹏：科技点亮农业</a></h3>
+                  <span class="info">
+                    <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11                  </span>
+                  <p>农业在古老的中国已经传承数了千年，在普通人印象里，一直是「汗滴禾下土」的印象，不过作为民之本，如果将科技注入进农业之中，会给整个行业带来哪些颠覆？</p>
+                </li>
+              </ul>
+              <ul class="s">
+                <li>
+                  <h3><a target="_blank" href="/read/view/196559" title="小米创始人雷军：小米不能做太多产品">小米创始人雷军：小米不能做太多产品</a></h3>
+                  <span class="info"> <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11</span>
+                  <p>三年后，雷军再次做客极客公园，当他遇上三年前曾经采访他的张鹏时，吐露了哪些心声？另外对于一家市值百亿美金的公司，为什么雷军说小米不能做太多产品？</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" href="/read/view/196555" title="摩登天空创始人沈黎晖：音乐中的极客精神">摩登天空创始人沈黎晖：音乐中的极客精神</a></h3>
+                  <span class="info"> <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11</span>
+                  <p>摩登天空创始人沈黎晖自己曾经也玩音乐，1997 年他的乐队有了第一张唱片，同时也诞生了摩登天空，这是一家有着极客精神的「另类」公司，他们利用音乐节和互联网将自己打造成了一个系统。</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" href="/read/view/196552" title="百度创始人李彦宏：互联网的下一章">百度创始人李彦宏：互联网的下一章</a></h3>
+                  <span class="info"> <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11</span>
+                  <p>本文汇聚对百度创始人李彦宏访谈的观点：互联网如何加速淘汰传统行业？为什么说技术是百度的生存之道？百度的少帅计划是什么？收购 91 后如何整合？聪明与成功有必然的关系吗？</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" href="/read/view/196543" title="沃兹现场语录：可穿戴设备必然会经历「鸡肋」阶段">沃兹现场语录：可穿戴设备必然会经历「鸡肋」阶段</a></h3>
+                  <span class="info"> <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11</span>
+                  <p>沃兹作为地球村头号极客，你知道他对于「极客」、「乔布斯」、「安卓」、「技术趋势」、「创业」有着什么样的看法吗？本文是从创新大会访谈中提取的沃兹语录。</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" href="/read/view/196545" title="《iLook》出版人洪晃：找到时尚与科技的灵犀">《iLook》出版人洪晃：找到时尚与科技的灵犀</a></h3>
+                  <span class="info"> <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11</span>
+                  <p>当下，我们的时尚基本上是听国外的，那么《iLook》的出版人洪晃为什么认为——极客精神能让中国在世界范围内有时尚文化话语权？</p>
+                </li>
+                <li>
+                  <h3><a target="_blank" href="/read/view/196365" title="极客之选2013">极客之选2013</a></h3>
+                  <span class="info"> <a target="_blank" title="极客公园" href="/user/home/index/894">极客公园</a> / 2014.01.11</span>
+                  <p>不管是硬件还是软件。极客公园的极客们，通过各种讨论、试用、折腾，甚至是厮杀，选出了一些今年极客应该拥有的设备，让我们来看看都有哪些。  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="cast">
+            <div class="tit-mod">
+              <h2><a href="/cast/" title="极客广播" class="t">极客广播</a><span class="info">用产品的角度看待世界</span></h2>
+              <span class="more"> <a target="_blank" title="更多极客广播" class="bg-img" href="/cast/">更多</a></span>
+            </div>
+            <div class="cast-list">
+              <ul class="p">
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195488" title="极客访谈：YY语音李学凌"><img alt="极客访谈：YY语音李学凌" src="http://geekpark-img.qiniudn.com/uploads/event/clips/5NKJrlNRdpKuXJ8reVptrMuNruXDYahm.jpg"/></a><a target="_blank" href="/cast/view/195488" title="极客访谈：YY语音李学凌" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="极客访谈：YY语音李学凌" href="/cast/view/195488">极客访谈：YY语音李学凌</a></h3>
+                    <span class="info">夹克张&emsp;李学凌&emsp;                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195488" target="_blank" title="极客访谈：YY语音李学凌">极客访谈：YY语音李学凌</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/193167" target="_blank"><p>来自第51期极客活动</p><p>2013 中国互联网创新产品评选 深圳站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195486" title="如何打造极致的阅读体验？"><img alt="如何打造极致的阅读体验？" src="http://geekpark-img.qiniudn.com/uploads/event/clips/cWHNh96ymaptWL731wslRmprtOLO2sKm.jpg"/></a><a target="_blank" href="/cast/view/195486" title="如何打造极致的阅读体验？" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="如何打造极致的阅读体验？" href="/cast/view/195486">如何打造极致的阅读体验？</a></h3>
+                    <span class="info">王毅 CTO 多看                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195486" target="_blank" title="如何打造极致的阅读体验？">如何打造极致的阅读体验？</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/193167" target="_blank"><p>来自第51期极客活动</p><p>2013 中国互联网创新产品评选 深圳站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195487" title="中国的粉红经济"><img alt="中国的粉红经济" src="http://geekpark-img.qiniudn.com/uploads/event/clips/qOl7FdaXRjGXBLcDv4eb6CJXpt0rHYVP.jpg"/></a><a target="_blank" href="/cast/view/195487" title="中国的粉红经济" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="中国的粉红经济" href="/cast/view/195487">中国的粉红经济</a></h3>
+                    <span class="info">凌绝顶 创始人 ZANK 赞客                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195487" target="_blank" title="中国的粉红经济">中国的粉红经济</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/193167" target="_blank"><p>来自第51期极客活动</p><p>2013 中国互联网创新产品评选 深圳站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195287" title="运营商和移动 IM 的联合价值"><img alt="运营商和移动 IM 的联合价值" src="http://geekpark-img.qiniudn.com/uploads/event/clips/boCy6gP2LIdnDf4HbQZhC6zTorYKwtm9.jpg"/></a><a target="_blank" href="/cast/view/195287" title="运营商和移动 IM 的联合价值" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="运营商和移动 IM 的联合价值" href="/cast/view/195287">运营商和移动 IM 的联合价值</a></h3>
+                    <span class="info">章行 易信产品经理 网易杭州研究院                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195287" target="_blank" title="运营商和移动 IM 的联合价值">运营商和移动 IM 的联合价值</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/192157" target="_blank"><p>来自第50期极客活动</p><p>2013 中国互联网创新产品评选 北京站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195288" title="极客访谈：豌豆荚王俊煜"><img alt="极客访谈：豌豆荚王俊煜" src="http://geekpark-img.qiniudn.com/uploads/event/clips/KY0RiZKo2HwRou2vdeNL4RVcjXlpiF4b.jpg"/></a><a target="_blank" href="/cast/view/195288" title="极客访谈：豌豆荚王俊煜" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="极客访谈：豌豆荚王俊煜" href="/cast/view/195288">极客访谈：豌豆荚王俊煜</a></h3>
+                    <span class="info">夹克张&emsp;王俊煜&emsp;                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195288" target="_blank" title="极客访谈：豌豆荚王俊煜">极客访谈：豌豆荚王俊煜</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/192157" target="_blank"><p>来自第50期极客活动</p><p>2013 中国互联网创新产品评选 北京站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195289" title="极客访谈：唱吧陈华"><img alt="极客访谈：唱吧陈华" src="http://geekpark-img.qiniudn.com/uploads/event/clips/HB82ZTh4vrTbBEP9qnC1Um9ZxrksiCol.jpg"/></a><a target="_blank" href="/cast/view/195289" title="极客访谈：唱吧陈华" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="极客访谈：唱吧陈华" href="/cast/view/195289">极客访谈：唱吧陈华</a></h3>
+                    <span class="info">陈华&emsp;夹克张&emsp;                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195289" target="_blank" title="极客访谈：唱吧陈华">极客访谈：唱吧陈华</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/192157" target="_blank"><p>来自第50期极客活动</p><p>2013 中国互联网创新产品评选 北京站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195285" title="让职业人士自己指导自己的生活"><img alt="让职业人士自己指导自己的生活" src="http://geekpark-img.qiniudn.com/uploads/event/clips/EjWbIjAVb1Gn3crfsj9mjfWiuVXAzYAS.jpg"/></a><a target="_blank" href="/cast/view/195285" title="让职业人士自己指导自己的生活" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="让职业人士自己指导自己的生活" href="/cast/view/195285">让职业人士自己指导自己的生活</a></h3>
+                    <span class="info">黄继新 COO、联合创始人、知乎日报产品负责人 知乎                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195285" target="_blank" title="让职业人士自己指导自己的生活">让职业人士自己指导自己的生活</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/192157" target="_blank"><p>来自第50期极客活动</p><p>2013 中国互联网创新产品评选 北京站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/195281" title="移动开发者新盈利模式"><img alt="移动开发者新盈利模式" src="http://geekpark-img.qiniudn.com/uploads/event/clips/KrZCd2odxUj7BLp5wINtqHGKAdpok8ny.jpg"/></a><a target="_blank" href="/cast/view/195281" title="移动开发者新盈利模式" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="移动开发者新盈利模式" href="/cast/view/195281">移动开发者新盈利模式</a></h3>
+                    <span class="info">刘爽 应用商店运营中心市场总监 中国电信                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/195281" target="_blank" title="移动开发者新盈利模式">移动开发者新盈利模式</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/192157" target="_blank"><p>来自第50期极客活动</p><p>2013 中国互联网创新产品评选 北京站巡演</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/194843" title="声音：创新的另一种维度"><img alt="声音：创新的另一种维度" src="http://geekpark-img.qiniudn.com/uploads/event/clips/SR8DStxMOuOyXblNwOLqaGC4hZkQvtyi.jpg"/></a><a target="_blank" href="/cast/view/194843" title="声音：创新的另一种维度" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="声音：创新的另一种维度" href="/cast/view/194843">声音：创新的另一种维度</a></h3>
+                    <span class="info">许朝军&emsp;夹克张&emsp;                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/194843" target="_blank" title="声音：创新的另一种维度">声音：创新的另一种维度</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/190844" target="_blank"><p>来自第49期极客活动</p><p>2013 中国互联网创新产品评选 南京站巡演・4G 时代的创新</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="pic"><a target="_blank" href="/cast/view/194841" title="如何依托技术做更智慧的创新"><img alt="如何依托技术做更智慧的创新" src="http://geekpark-img.qiniudn.com/uploads/event/clips/n20NfoTS5EdYoJ3DKo6LBtJ2P1RWxMvG.jpg"/></a><a target="_blank" href="/cast/view/194841" title="如何依托技术做更智慧的创新" class="play">play</a></div>
+                  <div class="cont">
+                    <h3><a target="_blank" title="如何依托技术做更智慧的创新" href="/cast/view/194841">如何依托技术做更智慧的创新</a></h3>
+                    <span class="info">王小川&emsp;夹克张&emsp;                    </span>
+                  </div>
+                  <a href="#" title="查看该广播所属活动" class="bg-img up-event"></a>
+                  <div class="events-list">
+                    <div class="events-inner">
+                      <h3><a href="/cast/view/194841" target="_blank" title="如何依托技术做更智慧的创新">如何依托技术做更智慧的创新</a></h3>
+                      <div class="e">
+                        <div>
+                          <a href="/event/view/review/190844" target="_blank"><p>来自第49期极客活动</p><p>2013 中国互联网创新产品评选 南京站巡演・4G 时代的创新</p></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <h3 class="tit-second-mod events">更多精彩极客活动</h3>
+              <ul class="s">
+                <li class="">
+                  <h3><a target="_blank" title="更轻的应用，更重的商业" href="/event/view/review/190356">更轻的应用，更重的商业</a></h3>
+                  <span class="info">2013.10.26 / <a target="_blank" title="更轻的应用，更重的商业" href="/event/view/review/190356">该活动视频已被观看 47179 次</a></span>
+                </li>
+                <li class="">
+                  <h3><a target="_blank" title="科技改变电影" href="/event/view/review/188794">科技改变电影</a></h3>
+                  <span class="info">2013.09.18 / <a target="_blank" title="科技改变电影" href="/event/view/review/188794">该活动视频已被观看 20885 次</a></span>
+                </li>
+                <li class="">
+                  <h3><a target="_blank" title="IN-CAR・汽车乘以互联网" href="/event/view/review/187950">IN-CAR・汽车乘以互联网</a></h3>
+                  <span class="info">2013.09.14 / <a target="_blank" title="IN-CAR・汽车乘以互联网" href="/event/view/review/187950">该活动视频已被观看 9670 次</a></span>
+                </li>
+                <li class="">
+                  <h3><a target="_blank" title="硬件创新公开课：新硬件，新生活" href="/event/view/review/186401">硬件创新公开课：新硬件，新生活</a></h3>
+                  <span class="info">2013.08.22 / <a target="_blank" title="硬件创新公开课：新硬件，新生活" href="/event/view/review/186401">该活动视频已被观看 16081 次</a></span>
+                </li>
+                <li class="last">
+                  <h3><a target="_blank" title="移动互联网创新大会2013 ∙ 极客公园夏令营" href="/event/view/review/181008">移动互联网创新大会2013 ∙ 极客公园夏令营</a></h3>
+                  <span class="info">2013.07.05 / <a target="_blank" title="移动互联网创新大会2013 ∙ 极客公园夏令营" href="/event/view/review/181008">该活动视频已被观看 134597 次</a></span>
+                </li>
+                <li class="last">
+                  <h3><a target="_blank" title="人・机：人与机器的故事" href="/event/view/review/178584">人・机：人与机器的故事</a></h3>
+                  <span class="info">2013.06.22 / <a target="_blank" title="人・机：人与机器的故事" href="/event/view/review/178584">该活动视频已被观看 27802 次</a></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="cont-side">
+
+          <div class="side-mod break-news">
+            <div class="tit-mod">
+              <h2><a href="/read/seed" title="捕风捉影" class="t">捕风捉影</a></h2><span class="more"> <a href="/read/news" target="_blank" class="bg-img" title="更多捕风捉影">更多</a></span>
+            </div>
+            <div class="view_box">
+              <ul id="news_list">
+                <li><a href="#">谷歌程序员年薪 300 万美元</a></li>
+
+                <li><a href="#">传微软将于2015年4月发布最新Windows系统</a></li>
+
+                <li><a href="#">阿里巴巴宣布推出手游平台</a></li>
+
+                <li><a href="#">iPhone 5C/5S冷热两极 越狱比例不升反降</a></li>
+
+                <li><a href="#">海尔、优酷联姻华数合推智能电视</a></li>
+
+                <li><a href="#">7-11将全面支持支付宝钱包付款</a></li>
+
+                <li><a href="#">中兴推智能手表Grand Watch</a></li>
+
+                <li><a href="#">全球数百WiMax运营商将升级至TD-LTE</a></li>
+
+                <li><a href="#">2014年 Android 设备出货量将超过10亿台</a></li>
+
+                <li><a href="#">福特CEO“泼冷水”：今年我不会去微软</a></li>
+
+              </ul>
+
+              <div class="news_cell">
+                 <a href="http://gpk.im/qton" title="谷歌程序员年薪 300 万美元" class="news_title" target="_blank">谷歌程序员年薪 300 万美元</a>
+                 <p><span>凭借自身的资金实力优势，往往也成为硅谷人才大战的大赢家。最新的证据表明，谷歌程序员的年薪高达300万美元，因此，一些创新型企业如果想用50万美元来挖谷歌程序员，那根本没门。</span></p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtom" title="传微软将于2015年4月发布最新Windows系统" class="news_title" target="_blank">传微软将于2015年4月发布最新Windows系统</a>
+                 <p>有关于下一代 Windows 操作系统&ldquo;Threshold&rdquo;的传闻近日甚嚣尘上，不过知名微软观察人士保罗&bull;斯洛特 (Paul Thurott) 则在周六就该系统透露了更多的信息。据斯洛特称，&ldquo;Threshold&rdquo;较目前的 Windows 8 相比将有重大变化，例如&ldquo;开始&rdquo;菜单的回归以及微软针对 Windows Phone 和 Windows RT 平台的整合等。此外，微软还正在研发单一的应用平台，以满足 Xbox、Windows Phone 和 Windows 用户的需求。</p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtoj" title="阿里巴巴宣布推出手游平台" class="news_title" target="_blank">阿里巴巴宣布推出手游平台</a>
+                 <p>阿里巴巴集团8日宣布，将推出自己的手机游戏平台，改变目前游戏产业畸形的分成比例，打造开放共赢的游戏生态链。并且公布了相关产品形态、分成机制以及技术支持等的方案：对于单机版游戏合作者，第一年将完全免费为其提供服务，第二年开始的分成机制仍在制定中；联合运营的游戏采用8：2的分成模式，其中阿里巴巴拿20%用于覆盖成本和用户激励，游戏开发者获得70%的收益，剩余10%将用于支持农村孩子教育发展。</p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtoi" title="iPhone 5C/5S冷热两极 越狱比例不升反降" class="news_title" target="_blank">iPhone 5C/5S冷热两极 越狱比例不升反降</a>
+                 <p><span>1月9日消息，国内移动数据统计平台友盟今日发布了2013年12月统计数据，数据显示</span>iPhone<span>&nbsp;5S市场占有率已经上升到了12%，仅次于iPhone 4，而上月</span>iOS<span>&nbsp;7完美越狱工具发布后，越狱用户的比例却没有明显增长，反而从11月的14.1%下降到了12.7%。</span></p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtoh" title="海尔、优酷联姻华数合推智能电视" class="news_title" target="_blank">海尔、优酷联姻华数合推智能电视</a>
+                 <p>据家电业知情人士透露，视频网站优酷、家电厂商海尔联合视频牌照拥有者华数集团将于今日晚些时候宣布达成一项重要的战略合作协议。届时三方将共同推出智能互联网电视，海尔方面作为电视硬件制造商，华数集团作为牌照方、优酷则作为软件服务提供方，同时这也是家电巨头海尔首次在电视中内置视频网站的软件。</p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtog" title="7-11将全面支持支付宝钱包付款" class="news_title" target="_blank">7-11将全面支持支付宝钱包付款</a>
+                 <p>支付宝线下支付拓展的步伐又有新进展，笔者从消息人士处获知，7-11便利店将全面支付宝钱包付款，预计支付宝方面将很快公布这一合作，并在今年第一季度正式投入使用。在此之前，支付宝已经和另外一家便利连锁&ldquo;美宜佳&rdquo;达成合作，使用支付宝钱包的条码支付功能，用户在结账的时候向收银员出示手机上的条形码，收银员拿扫描枪扫描便可以完成付款。</p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtof" title="中兴推智能手表Grand Watch" class="news_title" target="_blank">中兴推智能手表Grand Watch</a>
+                 <p>国内手机厂商开始涉足智能硬件，CES是个很好的展示舞台，中兴已经借此机会公布了其智能手表Grand Watch。和市面上的大部分手环、手表热门产品一样，中兴Grand Watch的基本功能也是&ldquo;计步器&rdquo;。可7*24小时记录行动数据、能分析体内脂肪燃烧情况。由两款内置在Grand Watch的应用软件实现。同时Grand Watch内置了QQ、微信、微博、Facebook、Twitter等第三方社交应用，可控制手机音乐播放、远程拍照，同时支持闹钟、日程表、天气预报、防丢等工具。也可来电提醒与拒接。</p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtoe" title="全球数百WiMax运营商将升级至TD-LTE" class="news_title" target="_blank">全球数百WiMax运营商将升级至TD-LTE</a>
+                 <p><span>&ldquo;目前，全球已启动TD- LTE商用网络24个，接下来世界上大概四百多个运营企业使用WIMAX的即将全部升级为TD- LTE，名称叫WIMAX2.1，TD- LTE的优势与价值正在日益显现。&rdquo;在昨日TD产业技术协同创新经验交流会上，工业和信息化部通信发展司司长闻库如此表示。</span></p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtoc" title="2014年 Android 设备出货量将超过10亿台" class="news_title" target="_blank">2014年 Android 设备出货量将超过10亿台</a>
+                 <p>1 月 8 日，据路透社报道，市场研究公司 Gartner 当地时间周二发表报告预测，今年 Android 智能手机和平板电脑出货量将超过 10 亿台。今年 Android 设备用户将达到 11 亿，比去年增长 26%，其中新兴市场需求最为强劲。Gartner 称，今年 iPhone、iPad 和 Mac 出货量将达到 3.44 亿台，比去年增长 28%；Windows 设备出货量将由 3.28 亿台增长至 3.6 亿台，Windows 是台式机和笔记本市场上的霸主。</p>
+              </div>
+              <div class="news_cell">
+                 <a href="http://gpk.im/qtob" title="福特CEO“泼冷水”：今年我不会去微软" class="news_title" target="_blank">福特CEO“泼冷水”：今年我不会去微软</a>
+                 <p>&nbsp;1月8日消息，自去年8月鲍尔默宣布退休以来，到底谁会成为<a href="http://tech.163.com/company/microsoft/">微软</a>下任CEO就成为了热门话题。而福特现任CEO艾伦&middot;穆拉利(Alan Mulally)一直是呼声最高的人选。不过当事人昨日给微软&ldquo;泼了盆冷水&rdquo;，称不会离开公司加盟微软。在周二接受美联社采访时，穆拉利表示至少在2014年他还会呆在福特公司，而发表澄清的目的就是不让微软再进行炒作。</p>
+<div>&nbsp;</div>
+<p>&nbsp;</p>
+              </div>
+          <div class="news_ctrl_panel">
+              <div class="back_to_list"></div>
+               <label><span></span> / 10</label>
+               <ul class="page_ctrl">
+                <li id="larr"></li>
+                <li id="rarr"></li>
+               </ul>
+            </div>
+          </div>
+          </div>
+
+<!--
+
+          <div class="side-mod reg-ad">
+            <a href="http://gpk.im/qtl5" target="_blank">
+              <img src="http://geekpark-img.qiniudn.com/uploads/event/promotion/dc63c55972c7e995ed103204d03c6cdf.jpg" alt="gif2014" width="330" height="270" />
+            </a>
+          </div>
+
+-->
+
+          <div class="side-mod reg-ad">
+            <a href="http://gpk.im/qtku" target="_blank">
+              <img src="http://geekpark-img.qiniudn.com/uploads/event/promotion/17ef3c0c93811ddb0717000a02f61e97.jpg" alt="h3c" width="330" height="270" />
+            </a>
+          </div>
+          <!-- <div class="side-mod random-article">
+            <div class="random-article-inner">
+              <div class="resizeImg-R"><img src="http://geekpark-img.qiniudn.com/uploads/reading/share/wQFOusQqowRu7fUPn54YGTSaCTv0MwY6.jpg" alt="random IMG" width="330" height="240"/></div>
+              <div class="cnt">
+                <div class="hack">
+                  <div class="ie">
+                    <div class="resize">
+                      <p class="tit t-col2"><a title="Draw Something 为何如此流行" target="_blank" href="/read/view/155654">Draw Something 为何如此流行</a></p>
+                    </div>
+                    <p class="btn"><a id="random_article" href="#" title="换一换，也许你喜欢" class="bg-img"><img src="/public/css/images/home/btn-loading.gif" class="fn-hide" alt=""></a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <div class="hot-recommend">
+            <h3 class="tit-second-mod hot-tit">热门推荐</h3>
+            <div class="tab-title">
+              <span class="s current">极客观察 </span>
+              <span class="c">极客广播</span>
+            </div>
+            <ul class="hot-list">
+              <li class="first"><i class="bg-img num1"></i><a target="_blank" title="小米路由" href="/read/view/195133">小米路由器独家首测：它的亮点在哪？</a></li>
+              <li class=""><i class="bg-img num2"></i><a target="_blank" title="产品万艾可" href="/read/view/194651">“产品万艾可”：你吃，还是不吃？</a></li>
+              <li class=""><i class="bg-img num3"></i><a target="_blank" title="乔布斯的魅力演讲" href="/read/view/194944">像乔布斯一样演讲，离不开这四个工具</a></li>
+              <li class=""><i class="bg-img num4"></i><a target="_blank" title="硅谷观察" href="/read/view/192473">硅谷观察（一）从古罗马到硅谷：连接历史和未来</a></li>
+              <li class=""><i class="bg-img num5"></i><a target="_blank" title="智能手表" href="/read/view/190585">舍本逐末的智能手表</a></li>
+              <li class=""><i class="bg-img num6"></i><a target="_blank" title="手机QQ  微信" href="/read/view/192111">手机 QQ 更新：微信做的事情我不做</a></li>
+              <li class=""><i class="bg-img num7"></i><a target="_blank" title="少年开发者   少年极客" href="/read/view/190567">高三学生的开发野史：帮我偷懒，逗你开心</a></li>
+              <li class=""><i class="bg-img num8"></i><a target="_blank" title="少年极客   Twitter" href="/read/view/192222">【极客人物】Twidere 开发者：95后的宅里奥</a></li>
+              <li class=""><i class="bg-img num9"></i><a target="_blank" title="轻应用" href="/read/view/191340">轻应用，做什么？怎么做？</a></li>
+              <li class=""><i class="bg-img num10"></i><a target="_blank" title="科技病" href="/read/view/191914">【极客发现】科技是一种病！得治！</a></li>
+            </ul>
+            <ul class="hot-list" style="display:none">
+              <li class="first"><i class="bg-img num1"></i><a target="_blank" title="UC 俞永福" href="/cast/view/166207">UC 和移动互联网的未来</a></li>
+              <li class=""><i class="bg-img num2"></i><a target="_blank" title="本土设计的用户体验设计" href="/cast/view/165233">本土化的用户体验设计</a></li>
+              <li class=""><i class="bg-img num3"></i><a target="_blank" title="洛可可的设计之道" href="/cast/view/165237">上上之道 禅悟设计</a></li>
+              <li class=""><i class="bg-img num4"></i><a target="_blank" title=" 产品如何让用户更专注？" href="/cast/view/164182">产品如何让用户更专注？</a></li>
+              <li class=""><i class="bg-img num5"></i><a target="_blank" title="王小川：移动搜索开启的新未来" href="/cast/view/160623">移动搜索开启的新未来</a></li>
+              <li class=""><i class="bg-img num6"></i><a target="_blank" title="令人印象深刻的设计瞬间" href="/cast/view/165249">令人印象深刻的设计瞬间</a></li>
+              <li class=""><i class="bg-img num7"></i><a target="_blank" title="微博化时代的信息和权力" href="/cast/view/162918">微博化时代的信息和权力</a></li>
+              <li class=""><i class="bg-img num8"></i><a target="_blank" title="多贝：教育的新新形态" href="/cast/view/164017">多贝：教育的新新形态</a></li>
+              <li class=""><i class="bg-img num9"></i><a target="_blank" title="薛蛮子 --- 薛蛮子看微博" href="/cast/view/162961">薛蛮子看微博</a></li>
+              <li class=""><i class="bg-img num10"></i><a target="_blank" title="快速迭代" href="/cast/view/160761">快速迭代的互联网开发模式</a></li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+      <div class="i-links">
+        <ul>
+          <li class="big-text">友情链接：</li>
+          <li><a target="_blank" title="PINGWEST" href="http://www.pingwest.com/">PINGWEST</a></li>
+          <li><a target="_blank" title="凤凰科技" href="http://tech.ifeng.com/">凤凰科技</a></li>
+          <li><a target="_blank" title="雷锋网" href="http://www.leiphone.com/">雷锋网</a></li>
+          <li><a target="_blank" title="TECH2IPO" href="http://tech2ipo.com/">TECH2IPO</a></li>
+          <li><a target="_blank" title="虎嗅" href="http://www.huxiu.com/">虎嗅</a></li>
+          <li><a target="_blank" title="商业价值" href="http://www.businessvalue.com.cn/">商业价值</a></li>
+          <li><a target="_blank" title="ITValue" href="http://www.itvalue.com.cn/">ITValue</a></li>
+          <li><a target="_blank" title="cnBeta" href="http://cnbeta.com/">cnBeta</a></li>
+          <li><a target="_blank" title="3w招聘" href="http://www.3wzhaopin.com/">3w招聘</a></li>
+          <li><a target="_blank" title="快鲤鱼" href="http://www.kuailiyu.com/">快鲤鱼</a></li>
+          <li><a target="_blank" title="车连线" href="http://www.chelianxian.com/">车连线</a></li>           
+        </ul>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="container">
+        <div class="col">
+          <div class="footer-title">极客公园</div>
+          <ul class="footer-content">
+            <li><a title="关于极客公园" href="/pub/about">关于我们</a></li>
+            <li><a title="加入我们" href="/job" target="_blank">加入我们</a></li>
+            <li><a title="访问移动版" class="jump-to-mobile">访问移动版</a></li>
+            <li><a title="产品求关注" href="/clue/" target="_blank">产品求关注</a></li>
+            <!-- <li><a title="友情链接" href="/pub/links">友情链接</a></li> -->
+          </ul>
+        </div>
+        
+        <div class="col">
+          <div class="footer-title">实验室</div>
+          <ul class="footer-content">
+            <li><a title="极客公园 - Google Reader 归档计划" href="/lab/google_reader">Google Reader 归档计划</a></li>
+            <li><a title="极客早知道 - iOS 客户端" href="https://itunes.apple.com/us/app/ji-ke-zao-zhi-dao/id629628618?mt=8">极客早知道：iOS 版</a></li>
+            <li><a href="http://book.duokan.com/search/%E6%9E%81%E5%AE%A2%E5%85%AC%E5%9B%AD/1" title="极客公园 - 多看月刊">极客公园月刊</a></li>
+          </ul>
+        </div>    
+<!--
+        <div class="col">
+          <div class="footer-title">服务与支持</div>
+          <ul class="footer-content">
+            <li><a title="用户协议" href="/pub/terms">用户协议</a></li>
+            <li><a title="隐私条款" href="/pub/privacy">隐私条款</a></li>
+            <li><a href="/rhea" title="点击打开意见反馈窗口">意见反馈</a></li>
+          </ul>
+        </div>
+-->
+        <div class="col">
+          <div class="footer-title">订阅</div>
+          <ul class="footer-content">
+            <li><a class="social-media-icon rss" title="RSS" target="_blank" href="http://feeds.geekpark.net/">RSS订阅</a></li>
+            <li><a class="social-media-icon email" title="Email Service" target="_blank" href="http://eepurl.com/fzlSk">活动通知订阅</a></li>
+          </ul>
+        </div>
+        <div class="col social-media">
+          <div class="footer-title">关注我们</div>
+          <ul class="footer-content">
+            <li><a class="social-media-icon sina" title="新浪微博: @geekpark" target="_blank" href="http://weibo.com/geekpark">新浪微博</a></li>
+            <li><a class="social-media-icon tencent" title="腾讯微博: @geekparknet" target="_blank" href="http://t.qq.com/geekparknet">腾讯微博</a></li>
+            <li><a class="social-media-icon twitter" title="Twitter: @GeekParkNet" target="_blank" href="https://twitter.com/GeekParkNet">Twitter</a></li>
+            <li><a class="social-media-icon gplus" title="Google+: @geekpark" target="_blank" href="https://plus.google.com/117900237066383009895/" rel="publisher">Google+</a></li>
+            <li><a class="social-media-icon huaban" title="花瓣网: @geekpark" target="_blank" href="http://huaban.com/geekpark">花瓣网</a></li>
+            <li><a class="social-media-icon renren" title="人人小站: @geekpark" target="_blank" href="http://zhan.renren.com/geekpark">人人小站</a></li>
+            <li><a class="social-media-icon diandian" title="点点: @geekparknet" target="_blank" href="http://geekparknet.diandian.com/">点点</a></li>
+            <li><img class="weixin-qrcode" title="在微信里搜索“极客公园”或在手机上扫描本二维码添加极客公园微信帐号" width="200" height="200" alt="GeekPark 微信" src="/public/css/images/geekpark-weixin.png" style="display: none;"><a class="social-media-icon weixin" title="微信" href="JavaScript:void(0);">微信</a></li>
+          </ul>
+        </div>
+        <div class="col cp">
+          <div class="support">
+            <p>图片存储由<a href="http://gpk.im/qiniu"> 七牛云存储 </a>提供</p>
+          </div>
+          <div class="copyright ICP">
+            <p>Copyright &copy; 2009 - 2013</p>
+            <p>北京中明万长管理咨询有限公司</p>
+          </div>
+          <div class="ICP">
+            <p>京ICP备09035963号</p>
+            <p>京公网安备110105001682号</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <div id="scrollTop" style="display:none;">
+    <div class="level-2"></div>
+    <div class="level-3"></div>
+  </div>
+  <!-- scripts concatenated and minified via ant build script-->
+  <script src="/public/js/libs/ajaxupload/fileuploader.js"></script>
+  <script src="/public/js/plugins.js"></script>
+  <script src="/public/js/libs/jquery.highlight.js"></script>
+  <script src="/public/js/libs/fancybox/jquery.fancybox.pack.js"></script>
+  <script src="/public/js/script.js"></script>  
+  <!-- end scripts-->
+          <!--[if lt IE 7 ]>
+  <script src="/public/js/libs/dd_belatedpng.js"></script>
+  <script>DD_belatedPNG.fix("img, .png_bg");</script>
+  <![endif]-->
+  <script type="text/javascript">
+  //  UI.global_search();
+    var uvOptions = {};
+    // !important
+    (function() {
+        initScrollTop();
+    })();
+  </script>
+   <div class="feedback-btn">
+    <a class="fancybox fancybox.ajax zh-cn" title="用户反馈" target="_blank" href="/rhea/feedback_reply_form/"><i></i> 用 户 反 馈 </a>
+  </div>​ 
+
+  <!-- <div class="feedback-btn">
+    <a class="fancybox zh-cn clue" title="申请报道" target="_blank" href="/clue/" style="line-height:16px;"><i></i> 申 请 报 道 </a>
+  </div>​ -->
+
+</body>
+</html>

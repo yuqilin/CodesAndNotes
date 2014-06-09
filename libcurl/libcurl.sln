@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "libcurl\libcurl.vcproj", "{DE23803C-D5EA-49AD-883A-36FD9E9271F5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "url_request_test", "url_request_test\url_request_test.vcproj", "{36BBD6A5-DB1E-4B02-8239-A958A876A003}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "http_client", "http_client\http_client.vcproj", "{40323434-07D4-4CD0-A321-32826972282C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE23803C-D5EA-49AD-883A-36FD9E9271F5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE23803C-D5EA-49AD-883A-36FD9E9271F5}.Debug|Win32.Build.0 = Debug|Win32
+		{DE23803C-D5EA-49AD-883A-36FD9E9271F5}.Release|Win32.ActiveCfg = Release|Win32
+		{DE23803C-D5EA-49AD-883A-36FD9E9271F5}.Release|Win32.Build.0 = Release|Win32
+		{36BBD6A5-DB1E-4B02-8239-A958A876A003}.Debug|Win32.ActiveCfg = Debug|Win32
+		{36BBD6A5-DB1E-4B02-8239-A958A876A003}.Debug|Win32.Build.0 = Debug|Win32
+		{36BBD6A5-DB1E-4B02-8239-A958A876A003}.Release|Win32.ActiveCfg = Release|Win32
+		{36BBD6A5-DB1E-4B02-8239-A958A876A003}.Release|Win32.Build.0 = Release|Win32
+		{40323434-07D4-4CD0-A321-32826972282C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{40323434-07D4-4CD0-A321-32826972282C}.Debug|Win32.Build.0 = Debug|Win32
+		{40323434-07D4-4CD0-A321-32826972282C}.Release|Win32.ActiveCfg = Release|Win32
+		{40323434-07D4-4CD0-A321-32826972282C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
