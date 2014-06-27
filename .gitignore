@@ -1,5 +1,3 @@
-/bin
-ipch
 *.a
 *.aps
 *.db
@@ -21,3 +19,4 @@ ipch
 Debug/
 Release/
 bin/
+ipch/
