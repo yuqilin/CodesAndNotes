@@ -7,6 +7,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#include <libavutil/common.h>
 #include <libavutil/timestamp.h>
 #include <libavutil/log.h>
 #include <libavutil/avstring.h>
@@ -15,7 +16,7 @@
 #include "log.h"
 
 typedef struct ConcatStream {
-    int64_t cur_dts;
+    int64_t last_mux_dts;
     int out_stream_index;
     int64_t duration;
 } ConcatStream;
@@ -286,21 +287,48 @@ int  concat_process(ConcatContext *ctx)
         ustime_to_string(deltaus, deltatime);
         LOG("fileno[%d], pkt.stream_index=%d, pkt.dts=%"PRId64"(%s), pkt.pts=%"PRId64"(%s), delta=%"PRId64"(%s)",
             fileno, pkt.stream_index, pkt.dts, dtstime, pkt.pts, ptstime, delta, deltatime);
+        
+        // make sure increased dts
+//         if (cs->cur_dts != AV_NOPTS_VALUE &&
+//             pkt.dts == cs->cur_dts) {
+//             LOG("fileno[%d], pkt.stream_index=%d, pkt.dts==cs->cur_dts, dts=%"PRId64, fileno, pkt.stream_index, pkt.dts);
+// 
+//             pkt.dts += 40;
+// 
+//             //av_packet_unref(&pkt);
+//             //continue;
+//         }
+//         cs->cur_dts = pkt.dts;
+        if (!(ctx->ofmt_ctx->oformat->flags & AVFMT_NOTIMESTAMPS)) {
+            if ((outstream->codec->codec_type == AVMEDIA_TYPE_AUDIO || outstream->codec->codec_type == AVMEDIA_TYPE_VIDEO) &&
+                pkt.dts != AV_NOPTS_VALUE &&  cs->last_mux_dts != AV_NOPTS_VALUE) {
+                int64_t max = cs->last_mux_dts + !(ctx->ofmt_ctx->oformat->flags & AVFMT_TS_NONSTRICT);
+                if (pkt.dts < max) {
+                    int loglevel = max - pkt.dts > 2 || outstream->codec->codec_type == AVMEDIA_TYPE_VIDEO ? AV_LOG_WARNING : AV_LOG_DEBUG;
+                    LOG("Non-monotonous DTS in output stream "
+                        "%d:%d; previous: %"PRId64", current: %"PRId64"; ",
+                        fileno, outstream->index, cs->last_mux_dts, pkt.dts);
+                    LOG("changing to %"PRId64". This may result "
+                        "in incorrect timestamps in the output file.\n",
+                        max);
+                    if (pkt.pts >= pkt.dts)
+                        pkt.pts = FFMAX(pkt.pts, max);
+                    pkt.dts = max;
+                }
+            }
+            if (pkt.dts != AV_NOPTS_VALUE &&
+                pkt.pts != AV_NOPTS_VALUE &&
+                pkt.dts > pkt.pts) {
+                LOG("Invalid DTS: %"PRId64" PTS: %"PRId64" in output stream %d:%d\n",
+                    pkt.dts, pkt.pts, fileno, outstream->index);
+                pkt.pts = AV_NOPTS_VALUE;
+                pkt.dts = AV_NOPTS_VALUE;
+            }
+        }
+        cs->last_mux_dts = pkt.dts;
 
         // set new stream_index
         pkt.stream_index = cs->out_stream_index;
-
-        // make sure increased dts
-        if (cs->cur_dts != AV_NOPTS_VALUE &&
-            pkt.dts == cs->cur_dts) {
-            LOG("fileno[%d], pkt.stream_index=%d, pkt.dts==cs->cur_dts, dts=%"PRId64, fileno, pkt.stream_index, pkt.dts);
-
-            pkt.dts += 40;
-
-            //av_packet_unref(&pkt);
-            //continue;
-        }
-        cs->cur_dts = pkt.dts;
 
         ret = av_interleaved_write_frame(ctx->ofmt_ctx, &pkt);
         if (ret < 0) {
@@ -353,7 +381,7 @@ static int match_streams(ConcatContext *ctx)
 
     for (i = ctx->cur_file->nb_streams; i < ctx->ifmt_ctx->nb_streams; i++) {
         map[i].out_stream_index = -1;
-        map[i].cur_dts = AV_NOPTS_VALUE;
+        map[i].last_mux_dts = AV_NOPTS_VALUE;
 
         istream = ctx->ifmt_ctx->streams[i];
 
@@ -429,10 +457,7 @@ static int open_output(ConcatContext *ctx)
                 st->codec->flags |= CODEC_FLAG_GLOBAL_HEADER;
         }
     }
-
-    // dts时间戳相同，av_interleaved_write_frame会报错
-    //ofmt_ctx->oformat->flags |= AVFMT_TS_NONSTRICT;
-
+    
     av_dump_format(ctx->ofmt_ctx, 0, ctx->out_url, 1);
 
     return 0;
