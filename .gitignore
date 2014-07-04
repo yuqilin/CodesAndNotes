@@ -1,7 +1,8 @@
 *.a
-*.aps
+*.d
 *.db
 *.old
+*.aps
 *.opensdf
 *.psess
 *.sdf
